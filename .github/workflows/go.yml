@@ -28,7 +28,7 @@ jobs:
         sudo mkdir /var/fixtures
         sudo chmod 777 /var/fixtures
         printf "ciao\n" > /var/fixtures/ciao.txt
-        printf "$PRIVATE_KEY" > /var/fixtures/private-key
+        printf %s "$PRIVATE_KEY" > /var/fixtures/private-key
 
     - name: Test
       run: go test -v ./...
