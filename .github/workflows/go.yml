@@ -23,8 +23,8 @@ jobs:
     
     - name: Setup test environment
       run: |
-        mkdir /var/fixtures
-        chmod 777 /var/fixtures
+        sudo mkdir /var/fixtures
+        sudo chmod 777 /var/fixtures
         printf "ciao\n" > /var/fixtures/ciao.txt
       
     - name: Test
