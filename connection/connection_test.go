@@ -170,7 +170,7 @@ func TestSSH(t *testing.T) {
 		Host:    "drihm",
 		Port:    22,
 		User:    "andrea.parodi",
-		KeyPath: "/home/parroit/.ssh/andrea.parodi",
+		KeyPath: "/var/fixtures/private-key",
 	}
 
 	err := conn.Open()
