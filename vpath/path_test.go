@@ -104,3 +104,30 @@ func TestJoinP(t *testing.T) {
 	assert.Equal(t, p1.String(), p1.JoinP(VirtualPath{}).String())
 	assert.Equal(t, "localhost:.", VirtualPath{}.JoinP(VirtualPath{}).String())
 }
+
+func TestFromS(t *testing.T) {
+	p1 := FromS("timoteo:/tmp/caio")
+
+	assert.Equal(t, "timoteo", p1.Host)
+	assert.Equal(t, "/tmp/caio", p1.Path)
+
+	p2 := FromS(":/tmp/caio")
+
+	assert.Equal(t, "localhost", p2.Host)
+	assert.Equal(t, "/tmp/caio", p2.Path)
+
+	p3 := FromS("/tmp/caio")
+
+	assert.Equal(t, "localhost", p3.Host)
+	assert.Equal(t, "/tmp/caio", p3.Path)
+
+	p4 := FromS("timoteo:")
+
+	assert.Equal(t, "timoteo", p4.Host)
+	assert.Equal(t, ".", p4.Path)
+
+	p5 := FromS(":")
+
+	assert.Equal(t, "localhost", p5.Host)
+	assert.Equal(t, ".", p5.Path)
+}

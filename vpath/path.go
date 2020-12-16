@@ -46,6 +46,24 @@ func New(host string, pathFormat string, pathArgs ...interface{}) VirtualPath {
 	return p
 }
 
+// Local returns a new VirtualPath on localhost
+// with the given path
+func Local(pathFormat string, pathArgs ...interface{}) VirtualPath {
+	return New("localhost", pathFormat, pathArgs...)
+}
+
+// FromS returns a new VirtualPath
+// with host and path parsed from
+// pathRepr string argument.
+func FromS(pathRepr string) VirtualPath {
+	parts := strings.SplitN(pathRepr, ":", 2)
+	if len(parts) == 1 {
+		return Local(parts[0])
+	}
+
+	return New(parts[0], parts[1])
+}
+
 // String returns a string representing the virtual path
 // Host and path parts are separated by a colon: host:path
 func (vPath VirtualPath) String() string {

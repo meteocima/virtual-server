@@ -12,9 +12,9 @@ func TestInit(t *testing.T) {
 	assert.NoError(t, err)
 
 	assert.Equal(t, 3, len(Hosts))
-	local, drihm, withBck := Hosts["local"], Hosts["drihm"], Hosts["withbackup"]
+	local, drihm, withBck := Hosts["localhost"], Hosts["drihm"], Hosts["withbackup"]
 
-	assert.Equal(t, "local", local.Name)
+	assert.Equal(t, "localhost", local.Name)
 	assert.Equal(t, "drihm", drihm.Name)
 	assert.Equal(t, "andrea.parodi", drihm.User)
 	assert.Equal(t, "withbackup", withBck.Name)
