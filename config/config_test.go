@@ -1,0 +1,21 @@
+package config
+
+import (
+	"testing"
+
+	"github.com/meteocima/virtual-server/testutil"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestInit(t *testing.T) {
+	err := Init(testutil.FixtureDir("virt-serv.toml"))
+	assert.NoError(t, err)
+
+	assert.Equal(t, 3, len(Hosts))
+	local, drihm, withBck := Hosts["local"], Hosts["drihm"], Hosts["withbackup"]
+
+	assert.Equal(t, "local", local.Name)
+	assert.Equal(t, "drihm", drihm.Name)
+	assert.Equal(t, "andrea.parodi", drihm.User)
+	assert.Equal(t, "withbackup", withBck.Name)
+}

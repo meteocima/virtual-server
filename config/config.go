@@ -1,80 +1,73 @@
 package config
 
-/*
-
 import (
-	"log"
+	"os"
+	"path/filepath"
 
-	"github.com/meteocima/vfs/fs"
-	"github.com/spf13/viper"
+	"github.com/BurntSushi/toml"
 )
 
-type Config struct {
-	Filesystems map[string]*fs.Filesystem
-	MountPoints map[string]fs.MountPoint
+// HostType is an enum that represents
+// all possible host type. An host type
+// indicates how and where the processes is started
+type HostType int
+
+const (
+	// HostTypeOS represents an host that run process on the local machine
+	HostTypeOS HostType = iota
+	// HostTypeSSH represents an host that run process on a remote machine using SSH
+	HostTypeSSH
+)
+
+// Host is struct that contains information
+// about a host on which to run processes
+type Host struct {
+	Type        HostType
+	Name        string
+	Host        string
+	BackupHosts []string `toml:"backup-hosts"`
+	Port        int
+	User        string
+	Key         string
 }
 
-var Cfg Config
-
-func (cfg *Config) Init() {
-
-	cfg.Filesystems = map[string]*fs.Filesystem{}
-	fss := viper.GetStringMap("filesystem")
-
-	var getPropS = func(props map[string]interface{}, name string) string {
-		if val, ok := props[name]; ok {
-			return val.(string)
-		}
-		return ""
-	}
-
-	var getPropI = func(props map[string]interface{}, name string) int64 {
-		if val, ok := props[name]; ok {
-			return val.(int64)
-		}
-		return 0
-	}
-
-	var getPropStrArr = func(props map[string]interface{}, name string) []string {
-		if val, ok := props[name]; ok {
-			arr := val.([]interface{})
-			res := make([]string, len(arr))
-			for idx, item := range arr {
-				res[idx] = item.(string)
-			}
-			return res
-		}
-		return nil
-	}
-
-	for name, fsInst := range fss {
-		fsMap := fsInst.(map[string]interface{})
-		cfg.Filesystems[name] = &fs.Filesystem{
-			Type:        fs.FsType(getPropI(fsMap, "type")),
-			Name:        name,
-			BackupHosts: getPropStrArr(fsMap, "backup-hosts"),
-			Host:        getPropS(fsMap, "host"),
-			Port:        getPropI(fsMap, "port"),
-			User:        getPropS(fsMap, "user"),
-			Password:    getPropS(fsMap, "password"),
-			Key:         getPropS(fsMap, "key"),
-		}
-	}
-
-	mountPoints := viper.GetStringMap("mountpoint")
-	cfg.MountPoints = map[string]fs.MountPoint{}
-	for name, mountpoint := range mountPoints {
-		fsMap := mountpoint.(map[string]interface{})
-		fsInst, ok := cfg.Filesystems[getPropS(fsMap, "fs")]
-		if !ok {
-			log.Fatalf("cannot find file system `%s`", getPropS(fsMap, "fs"))
-		}
-		cfg.MountPoints[name] = fs.MountPoint{
-			Filesystem: fsInst,
-			Name:       name,
-			Root:       getPropS(fsMap, "root"),
-		}
-	}
-
+// Type is a structure which contains the
+// configuration for the running command.
+type Type struct {
+	Hosts map[string]*Host
 }
-*/
+
+// Hosts contains the configuration public instance
+var Hosts map[string]*Host
+
+// Filename contains the absolute path of
+// the configuration file used to initialize
+// the module
+var Filename string
+
+// Init loads the global, public configuration
+// from the given file.
+func Init(configFile string) error {
+	var cfg Type
+	_, err := toml.DecodeFile(configFile, &cfg)
+	if err != nil {
+		return err
+	}
+
+	for name, host := range cfg.Hosts {
+		host.Name = name
+	}
+
+	wd, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	Filename, err = filepath.Rel(wd, configFile)
+	if err != nil {
+		return err
+	}
+
+	Hosts = cfg.Hosts
+	return nil
+}

@@ -52,7 +52,7 @@ func (conn *LocalConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error) {
 
 // Link ...
 func (conn *LocalConnection) Link(source, target vpath.VirtualPath) error {
-	return nil
+	return os.Symlink(source.Path, target.Path)
 }
 
 // MkDir ...

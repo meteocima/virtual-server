@@ -204,7 +204,13 @@ func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error) {
 
 // Link ...
 func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error {
-	return nil
+	client, err := sftp.NewClient(conn.client)
+	if err != nil {
+		return err
+	}
+	defer client.Close()
+
+	return client.Symlink(source.Path, target.Path)
 }
 
 // MkDir ...

@@ -1,0 +1,19 @@
+[hosts]
+  [hosts.local]
+    type = 0 #HostTypeOS
+  [hosts.drihm]
+    type = 1 #HostTypeSSH
+    host = "130.251.104.213"
+    port = 22
+    user = "andrea.parodi"
+    key = "/var/fixtures/private-key"
+  [hosts.withbackup]
+    type = 1 #HostTypeSSH
+    host = "example.com"
+    backup-hosts = ["local", "drihm"]
+    port = 22
+    user = "andrea.parodi"
+    key = "/var/fixtures/private-key"
+[anyother]
+  key=42
+  answer="42"

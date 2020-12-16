@@ -137,9 +137,8 @@ func (ctx *Context) Link(from, to vpath.VirtualPath) {
 	if ctx.Err != nil {
 		return
 	}
-	//conn := connection.FindHost(from.Host)
-	//conn.Link
-
+	conn := connection.FindHost(from.Host)
+	ctx.Err = conn.Link(from, to)
 }
 
 // MkDir ...

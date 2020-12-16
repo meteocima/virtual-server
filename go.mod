@@ -3,6 +3,7 @@ module github.com/meteocima/virtual-server
 go 1.15
 
 require (
+	github.com/BurntSushi/toml v0.3.1
 	github.com/hpcloud/tail v1.0.0
 	github.com/pkg/sftp v1.12.0
 	github.com/stretchr/testify v1.6.1
