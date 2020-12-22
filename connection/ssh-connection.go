@@ -258,3 +258,8 @@ func (conn *SSHConnection) RmFile(file vpath.VirtualPath) error {
 	}
 	return nil
 }
+
+// Run ...
+func (conn *SSHConnection) Run(command string, args []string, options ...RunOptions) error {
+	return nil
+}

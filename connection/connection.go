@@ -9,6 +9,38 @@ import (
 	"github.com/meteocima/virtual-server/vpath"
 )
 
+// RunOptions ...
+type RunOptions struct {
+	// OutFromLog if sets, output is read from a file
+	// instead of from the process stdout
+	OutFromLog *vpath.VirtualPath
+
+	// OutFromLog if sets, output is read from a file
+	// instead of from the process stderr
+	ErrFromLog *vpath.VirtualPath
+
+	// Cwd is set the work directory in which the process will be executed.
+	Cwd *vpath.VirtualPath
+
+	// Stdin, if set, is an io.Reader that will be used
+	// as process Stdin
+	Stdin *io.Reader
+
+	// Stdout, if set, is an io.Writer that will be used
+	// as process Stdout
+	Stdout *io.Writer
+
+	// Stderr, if set, is an io.Writer that will be used
+	// as process Stderr
+	Stderr *io.Reader
+}
+
+type CopyOptions struct {
+}
+
+type MoveOptions struct {
+}
+
 // Connection ...
 type Connection interface {
 	Open() error
@@ -21,6 +53,7 @@ type Connection interface {
 	RmDir(dir vpath.VirtualPath) error
 	RmFile(file vpath.VirtualPath) error
 	Link(source, target vpath.VirtualPath) error
+	Run(command string, args []string, options ...RunOptions) error
 }
 
 var connections = map[string]Connection{}

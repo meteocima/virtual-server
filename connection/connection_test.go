@@ -9,9 +9,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-
 func exists(t *testing.T, conn Connection, file vpath.VirtualPath) bool {
 	_, err := conn.Stat(file)
+
 	if os.IsNotExist(err) {
 		return false
 	}
@@ -146,6 +146,15 @@ func CheckOpenWriter(conn Connection) func(t *testing.T) {
 	}
 }
 
+func CheckRun(conn Connection) func(t *testing.T) {
+	return func(t *testing.T) {
+		//fixtures := vpath.VirtualPath{Path: "/var/fixtures/"}
+		//opt := fixtures.Join("testcmd"), fixtures.Join("testcmd.log")
+		err := conn.Run("testcmd", []string{"/var/fixtures/"})
+		assert.NoError(t, err)
+	}
+}
+
 func DoAllChecks(t *testing.T, conn Connection) {
 	t.Run("CheckStat", CheckStat(conn))
 	t.Run("CheckMkDir", CheckMkDir(conn))
@@ -154,6 +163,7 @@ func DoAllChecks(t *testing.T, conn Connection) {
 	t.Run("CheckOpenWriter", CheckOpenWriter(conn))
 	t.Run("CheckRmFile", CheckRmFile(conn))
 	t.Run("CheckReadDir", CheckReadDir(conn))
+	t.Run("CheckRun", CheckRun(conn))
 }
 
 func TestLocalHost(t *testing.T) {

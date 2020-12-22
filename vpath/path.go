@@ -19,6 +19,24 @@ type VirtualPath struct {
 	Path string
 }
 
+// Stdin is a placeholder VirtualPath which represents the `stdin` stream of a process.
+var Stdin = &VirtualPath{
+	Host: "any",
+	Path: "stdin",
+}
+
+// Stdout is a placeholder VirtualPath which represents the `stdout` stream of a process.
+var Stdout = &VirtualPath{
+	Host: "any",
+	Path: "stdout",
+}
+
+// Stderr is a placeholder VirtualPath which represents the `stderr` stream of a process.
+var Stderr = &VirtualPath{
+	Host: "any",
+	Path: "stderr",
+}
+
 // private method that resolve
 // nil fields to their corresponding
 // values

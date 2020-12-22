@@ -169,107 +169,11 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 }
 
 // Run ...
-func (ctx *Context) Run(cwd vpath.VirtualPath, logFile vpath.VirtualPath, command string, args ...string) {
+func (ctx *Context) Run(command string, args []string, options ...connection.RunOptions) {
 	if ctx.Err != nil {
 		return
 	}
-	/*Logf("\tRun %s %s\n", command, args)
-	cmd := exec.Command(command, args...)
-	cmd.Dir = ctx.Root.JoinP(cwd).String()
-
-	if logFile != "" {
-		err := os.Remove(ctx.Root.JoinP(logFile).String())
-		if err != nil && !os.IsNotExist(err) {
-			ctx.Err = fmt.Errorf("Run `%s`: Remove error: %w", command, err)
-			return
-		}
-	}
-
-	output, pwrite := io.Pipe()
-
-	var tailProc *tail.Tail
-	if logFile == "" {
-		stdout, err := cmd.StdoutPipe()
-		if err != nil {
-			ctx.Err = fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
-			return
-		}
-		stderr, err := cmd.StderrPipe()
-		if err != nil {
-			ctx.Err = fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
-			return
-		}
-
-		go func() {
-			done := sync.WaitGroup{}
-			done.Add(2)
-			go func() {
-				io.Copy(pwrite, stdout)
-				done.Done()
-			}()
-
-			go func() {
-				io.Copy(pwrite, stderr)
-				done.Done()
-			}()
-
-			done.Wait()
-
-			pwrite.Close()
-		}()
-
-	} else {
-
-		tail, err := tail.TailFile(ctx.Root.JoinP(logFile).String(), tail.Config{
-			Follow:    true,
-			MustExist: false,
-			ReOpen:    true,
-		})
-
-		if err != nil {
-			ctx.Err = fmt.Errorf("Run `%s`: TailFile error: %w", command, err)
-			return
-		}
-		tailProc = tail
-
-		go func() {
-			for l := range tail.Lines {
-				pwrite.Write([]byte(l.Text + "\n"))
-				if l.Err != nil {
-					ctx.Err = fmt.Errorf("Run `%s`: TailFile error (lines): %w", command, err)
-					break
-				}
-			}
-			pwrite.Close()
-		}()
-
-	}
-
-	err := cmd.Start()
-	if ctx.Err != nil {
-		ctx.Err = fmt.Errorf("Run `%s`: Start error: %w", command, err)
-		return
-	}
-
-	go func() {
-		stdoutBuff := bufio.NewReader(output)
-		line, _, err := stdoutBuff.ReadLine()
-		for line != nil {
-			line, _, err = stdoutBuff.ReadLine()
-			if err != nil && err != io.EOF {
-				ctx.Err = fmt.Errorf("Run `%s`: ReadLine error: %w", command, err)
-			}
-			fmt.Println(string(line))
-		}
-	}()
-	err = cmd.Wait()
-
-	if err != nil {
-		ctx.Err = fmt.Errorf("Run `%s`: Wait error: %w", command, err)
-	}
-
-	if tailProc != nil {
-		tailProc.Stop()
-	}
+	/*conn := connection.FindHost(cwd.Host)
+	ctx.Err = conn.Run(command, args...)
 	*/
 }
