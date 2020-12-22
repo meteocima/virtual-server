@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+
 func exists(t *testing.T, conn Connection, file vpath.VirtualPath) bool {
 	_, err := conn.Stat(file)
 	if os.IsNotExist(err) {
