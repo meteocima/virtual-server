@@ -148,9 +148,10 @@ func CheckOpenWriter(conn Connection) func(t *testing.T) {
 
 func CheckRun(conn Connection) func(t *testing.T) {
 	return func(t *testing.T) {
-		//fixtures := vpath.VirtualPath{Path: "/var/fixtures/"}
-		//opt := fixtures.Join("testcmd"), fixtures.Join("testcmd.log")
-		err := conn.Run("testcmd", []string{"/var/fixtures/"})
+		fixtures := vpath.VirtualPath{Path: "/var/fixtures/", Host: conn.HostName()}
+		process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"})
+
+		assert.NotNil(t, process)
 		assert.NoError(t, err)
 	}
 }

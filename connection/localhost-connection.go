@@ -5,13 +5,20 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"sort"
+	"strings"
 
 	"github.com/meteocima/virtual-server/vpath"
 )
 
 // LocalConnection ...
 type LocalConnection struct{}
+
+// HostName ...
+func (conn *LocalConnection) HostName() string {
+	return "localhost"
+}
 
 // OpenReader ...
 func (conn *LocalConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error) {
@@ -82,9 +89,59 @@ func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error {
 	return nil
 }
 
-// Run ...
-func (conn *LocalConnection) Run(command string, args []string, options ...RunOptions) error {
+// LocalProcess ...
+type LocalProcess struct {
+}
+
+// CombinedOutput ...
+func (proc *LocalProcess) CombinedOutput() io.Reader {
 	return nil
+}
+
+// Kill ...
+func (proc *LocalProcess) Kill() error {
+	return nil
+}
+
+// Stdin ...
+func (proc *LocalProcess) Stdin() io.Reader {
+	return nil
+}
+
+// Stdout ...
+func (proc *LocalProcess) Stdout() io.Writer {
+	return nil
+}
+
+// Stderr ...
+func (proc *LocalProcess) Stderr() io.Writer {
+	return nil
+}
+
+// Wait ...
+func (proc *LocalProcess) Wait() (int, error) {
+	return 0, nil
+}
+
+// Run ...
+func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
+	fmt.Println(strings.Repeat("*", 120))
+	fmt.Println("EXECUTING", command.Path)
+	fmt.Println(strings.Repeat("*", 120))
+
+	cmd := exec.Command(command.Path, args...)
+	err := cmd.Start()
+	if err != nil {
+		return nil, fmt.Errorf("Run `%s`: Start error: %w", command, err)
+	}
+
+	err = cmd.Wait()
+
+	if err != nil {
+		return nil, fmt.Errorf("Run `%s`: Wait error: %w", command, err)
+	}
+
+	return &LocalProcess{}, nil
 
 	/*Logf("\tRun %s %s\n", command, args)
 	cmd := exec.Command(command, args...)

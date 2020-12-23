@@ -28,9 +28,12 @@ function test_all() {
 }
 
 function on_sourcechanges_retest() {
-  while inotifywait -r -e modify -e move -e create -e delete -e delete_self .; do
+  test_all $1
+  while true; do
+    event=`inotifywait -qr -e modify -e move -e create -e delete -e delete_self .`
+    echo EVENT $event
     previous=$all_tests_passed
-    test_all
+    test_all $1
     if [[ $all_tests_passed != $previous ]]; then
       if [[ $all_tests_passed == 1 ]]; then
         spd-say -y Italian+female5 'Tutti i test sono ok'

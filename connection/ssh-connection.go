@@ -18,12 +18,18 @@ type SSHConnection struct {
 	BackupHosts []string
 	Name        string
 
-	Host    string
-	Port    int
-	User    string
-	KeyPath string
-	config  *ssh.ClientConfig
-	client  *ssh.Client
+	Host     string
+	Port     int
+	User     string
+	KeyPath  string
+	hostName string
+	config   *ssh.ClientConfig
+	client   *ssh.Client
+}
+
+// HostName ...
+func (conn *SSHConnection) HostName() string {
+	return conn.hostName
 }
 
 func privateSSHKey(path string) (ssh.AuthMethod, error) {
@@ -260,6 +266,40 @@ func (conn *SSHConnection) RmFile(file vpath.VirtualPath) error {
 }
 
 // Run ...
-func (conn *SSHConnection) Run(command string, args []string, options ...RunOptions) error {
+func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
+	return &SSHProcess{}, nil
+}
+
+// SSHProcess ...
+type SSHProcess struct {
+}
+
+// CombinedOutput ...
+func (proc *SSHProcess) CombinedOutput() io.Reader {
 	return nil
+}
+
+// Kill ...
+func (proc *SSHProcess) Kill() error {
+	return nil
+}
+
+// Stdin ...
+func (proc *SSHProcess) Stdin() io.Reader {
+	return nil
+}
+
+// Stdout ...
+func (proc *SSHProcess) Stdout() io.Writer {
+	return nil
+}
+
+// Stderr ...
+func (proc *SSHProcess) Stderr() io.Writer {
+	return nil
+}
+
+// Wait ...
+func (proc *SSHProcess) Wait() (int, error) {
+	return 0, nil
 }
