@@ -91,11 +91,15 @@ func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error {
 
 // LocalProcess ...
 type LocalProcess struct {
+	cmd            *exec.Cmd
+	stdout         io.Reader
+	stderr         io.Reader
+	combinedOutput io.Reader
 }
 
 // CombinedOutput ...
 func (proc *LocalProcess) CombinedOutput() io.Reader {
-	return nil
+	return proc.combinedOutput
 }
 
 // Kill ...
@@ -104,23 +108,24 @@ func (proc *LocalProcess) Kill() error {
 }
 
 // Stdin ...
-func (proc *LocalProcess) Stdin() io.Reader {
+func (proc *LocalProcess) Stdin() io.Writer {
 	return nil
 }
 
 // Stdout ...
-func (proc *LocalProcess) Stdout() io.Writer {
-	return nil
+func (proc *LocalProcess) Stdout() io.Reader {
+	return proc.stdout
 }
 
 // Stderr ...
-func (proc *LocalProcess) Stderr() io.Writer {
+func (proc *LocalProcess) Stderr() io.Reader {
 	return nil
 }
 
 // Wait ...
 func (proc *LocalProcess) Wait() (int, error) {
-	return 0, nil
+	err := proc.cmd.Wait()
+	return proc.cmd.ProcessState.ExitCode(), err
 }
 
 // Run ...
@@ -130,18 +135,49 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 	fmt.Println(strings.Repeat("*", 120))
 
 	cmd := exec.Command(command.Path, args...)
-	err := cmd.Start()
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
+	}
+	/*
+		stderr, err := cmd.StderrPipe()
+		if err != nil {
+			return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
+		}
+	*/
+	processStdout, processStdoutWriter := io.Pipe()
+
+	//	if err != nil {
+	//		return nil, fmt.Errorf("Run `%s`: Wait error: %w", command, err)
+	//	}
+
+	/*
+		processStdout, processStdoutWriter := io.Pipe()
+		processStderr, processStderrWriter := io.Pipe()
+		processCombinedOutput, processCombinedOutputWriter := io.Pipe()
+
+		outWriter := io.MultiWriter(processStdoutWriter, processCombinedOutputWriter)
+		errWriter := io.MultiWriter(processStderrWriter, processCombinedOutputWriter)
+	*/
+	process := &LocalProcess{
+		stdout: processStdout,
+		//stderr:         processStderr,
+		cmd: cmd,
+		//combinedOutput: processCombinedOutput,
+	}
+
+	err = cmd.Start()
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: Start error: %w", command, err)
 	}
 
-	err = cmd.Wait()
+	go func() {
+		io.Copy(processStdoutWriter, stdout)
+		processStdoutWriter.Close()
+	}()
 
-	if err != nil {
-		return nil, fmt.Errorf("Run `%s`: Wait error: %w", command, err)
-	}
-
-	return &LocalProcess{}, nil
+	return process, nil
 
 	/*Logf("\tRun %s %s\n", command, args)
 	cmd := exec.Command(command, args...)

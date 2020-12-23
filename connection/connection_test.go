@@ -1,6 +1,7 @@
 package connection
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -153,17 +154,25 @@ func CheckRun(conn Connection) func(t *testing.T) {
 
 		assert.NotNil(t, process)
 		assert.NoError(t, err)
+
+		outReader := process.Stdout()
+		assert.NotNil(t, outReader)
+		out, err := ioutil.ReadAll(outReader)
+		assert.NoError(t, err)
+		s := string(out)
+		fmt.Println(s)
+		assert.Equal(t, "THIS IS A TEST COMMAND\nTHIS IS AN ERROR COMMAND\n", s)
 	}
 }
 
 func DoAllChecks(t *testing.T, conn Connection) {
-	t.Run("CheckStat", CheckStat(conn))
-	t.Run("CheckMkDir", CheckMkDir(conn))
-	t.Run("CheckRmDir", CheckRmDir(conn))
-	t.Run("CheckOpenReader", CheckOpenReader(conn))
-	t.Run("CheckOpenWriter", CheckOpenWriter(conn))
-	t.Run("CheckRmFile", CheckRmFile(conn))
-	t.Run("CheckReadDir", CheckReadDir(conn))
+	//t.Run("CheckStat", CheckStat(conn))
+	//t.Run("CheckMkDir", CheckMkDir(conn))
+	//t.Run("CheckRmDir", CheckRmDir(conn))
+	//t.Run("CheckOpenReader", CheckOpenReader(conn))
+	//t.Run("CheckOpenWriter", CheckOpenWriter(conn))
+	//t.Run("CheckRmFile", CheckRmFile(conn))
+	//t.Run("CheckReadDir", CheckReadDir(conn))
 	t.Run("CheckRun", CheckRun(conn))
 }
 
@@ -177,6 +186,7 @@ func TestLocalHost(t *testing.T) {
 
 }
 
+/*
 func TestSSH(t *testing.T) {
 	conn := SSHConnection{
 		Host:    "drihm",
@@ -191,3 +201,4 @@ func TestSSH(t *testing.T) {
 	assert.NoError(t, conn.Close())
 
 }
+*/

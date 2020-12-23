@@ -8,6 +8,7 @@ export all_tests_passed=0
 
 function test_all() {
   verbose=$1
+  clear
   if go test $verbose ./...; then
     printf $GREEN
     figlet 'All tests passed.'
@@ -36,9 +37,9 @@ function on_sourcechanges_retest() {
     test_all $1
     if [[ $all_tests_passed != $previous ]]; then
       if [[ $all_tests_passed == 1 ]]; then
-        spd-say -y Italian+female5 'Tutti i test sono ok'
+        spd-say 'All tests passed.'
       else 
-        spd-say -y Italian+female5 'Test falliti!'
+        spd-say 'Some test failed.'
       fi
     fi
   done

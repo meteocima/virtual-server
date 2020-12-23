@@ -285,17 +285,17 @@ func (proc *SSHProcess) Kill() error {
 }
 
 // Stdin ...
-func (proc *SSHProcess) Stdin() io.Reader {
+func (proc *SSHProcess) Stdin() io.Writer {
 	return nil
 }
 
 // Stdout ...
-func (proc *SSHProcess) Stdout() io.Writer {
+func (proc *SSHProcess) Stdout() io.Reader {
 	return nil
 }
 
 // Stderr ...
-func (proc *SSHProcess) Stderr() io.Writer {
+func (proc *SSHProcess) Stderr() io.Reader {
 	return nil
 }
 

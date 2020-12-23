@@ -14,18 +14,18 @@ type Process interface {
 	Kill() error
 	// Stdin, is an io.Writer that will be used
 	// to send data to process stdin
-	Stdin() io.Reader
+	Stdin() io.Writer
 
 	// Stdin, if set, is an io.Reader that will be used
 	// to read data from process stdout
-	Stdout() io.Writer
+	Stdout() io.Reader
 
 	// Stderr, if set, is an io.Reader that will be used
 	// to read data from process stdout
-	Stderr() io.Writer
+	Stderr() io.Reader
 
 	// CombinedOutput returns an io.Reader that reads
-	// the combined output and errpr streams of the process
+	// the combined output and error streams of the process
 	CombinedOutput() io.Reader
 
 	// Wait expects the process to terminate
