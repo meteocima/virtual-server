@@ -27,7 +27,7 @@ jobs:
         sudo chmod 777 /var/fixtures
         ln -s fixtures/var-fixtures/* /var/fixtures 
         printf "ciao\n" > /var/fixtures/ciao.txt
-        cp fixtures/keys/fake-host /var/fixtures/private-key
+        cp fixtures/fakehost/keys/fake-host /var/fixtures/private-key
 
     - name: Test
       run: go test -v ./...
