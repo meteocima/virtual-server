@@ -1,6 +1,6 @@
 ssh-keygen -f "$HOME/.ssh/known_hosts" -R "[localhost]:2222"
-docker stop openssh-server
-docker rm openssh-server
+docker stop openssh-server || true
+docker rm openssh-server || true
 docker run -it \
   --name=openssh-server \
   --hostname=openssh-server `#optional` \
