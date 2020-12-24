@@ -1,6 +1,7 @@
 package ctx
 
 import (
+	"io/ioutil"
 	"testing"
 
 	"github.com/meteocima/virtual-server/config"
@@ -8,6 +9,8 @@ import (
 	"github.com/meteocima/virtual-server/vpath"
 	"github.com/stretchr/testify/assert"
 )
+
+const sOut = "THIS IS A TEST COMMAND\n"
 
 func TestNew(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
@@ -19,6 +22,18 @@ func TestNew(t *testing.T) {
 		found := ctx.Exists(drihmFixt.Join("drihm"))
 		assert.True(t, found)
 		assert.NoError(t, ctx.Err)
+	})
+
+	t.Run("Run", func(t *testing.T) {
+		testcmd := drihmFixt.Join("testcmd")
+		process := ctx.Run(testcmd, []string{"/var/fixtures/"})
+
+		out, err := ioutil.ReadAll(process.Stdout())
+		assert.NoError(t, err)
+		assert.Equal(t, sOut, string(out))
+
+		assert.NoError(t, ctx.Err)
+
 	})
 
 	t.Run("ReadDir", func(t *testing.T) {

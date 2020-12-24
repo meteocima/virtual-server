@@ -169,11 +169,17 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 }
 
 // Run ...
-func (ctx *Context) Run(command string, args []string, options ...connection.RunOptions) {
+func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...connection.RunOptions) connection.Process {
 	if ctx.Err != nil {
-		return
+		return nil
 	}
-	/*conn := connection.FindHost(cwd.Host)
-	ctx.Err = conn.Run(command, args...)
-	*/
+
+	conn := connection.FindHost(command.Host)
+	proc, err := conn.Run(command, args)
+	if err != nil {
+		ctx.Err = err
+		return nil
+	}
+
+	return proc
 }
