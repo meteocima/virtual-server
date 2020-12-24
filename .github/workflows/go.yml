@@ -22,13 +22,12 @@ jobs:
       uses: actions/checkout@v2
     
     - name: Setup test environment
-      env: 
-        PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       run: |
         sudo mkdir /var/fixtures
         sudo chmod 777 /var/fixtures
+        ln -s fixtures/var-fixtures/* /var/fixtures 
         printf "ciao\n" > /var/fixtures/ciao.txt
-        printf %s "$PRIVATE_KEY" > /var/fixtures/private-key
+        ln -s $PWD/fixtures/keys/fake-host /var/fixtures/private-key
         sudo bash -c 'printf "\n%s\n" "130.251.104.213 drihm" >> /etc/hosts'
 
     - name: Test

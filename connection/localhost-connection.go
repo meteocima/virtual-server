@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"sort"
 	"strings"
+	"sync"
 
 	"github.com/meteocima/virtual-server/vpath"
 )
@@ -91,15 +92,38 @@ func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error {
 
 // LocalProcess ...
 type LocalProcess struct {
-	cmd            *exec.Cmd
-	stdout         io.Reader
-	stderr         io.Reader
-	combinedOutput io.Reader
+	cmd              *exec.Cmd
+	stdout           io.Reader
+	stderr           io.Reader
+	combinedOutput   io.Reader
+	streamsCompleted *sync.WaitGroup
 }
 
 // CombinedOutput ...
 func (proc *LocalProcess) CombinedOutput() io.Reader {
-	return proc.combinedOutput
+	proc.streamsCompleted.Add(1)
+	combined, combinedWriter := io.Pipe()
+
+	done := sync.WaitGroup{}
+	done.Add(2)
+
+	go func() {
+		io.Copy(combinedWriter, proc.stdout)
+		done.Done()
+	}()
+
+	go func() {
+		io.Copy(combinedWriter, proc.stderr)
+		done.Done()
+	}()
+
+	go func() {
+		done.Wait()
+		combinedWriter.Close()
+		proc.streamsCompleted.Done()
+	}()
+
+	return combined
 }
 
 // Kill ...
@@ -114,16 +138,35 @@ func (proc *LocalProcess) Stdin() io.Writer {
 
 // Stdout ...
 func (proc *LocalProcess) Stdout() io.Reader {
-	return proc.stdout
+	proc.streamsCompleted.Add(1)
+	processStdout, processStdoutWriter := io.Pipe()
+
+	go func() {
+		io.Copy(processStdoutWriter, proc.stdout)
+		processStdoutWriter.Close()
+		proc.streamsCompleted.Done()
+	}()
+
+	return processStdout
 }
 
 // Stderr ...
 func (proc *LocalProcess) Stderr() io.Reader {
-	return nil
+	proc.streamsCompleted.Add(1)
+	processStderr, processStderrWriter := io.Pipe()
+
+	go func() {
+		io.Copy(processStderrWriter, proc.stderr)
+		processStderrWriter.Close()
+		proc.streamsCompleted.Done()
+	}()
+
+	return processStderr
 }
 
 // Wait ...
 func (proc *LocalProcess) Wait() (int, error) {
+	proc.streamsCompleted.Wait()
 	err := proc.cmd.Wait()
 	return proc.cmd.ProcessState.ExitCode(), err
 }
@@ -140,42 +183,23 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
 	}
-	/*
-		stderr, err := cmd.StderrPipe()
-		if err != nil {
-			return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
-		}
-	*/
-	processStdout, processStdoutWriter := io.Pipe()
 
-	//	if err != nil {
-	//		return nil, fmt.Errorf("Run `%s`: Wait error: %w", command, err)
-	//	}
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
+	}
 
-	/*
-		processStdout, processStdoutWriter := io.Pipe()
-		processStderr, processStderrWriter := io.Pipe()
-		processCombinedOutput, processCombinedOutputWriter := io.Pipe()
-
-		outWriter := io.MultiWriter(processStdoutWriter, processCombinedOutputWriter)
-		errWriter := io.MultiWriter(processStderrWriter, processCombinedOutputWriter)
-	*/
 	process := &LocalProcess{
-		stdout: processStdout,
-		//stderr:         processStderr,
-		cmd: cmd,
-		//combinedOutput: processCombinedOutput,
+		stdout:           stdout,
+		stderr:           stderr,
+		cmd:              cmd,
+		streamsCompleted: &sync.WaitGroup{},
 	}
 
 	err = cmd.Start()
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: Start error: %w", command, err)
 	}
-
-	go func() {
-		io.Copy(processStdoutWriter, stdout)
-		processStdoutWriter.Close()
-	}()
 
 	return process, nil
 

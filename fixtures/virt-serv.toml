@@ -3,8 +3,8 @@
     type = 0 #HostTypeOS
   [hosts.drihm]
     type = 1 #HostTypeSSH
-    host = "130.251.104.213"
-    port = 22
+    host = "localhost"
+    port = 2222
     user = "andrea.parodi"
     key = "/var/fixtures/private-key"
   [hosts.withbackup]

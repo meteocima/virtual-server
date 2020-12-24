@@ -149,30 +149,114 @@ func CheckOpenWriter(conn Connection) func(t *testing.T) {
 
 func CheckRun(conn Connection) func(t *testing.T) {
 	return func(t *testing.T) {
-		fixtures := vpath.VirtualPath{Path: "/var/fixtures/", Host: conn.HostName()}
-		process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"})
+		fixtures := NewPath(conn, "/var/fixtures/")
+		sOut := "THIS IS A TEST COMMAND\n"
+		sErr := "THIS IS AN ERROR COMMAND\n"
+		t.Run("CombinedOutput", func(t *testing.T) {
+			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"})
 
-		assert.NotNil(t, process)
-		assert.NoError(t, err)
+			assert.NotNil(t, process)
+			assert.NoError(t, err)
 
-		outReader := process.Stdout()
-		assert.NotNil(t, outReader)
-		out, err := ioutil.ReadAll(outReader)
-		assert.NoError(t, err)
-		s := string(out)
-		fmt.Println(s)
-		assert.Equal(t, "THIS IS A TEST COMMAND\nTHIS IS AN ERROR COMMAND\n", s)
+			outReader := process.CombinedOutput()
+			assert.NotNil(t, outReader)
+			out, err := ioutil.ReadAll(outReader)
+			assert.NoError(t, err)
+			s := string(out)
+			fmt.Println(s)
+
+			assert.Contains(t, s, sOut)
+			assert.Contains(t, s, sErr)
+			assert.Equal(t, len(sOut)+len(sErr), len(s))
+			exitCode, err := process.Wait()
+			assert.Equal(t, 0, exitCode)
+		})
+
+		t.Run("Output", func(t *testing.T) {
+			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"})
+
+			assert.NotNil(t, process)
+			assert.NoError(t, err)
+
+			r := process.Stdout()
+			assert.NotNil(t, r)
+
+			out, err := ioutil.ReadAll(r)
+			assert.NoError(t, err)
+
+			s := string(out)
+			fmt.Println(s)
+
+			assert.Equal(t, sOut, s)
+			exitCode, err := process.Wait()
+			assert.Equal(t, 0, exitCode)
+		})
+
+		t.Run("Error", func(t *testing.T) {
+			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"})
+
+			assert.NotNil(t, process)
+			assert.NoError(t, err)
+
+			r := process.Stderr()
+			assert.NotNil(t, r)
+
+			out, err := ioutil.ReadAll(r)
+			assert.NoError(t, err)
+
+			s := string(out)
+			fmt.Println(s)
+
+			assert.Equal(t, sErr, s)
+			exitCode, err := process.Wait()
+			assert.Equal(t, 0, exitCode)
+		})
+
+		t.Run("Multiple streams", func(t *testing.T) {
+			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"})
+
+			assert.NotNil(t, process)
+			assert.NoError(t, err)
+
+			rErr := process.Stderr()
+			assert.NotNil(t, rErr)
+			rOut := process.Stdout()
+			assert.NotNil(t, rErr)
+
+			outContent, err := ioutil.ReadAll(rOut)
+			assert.NoError(t, err)
+
+			errContent, err := ioutil.ReadAll(rErr)
+			assert.NoError(t, err)
+
+			assert.Equal(t, sErr, string(errContent))
+			assert.Equal(t, sOut, string(outContent))
+
+			exitCode, err := process.Wait()
+			assert.Equal(t, 0, exitCode)
+
+		})
+
+		t.Run("A command that fails", func(t *testing.T) {
+			process, err := conn.Run(NewPath(conn, "false"), nil)
+			assert.NotNil(t, process)
+			assert.NoError(t, err)
+
+			exitCode, err := process.Wait()
+			assert.Equal(t, 1, exitCode)
+
+		})
 	}
 }
 
 func DoAllChecks(t *testing.T, conn Connection) {
-	//t.Run("CheckStat", CheckStat(conn))
-	//t.Run("CheckMkDir", CheckMkDir(conn))
-	//t.Run("CheckRmDir", CheckRmDir(conn))
-	//t.Run("CheckOpenReader", CheckOpenReader(conn))
-	//t.Run("CheckOpenWriter", CheckOpenWriter(conn))
-	//t.Run("CheckRmFile", CheckRmFile(conn))
-	//t.Run("CheckReadDir", CheckReadDir(conn))
+	t.Run("CheckStat", CheckStat(conn))
+	t.Run("CheckMkDir", CheckMkDir(conn))
+	t.Run("CheckRmDir", CheckRmDir(conn))
+	t.Run("CheckOpenReader", CheckOpenReader(conn))
+	t.Run("CheckOpenWriter", CheckOpenWriter(conn))
+	t.Run("CheckRmFile", CheckRmFile(conn))
+	t.Run("CheckReadDir", CheckReadDir(conn))
 	t.Run("CheckRun", CheckRun(conn))
 }
 
@@ -186,11 +270,10 @@ func TestLocalHost(t *testing.T) {
 
 }
 
-/*
 func TestSSH(t *testing.T) {
 	conn := SSHConnection{
-		Host:    "drihm",
-		Port:    22,
+		Host:    "localhost",
+		Port:    2222,
 		User:    "andrea.parodi",
 		KeyPath: "/var/fixtures/private-key",
 	}
@@ -201,4 +284,3 @@ func TestSSH(t *testing.T) {
 	assert.NoError(t, conn.Close())
 
 }
-*/
