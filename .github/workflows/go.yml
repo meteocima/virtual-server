@@ -27,8 +27,7 @@ jobs:
         sudo chmod 777 /var/fixtures
         ln -s fixtures/var-fixtures/* /var/fixtures 
         printf "ciao\n" > /var/fixtures/ciao.txt
-        ln -s $PWD/fixtures/keys/fake-host /var/fixtures/private-key
-        sudo bash -c 'printf "\n%s\n" "130.251.104.213 drihm" >> /etc/hosts'
+        cp fixtures/keys/fake-host /var/fixtures/private-key
 
     - name: Test
       run: go test -v ./...
