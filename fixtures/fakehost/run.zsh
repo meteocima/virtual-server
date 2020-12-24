@@ -12,5 +12,3 @@ docker run -it \
   -e USER_NAME=andrea.parodi \
   -p 2222:2222 \
 meteocima/fake-ssh-host
-  
-#ssh root@localhost -p 2222 -i ~/.ssh/andrea.parodi

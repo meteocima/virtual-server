@@ -28,6 +28,10 @@ jobs:
         cp -r fixtures/fakehost/var-fixtures/* /var/fixtures 
         printf "ciao\n" > /var/fixtures/ciao.txt
         cp fixtures/fakehost/keys/fake-host /var/fixtures/private-key
-
+    - name: Start fakehost container
+      run: |
+        docker docker build . -t meteocima/fake-ssh-host
     - name: Test
-      run: go test -v ./...
+      run: |
+        bash fixtures/fakehost/run.zsh&
+        go test -v ./...
