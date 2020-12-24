@@ -30,7 +30,7 @@ jobs:
         cp fixtures/fakehost/keys/fake-host /var/fixtures/private-key
     - name: Start fakehost container
       run: |
-        docker docker build . -t meteocima/fake-ssh-host
+        docker docker build --tag meteocima/fake-ssh-host .
     - name: Test
       run: |
         bash fixtures/fakehost/run.zsh&
