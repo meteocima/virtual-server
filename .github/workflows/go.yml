@@ -35,7 +35,7 @@ jobs:
         
     - name: Test
       run: |
-        docker run -d \
+        docker run \
           --name=openssh-server \
           -e PUID=1000 \
           -e PGID=1000 \
@@ -44,5 +44,6 @@ jobs:
           -e SUDO_ACCESS=true `#optional` \
           -e USER_NAME=andrea.parodi \
           -p 2222:2222 \
-          meteocima/fake-ssh-host
+          meteocima/fake-ssh-host&
         go test -v ./...
+        kill %1
