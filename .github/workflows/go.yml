@@ -25,7 +25,7 @@ jobs:
       run: |
         sudo mkdir /var/fixtures
         sudo chmod 777 /var/fixtures
-        ln -s fixtures/var-fixtures/* /var/fixtures 
+        cp -r fixtures/fakehost/var-fixtures/* /var/fixtures 
         printf "ciao\n" > /var/fixtures/ciao.txt
         cp fixtures/fakehost/keys/fake-host /var/fixtures/private-key
 
