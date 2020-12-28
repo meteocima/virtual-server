@@ -2,6 +2,7 @@ package vpath
 
 import (
 	"fmt"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -95,6 +96,23 @@ func FromS(pathRepr string) VirtualPath {
 func (vPath VirtualPath) String() string {
 	vPath.resolve()
 	return vPath.Host + ":" + vPath.Path
+}
+
+// StringRel returns a string representing the virtual path
+// Host and path parts are separated by a colon: host:path
+func (vPath VirtualPath) StringRel() string {
+	vPath.resolve()
+	wd, err := os.Getwd()
+	if err != nil {
+		return vPath.String()
+	}
+
+	rel, err := filepath.Rel(wd, vPath.Path)
+	if err != nil {
+		return vPath.String()
+	}
+
+	return vPath.Host + ":" + rel
 }
 
 // Join returns a new virtual path formed

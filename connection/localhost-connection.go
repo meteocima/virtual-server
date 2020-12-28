@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/exec"
 	"sort"
-	"strings"
 	"sync"
 
 	"github.com/meteocima/virtual-server/vpath"
@@ -173,9 +172,9 @@ func (proc *LocalProcess) Wait() (int, error) {
 
 // Run ...
 func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
-	fmt.Println(strings.Repeat("*", 20))
-	fmt.Println("EXECUTING", command.Path)
-	fmt.Println(strings.Repeat("*", 20))
+	//fmt.Println(strings.Repeat("*", 20))
+	//fmt.Println("EXECUTING", command.Path)
+	//fmt.Println(strings.Repeat("*", 20))
 
 	cmd := exec.Command(command.Path, args...)
 

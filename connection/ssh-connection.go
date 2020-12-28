@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 	"sort"
-	"strings"
 	"sync"
 	"time"
 
@@ -280,9 +279,9 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 	}
 	//defer sess.Close()
 
-	fmt.Println(strings.Repeat("*", 120))
-	fmt.Println("EXECUTING", command.Path)
-	fmt.Println(strings.Repeat("*", 120))
+	//fmt.Println(strings.Repeat("*", 120))
+	//fmt.Println("EXECUTING", command.Path)
+	//fmt.Println(strings.Repeat("*", 120))
 
 	stdout, err := sess.StdoutPipe()
 	if err != nil {
