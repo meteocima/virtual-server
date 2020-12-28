@@ -173,9 +173,9 @@ func (proc *LocalProcess) Wait() (int, error) {
 
 // Run ...
 func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
-	fmt.Println(strings.Repeat("*", 120))
+	fmt.Println(strings.Repeat("*", 20))
 	fmt.Println("EXECUTING", command.Path)
-	fmt.Println(strings.Repeat("*", 120))
+	fmt.Println(strings.Repeat("*", 20))
 
 	cmd := exec.Command(command.Path, args...)
 
@@ -194,6 +194,10 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 		stderr:           stderr,
 		cmd:              cmd,
 		streamsCompleted: &sync.WaitGroup{},
+	}
+
+	if len(options) > 0 {
+		cmd.Dir = options[0].Cwd.Path
 	}
 
 	err = cmd.Start()

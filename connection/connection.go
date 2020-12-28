@@ -37,14 +37,14 @@ type Process interface {
 type RunOptions struct {
 	// OutFromLog if sets, output is read from a file
 	// instead of from the process stdout
-	OutFromLog *vpath.VirtualPath
+	OutFromLog vpath.VirtualPath
 
 	// OutFromLog if sets, output is read from a file
 	// instead of from the process stderr
-	ErrFromLog *vpath.VirtualPath
+	ErrFromLog vpath.VirtualPath
 
 	// Cwd is set the work directory in which the process will be executed.
-	Cwd *vpath.VirtualPath
+	Cwd vpath.VirtualPath
 
 	// Stdin, if set, is an io.Reader that will be used
 	// as process Stdin.

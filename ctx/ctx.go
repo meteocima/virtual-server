@@ -2,6 +2,7 @@ package ctx
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -168,6 +169,20 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 	ctx.Err = conn.RmFile(file)
 }
 
+// LogF ...
+func (ctx *Context) LogF(msg string, args ...interface{}) {
+	fmt.Printf(msg+"\n", args...)
+}
+
+// Exec ...
+func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options ...connection.RunOptions) {
+	p := ctx.Run(command, args, options...)
+
+	io.Copy(os.Stdout, p.Stdout())
+
+	p.Wait()
+}
+
 // Run ...
 func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...connection.RunOptions) connection.Process {
 	if ctx.Err != nil {
@@ -175,7 +190,7 @@ func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...con
 	}
 
 	conn := connection.FindHost(command.Host)
-	proc, err := conn.Run(command, args)
+	proc, err := conn.Run(command, args, options...)
 	if err != nil {
 		ctx.Err = err
 		return nil

@@ -19,6 +19,14 @@ type VirtualPath struct {
 	Path string
 }
 
+// UnmarshalText ...
+func (vPath *VirtualPath) UnmarshalText(data []byte) error {
+
+	*vPath = FromS(string(data))
+
+	return nil
+}
+
 // Stdin is a placeholder VirtualPath which represents the `stdin` stream of a process.
 var Stdin = &VirtualPath{
 	Host: "any",
