@@ -1,3 +1,10 @@
+// Package vpath represents an instance of a virtual path.
+// It is formed by the name of a Host defined in configuration
+// and by the absolute path within that file system.
+// The two parts are separated by a colon when
+// representing the vpath.VirtualPath as a string: host:path
+// an empty string in Host field represent the localhost Host.
+// an empty string in Path field represent the current directory (.).
 package vpath
 
 import (

@@ -1,6 +1,11 @@
-# ctx
---
-    import "."
+{{ useLayout(".layout.njk") }}
+{{ title("CIMA wrfda-runner") }}
+{{ subtitle("ctx package") }}
+
+# wrfda-runner ⟶ {{ meta.subtitle }}
+
+
+
 
 
 ## Usage

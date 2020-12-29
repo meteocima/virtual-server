@@ -1,3 +1,7 @@
+
+{{ useLayout(".layout.njk") }}
+{{ title("CIMA wrfda-runner") }}
+{{ subtitle("config package") }}
 # virtual-server
 
 `virtual-server` contains a set of functions

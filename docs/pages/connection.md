@@ -1,6 +1,11 @@
-# connection
---
-    import "."
+{{ useLayout(".layout.njk") }}
+{{ title("CIMA wrfda-runner") }}
+{{ subtitle("connection package") }}
+
+# wrfda-runner ⟶ {{ meta.subtitle }}
+
+
+
 
 
 ## Usage

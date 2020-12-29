@@ -1,0 +1,77 @@
+{
+    "docs/pages/config.md": {
+        "title": "CIMA wrfda-runner",
+        "subtitle": "config package",
+        "published": "2020-12-29T19:07:05.387Z",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/config.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/config.html",
+        "url": "website/config.html"
+    },
+    "docs/pages/connection.md": {
+        "title": "CIMA wrfda-runner",
+        "subtitle": "connection package",
+        "published": "2020-12-29T19:07:05.408Z",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/connection.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/connection.html",
+        "url": "website/connection.html"
+    },
+    "docs/pages/ctx.md": {
+        "title": "CIMA wrfda-runner",
+        "subtitle": "ctx package",
+        "published": "2020-12-29T19:07:05.421Z",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/ctx.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/ctx.html",
+        "url": "website/ctx.html"
+    },
+    "docs/pages/vpath.md": {
+        "title": "CIMA wrfda-runner",
+        "subtitle": "vpath package",
+        "published": "2020-12-29T19:07:05.429Z",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/vpath.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/vpath.html",
+        "url": "website/vpath.html"
+    },
+    "docs/pages/index.md": {
+        "title": "CIMA wrfda-runner",
+        "subtitle": "config package",
+        "published": "2020-12-29T19:07:05.425Z",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/index.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/index.html",
+        "url": "website/index.html"
+    }
+}

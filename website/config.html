@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <title>CIMA wrfda-runner | config package API documentation</title>
+  <meta name="description" content="golang config package documentation">
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com/">
+  <link rel="dns-prefetch" href="https://api.github.com/">
+
+  <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,400;0,700;1,400&family=Fira+Code&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/newmoon.css">
+  <link rel="stylesheet" href="./css/markdowit-copy.css">
+
+  <script src="https://livejs.com/live.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+<body>
+  
+<div class="container post">  
+  <header>
+  
+    <h1>CIMA wrfda-runner</h1>
+    <div class="subtitle">
+      `config package` API documentation
+    </div>
+  </header>
+
+  <section class="post">
+    <h1>wrfda-runner ⟶ config package</h1>
+<p>Package config allows to load the global configuration from a <code>toml</code> file using
+the <code>config.Init</code> function.</p>
+<p>Once Init is called, the configuration file path is available as
+<code>config.Filename</code>, and the configured hosts as <code>config.Hosts</code></p>
+<h2>Example</h2>
+<p><strong>main.go</strong></p>
+<pre><code class="language-go">
+    <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+      err := config.Init(<span class="hljs-string">&quot;./config.toml&quot;</span>)
+      <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
+        log.Fatal(err.Error())
+      }
+    }
+
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825397-13333">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="
+    func main() {
+      err := config.Init(&quot;./config.toml&quot;)
+      if err != nil {
+        log.Fatal(err.Error())
+      }
+    }
+
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825397-13333" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p><strong>config.toml</strong></p>
+<pre><code>
+    [hosts]
+
+    [hosts.localhost]
+    type = 0 #HostTypeOS
+
+    [hosts.drihm]
+    type = 1 #HostTypeSSH
+    host = &quot;localhost&quot;
+    port = 2222
+    user = &quot;andrea.parodi&quot;
+    key = &quot;/var/fixtures/private-key&quot;
+
+    [hosts.withbackup]
+    type = 1 #HostTypeSSH
+    host = &quot;example.com&quot;
+    backup-hosts = [&quot;local&quot;, &quot;drihm&quot;]
+    port = 22
+    user = &quot;andrea.parodi&quot;
+    key = &quot;/var/fixtures/private-key&quot;
+
+</code><div class="m-mdic-copy-wrapper"><div class="u-mdic-copy-notify" id="j-notify-1609268825401-9457">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="
+    [hosts]
+
+    [hosts.localhost]
+    type = 0 #HostTypeOS
+
+    [hosts.drihm]
+    type = 1 #HostTypeSSH
+    host = &quot;localhost&quot;
+    port = 2222
+    user = &quot;andrea.parodi&quot;
+    key = &quot;/var/fixtures/private-key&quot;
+
+    [hosts.withbackup]
+    type = 1 #HostTypeSSH
+    host = &quot;example.com&quot;
+    backup-hosts = [&quot;local&quot;, &quot;drihm&quot;]
+    port = 22
+    user = &quot;andrea.parodi&quot;
+    key = &quot;/var/fixtures/private-key&quot;
+
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825401-9457" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<h2>Usage</h2>
+<pre><code class="language-go"><span class="hljs-keyword">var</span> Filename <span class="hljs-keyword">string</span>
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825401-21884">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Filename string
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825401-21884" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p>Filename contains the absolute path of the configuration file used to initialize
+the module</p>
+<pre><code class="language-go"><span class="hljs-keyword">var</span> Hosts <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]*Host
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825402-89237">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Hosts map[string]*Host
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825402-89237" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p>Hosts contains the configuration public instance</p>
+<h4>func  Init</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Init</span><span class="hljs-params">(configFile <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">error</span></span>
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825402-76180">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func Init(configFile string) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825402-76180" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p>Init loads the global, public configuration from the given file.</p>
+<h4>type Host</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Host <span class="hljs-keyword">struct</span> {
+	<span class="hljs-comment">// Contains the type of the host.</span>
+	<span class="hljs-comment">// It can be either `HostTypeOS` or</span>
+	<span class="hljs-comment">// `HostTypeSSH`</span>
+	Type HostType
+	<span class="hljs-comment">// Name of the host, written at</span>
+	<span class="hljs-comment">// runtime using the key of the</span>
+	<span class="hljs-comment">// host section in the config file.</span>
+	Name <span class="hljs-keyword">string</span>
+	<span class="hljs-comment">// Hostname of the server,</span>
+	<span class="hljs-comment">// used only for SSH type hosts.</span>
+	Host <span class="hljs-keyword">string</span>
+	<span class="hljs-comment">// A list of backup hostnames</span>
+	<span class="hljs-comment">// to use in case of failure</span>
+	<span class="hljs-comment">// connecting.</span>
+	BackupHosts []<span class="hljs-keyword">string</span> <span class="hljs-string">`toml:&quot;backup-hosts&quot;`</span>
+	<span class="hljs-comment">// Tcp port to use</span>
+	Port <span class="hljs-keyword">int</span>
+	<span class="hljs-comment">// Username to use to authenticate on</span>
+	<span class="hljs-comment">// the host</span>
+	User <span class="hljs-keyword">string</span>
+	<span class="hljs-comment">// Local path of the private SSH</span>
+	<span class="hljs-comment">// key file.</span>
+	Key <span class="hljs-keyword">string</span>
+}
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825402-99021">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Host struct {
+	// Contains the type of the host.
+	// It can be either `HostTypeOS` or
+	// `HostTypeSSH`
+	Type HostType
+	// Name of the host, written at
+	// runtime using the key of the
+	// host section in the config file.
+	Name string
+	// Hostname of the server,
+	// used only for SSH type hosts.
+	Host string
+	// A list of backup hostnames
+	// to use in case of failure
+	// connecting.
+	BackupHosts []string `toml:&quot;backup-hosts&quot;`
+	// Tcp port to use
+	Port int
+	// Username to use to authenticate on
+	// the host
+	User string
+	// Local path of the private SSH
+	// key file.
+	Key string
+}
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825402-99021" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p>Host is struct that contains information about a host on which to run processes</p>
+<h4>type HostType</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> HostType <span class="hljs-keyword">int</span>
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825403-43849">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type HostType int
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825403-43849" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p>HostType is an enum that represents all possible host type. An host type
+indicates how and where the processes is started. An HostType variable can have
+following values:</p>
+<pre><code class="language-go"><span class="hljs-keyword">const</span> (
+	<span class="hljs-comment">// HostTypeOS represents an host that</span>
+	<span class="hljs-comment">// run processes on the local machine</span>
+	HostTypeOS HostType = <span class="hljs-literal">iota</span>
+
+	<span class="hljs-comment">// HostTypeSSH represents an host that</span>
+	<span class="hljs-comment">// run processes on a remote machine</span>
+	<span class="hljs-comment">// through an SSH connection.</span>
+	HostTypeSSH
+)
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825403-5842">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="const (
+	// HostTypeOS represents an host that
+	// run processes on the local machine
+	HostTypeOS HostType = iota
+
+	// HostTypeSSH represents an host that
+	// run processes on a remote machine
+	// through an SSH connection.
+	HostTypeSSH
+)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825403-5842" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<h4>type Type</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Type <span class="hljs-keyword">struct</span> {
+	Hosts <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]*Host
+}
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825403-15422">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Type struct {
+	Hosts map[string]*Host
+}
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825403-15422" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+    const e = {
+        copy: (t = '', e = '') =>
+            new Promise((c, o) => {
+                const n = document.createElement('textarea'),
+                    d = e ? `\n\n${e}` : e;
+                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
+                try {
+                    const t = document.execCommand('copy');
+                    document.body.removeChild(n), t ? c() : o();
+                } catch (t) {
+                    document.body.removeChild(n), o();
+                }
+            }),
+        btnClick(t) {
+            const c = t && t.dataset ? t.dataset : {},
+                o = c.mdicNotifyId,
+                n = document.getElementById(o),
+                d = c.mdicNotifyDelay,
+                i = c.mdicCopyFailText;
+            e.copy(c.mdicContent, c.mdicAttachContent)
+                .then(() => {
+                    (n.style.display = 'block'),
+                        setTimeout(() => {
+                            n.style.display = 'none';
+                        }, d);
+                })
+                .catch(() => {
+                    alert(i);
+                });
+        },
+    };
+    e.btnClick(t);
+})(this);
+">copy</button></div></pre>
+<p>Type is a structure which contains the configuration data for the running
+command.</p>
+<p><em>Used internally and exported only to properly unmasharl the <code>toml</code>
+configuration</em></p>
+
+  </section>
+
+  <footer>
+  </footer>
+</div>
+
+</body>
+
+</html>
