@@ -6,9 +6,16 @@ GREEN="\e[92m"
 
 export all_tests_passed=0
 
+function rebuild_docs() {
+  for pkg in vpath ctx connection config; do
+    godocdown ./$pkg > docs/pages/$pkg.md
+  done
+}
+
 function test_all() {
   verbose=$1
   clear
+  
   if go test $verbose ./...; then
     printf $GREEN
     figlet 'All tests passed.'
