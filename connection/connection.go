@@ -65,9 +65,11 @@ type RunOptions struct {
 	Stderr *io.Writer
 }
 
+// CopyOptions ...
 type CopyOptions struct {
 }
 
+// MoveOptions ...
 type MoveOptions struct {
 }
 

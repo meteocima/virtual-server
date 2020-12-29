@@ -8,7 +8,9 @@ import (
 	"os/exec"
 	"sort"
 	"sync"
+	"time"
 
+	"github.com/hpcloud/tail"
 	"github.com/meteocima/virtual-server/vpath"
 )
 
@@ -170,6 +172,41 @@ func (proc *LocalProcess) Wait() (int, error) {
 	return proc.cmd.ProcessState.ExitCode(), err
 }
 
+var tailCfg = tail.Config{
+	Follow:    true,
+	MustExist: false,
+	ReOpen:    true,
+	Logger:    tail.DiscardingLogger,
+}
+
+const supposedMaxWriteDelay = time.Second
+
+func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPath) {
+
+	defer w.Close()
+
+	tailProc, err := tail.TailFile(outLogFile.Path, tailCfg)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "WARNING: copyLines error: (opening tail.TailFile `%s`\n): %s", outLogFile.Path, err.Error())
+		return
+	}
+	go func() {
+		proc.cmd.Wait()
+		time.Sleep(supposedMaxWriteDelay)
+		tailProc.StopAtEOF()
+
+	}()
+	for l := range tailProc.Lines {
+		w.Write([]byte(l.Text + "\n"))
+		if l.Err != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: copyLines error (looping lines from `%s`): %s\n", outLogFile.Path, l.Err.Error())
+			return
+		}
+
+	}
+
+}
+
 // Run ...
 func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
 	//fmt.Println(strings.Repeat("*", 20))
@@ -177,132 +214,61 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 	//fmt.Println(strings.Repeat("*", 20))
 
 	cmd := exec.Command(command.Path, args...)
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		return nil, fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
-	}
-
-	stderr, err := cmd.StderrPipe()
-	if err != nil {
-		return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
-	}
-
 	process := &LocalProcess{
-		stdout:           stdout,
-		stderr:           stderr,
 		cmd:              cmd,
 		streamsCompleted: &sync.WaitGroup{},
+	}
+
+	errLogFile := vpath.Stderr
+	outLogFile := vpath.Stdout
+	if len(options) > 0 {
+		if options[0].OutFromLog.Host != "" {
+			outLogFile = &options[0].OutFromLog
+		}
+		if options[0].ErrFromLog.Host != "" {
+			errLogFile = &options[0].ErrFromLog
+		}
+	}
+
+	if outLogFile != vpath.Stdout {
+
+		output, pwrite := io.Pipe()
+		process.stdout = output
+
+		go copyLines(process, pwrite, *outLogFile)
+	} else {
+
+		output, err := cmd.StdoutPipe()
+		if err != nil {
+			return nil, fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
+		}
+		process.stdout = output
+
+	}
+
+	if errLogFile != vpath.Stderr {
+
+		output, pwrite := io.Pipe()
+		process.stderr = output
+
+		go copyLines(process, pwrite, *errLogFile)
+	} else {
+		output, err := cmd.StderrPipe()
+		if err != nil {
+			return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
+		}
+		process.stderr = output
 	}
 
 	if len(options) > 0 {
 		cmd.Dir = options[0].Cwd.Path
 	}
 
-	err = cmd.Start()
+	err := cmd.Start()
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: Start error: %w", command, err)
 	}
 
 	return process, nil
 
-	/*Logf("\tRun %s %s\n", command, args)
-	cmd := exec.Command(command, args...)
-	cmd.Dir = ctx.Root.JoinP(cwd).String()
-
-	if logFile != "" {
-		err := os.Remove(ctx.Root.JoinP(logFile).String())
-		if err != nil && !os.IsNotExist(err) {
-			ctx.Err = fmt.Errorf("Run `%s`: Remove error: %w", command, err)
-			return
-		}
-	}
-
-	output, pwrite := io.Pipe()
-
-	var tailProc *tail.Tail
-	if logFile == "" {
-		stdout, err := cmd.StdoutPipe()
-		if err != nil {
-			ctx.Err = fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
-			return
-		}
-		stderr, err := cmd.StderrPipe()
-		if err != nil {
-			ctx.Err = fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
-			return
-		}
-
-		go func() {
-			done := sync.WaitGroup{}
-			done.Add(2)
-			go func() {
-				io.Copy(pwrite, stdout)
-				done.Done()
-			}()
-
-			go func() {
-				io.Copy(pwrite, stderr)
-				done.Done()
-			}()
-
-			done.Wait()
-
-			pwrite.Close()
-		}()
-
-	} else {
-
-		tail, err := tail.TailFile(ctx.Root.JoinP(logFile).String(), tail.Config{
-			Follow:    true,
-			MustExist: false,
-			ReOpen:    true,
-		})
-
-		if err != nil {
-			ctx.Err = fmt.Errorf("Run `%s`: TailFile error: %w", command, err)
-			return
-		}
-		tailProc = tail
-
-		go func() {
-			for l := range tail.Lines {
-				pwrite.Write([]byte(l.Text + "\n"))
-				if l.Err != nil {
-					ctx.Err = fmt.Errorf("Run `%s`: TailFile error (lines): %w", command, err)
-					break
-				}
-			}
-			pwrite.Close()
-		}()
-
-	}
-
-	err := cmd.Start()
-	if ctx.Err != nil {
-		ctx.Err = fmt.Errorf("Run `%s`: Start error: %w", command, err)
-		return
-	}
-
-	go func() {
-		stdoutBuff := bufio.NewReader(output)
-		line, _, err := stdoutBuff.ReadLine()
-		for line != nil {
-			line, _, err = stdoutBuff.ReadLine()
-			if err != nil && err != io.EOF {
-				ctx.Err = fmt.Errorf("Run `%s`: ReadLine error: %w", command, err)
-			}
-			fmt.Println(string(line))
-		}
-	}()
-	err = cmd.Wait()
-
-	if err != nil {
-		ctx.Err = fmt.Errorf("Run `%s`: Wait error: %w", command, err)
-	}
-
-	if tailProc != nil {
-		tailProc.Stop()
-	}
-	*/
 }

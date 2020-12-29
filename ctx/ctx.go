@@ -29,7 +29,7 @@ func (ctx *Context) ContextFailed(offendingFunc string, err error) {
 // SetRunning ...
 func (ctx *Context) SetRunning(msg string, args ...interface{}) func() {
 	ctx.RunningFunction = fmt.Sprintf(msg, args...)
-	fmt.Printf("%s\n", ctx.RunningFunction)
+	fmt.Printf("\t⟶\t%s\n", ctx.RunningFunction)
 	return func() {
 		ctx.RunningFunction = ""
 	}
@@ -231,7 +231,7 @@ func (ctx *Context) LogF(msg string, args ...interface{}) {
 func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options ...connection.RunOptions) {
 	p := ctx.Run(command, args, options...)
 	if p != nil {
-		io.Copy(os.Stdout, p.Stdout())
+		io.Copy(os.Stderr, p.CombinedOutput())
 		p.Wait()
 	}
 }
