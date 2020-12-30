@@ -173,6 +173,7 @@ func (proc *LocalProcess) Wait() (int, error) {
 }
 
 var tailCfg = tail.Config{
+	Poll:      true,
 	Follow:    true,
 	MustExist: false,
 	ReOpen:    true,
