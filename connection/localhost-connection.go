@@ -176,7 +176,7 @@ var tailCfg = tail.Config{
 	Follow:    true,
 	MustExist: false,
 	ReOpen:    true,
-	Logger:    tail.DiscardingLogger,
+	//Logger:    tail.DiscardingLogger,
 }
 
 const supposedMaxWriteDelay = time.Second
