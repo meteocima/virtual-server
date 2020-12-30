@@ -1,8 +1,8 @@
 {{ useLayout(".layout.njk") }}
-{{ title("CIMA wrfda-runner") }}
+{{ title("CIMA virtual-server") }}
 {{ subtitle("vpath package") }}
 
-# wrfda-runner ⟶ {{ meta.subtitle }}
+# [virtual-server](./index) ⟶ {{ meta.subtitle }}
 
 
 
@@ -103,9 +103,8 @@ directory path of the original instance.
 ```go
 func (vPath VirtualPath) Filename() string
 ```
-Filename returns the filename (with extension,
-
-    but without directory path) of the virtual path
+Filename returns the filename (with extension, but without directory path) of
+the virtual path
 
 #### func (VirtualPath) Join
 

@@ -153,7 +153,7 @@ func (vPath VirtualPath) Dir() VirtualPath {
 }
 
 // Filename returns the filename (with extension,
-//	but without directory path) of the virtual path
+// but without directory path) of the virtual path
 func (vPath VirtualPath) Filename() string {
 	return path.Base(vPath.Path)
 }

@@ -1,8 +1,8 @@
 {{ useLayout(".layout.njk") }}
-{{ title("CIMA wrfda-runner") }}
+{{ title("CIMA virtual-server") }}
 {{ subtitle("connection package") }}
 
-# wrfda-runner ⟶ {{ meta.subtitle }}
+# [virtual-server](./index) ⟶ {{ meta.subtitle }}
 
 
 

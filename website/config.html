@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-  <title>CIMA wrfda-runner | config package API documentation</title>
+  <title>CIMA virtual-server | config package API documentation</title>
   <meta name="description" content="golang config package documentation">
 
   <link rel="dns-prefetch" href="https://fonts.gstatic.com/">
@@ -27,14 +27,14 @@
 <div class="container post">  
   <header>
   
-    <h1>CIMA wrfda-runner</h1>
+    <h1>CIMA virtual-server</h1>
     <div class="subtitle">
       `config package` API documentation
     </div>
   </header>
 
   <section class="post">
-    <h1>wrfda-runner ⟶ config package</h1>
+    <h1><a href="./index">virtual-server</a> ⟶ config package</h1>
 <p>Package config allows to load the global configuration from a <code>toml</code> file using
 the <code>config.Init</code> function.</p>
 <p>Once Init is called, the configuration file path is available as
@@ -42,6 +42,8 @@ the <code>config.Init</code> function.</p>
 <h2>Example</h2>
 <p><strong>main.go</strong></p>
 <pre><code class="language-go">
+    <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;github.com/meteocima/virtual-server/config&quot;</span>
+
     <span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
       err := config.Init(<span class="hljs-string">&quot;./config.toml&quot;</span>)
       <span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> {
@@ -49,7 +51,9 @@ the <code>config.Init</code> function.</p>
       }
     }
 
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825397-13333">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477884-34907">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="
+    import &quot;github.com/meteocima/virtual-server/config&quot;
+
     func main() {
       err := config.Init(&quot;./config.toml&quot;)
       if err != nil {
@@ -57,7 +61,7 @@ the <code>config.Init</code> function.</p>
       }
     }
 
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825397-13333" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477884-34907" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -114,7 +118,7 @@ the <code>config.Init</code> function.</p>
     user = &quot;andrea.parodi&quot;
     key = &quot;/var/fixtures/private-key&quot;
 
-</code><div class="m-mdic-copy-wrapper"><div class="u-mdic-copy-notify" id="j-notify-1609268825401-9457">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="
+</code><div class="m-mdic-copy-wrapper"><div class="u-mdic-copy-notify" id="j-notify-1609269477888-19246">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="
     [hosts]
 
     [hosts.localhost]
@@ -135,7 +139,7 @@ the <code>config.Init</code> function.</p>
     user = &quot;andrea.parodi&quot;
     key = &quot;/var/fixtures/private-key&quot;
 
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825401-9457" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477888-19246" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -172,8 +176,8 @@ the <code>config.Init</code> function.</p>
 ">copy</button></div></pre>
 <h2>Usage</h2>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Filename <span class="hljs-keyword">string</span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825401-21884">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Filename string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825401-21884" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477888-33212">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Filename string
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477888-33212" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -211,8 +215,8 @@ the <code>config.Init</code> function.</p>
 <p>Filename contains the absolute path of the configuration file used to initialize
 the module</p>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Hosts <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]*Host
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825402-89237">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Hosts map[string]*Host
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825402-89237" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477889-36230">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Hosts map[string]*Host
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477889-36230" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -250,8 +254,8 @@ the module</p>
 <p>Hosts contains the configuration public instance</p>
 <h4>func  Init</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Init</span><span class="hljs-params">(configFile <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825402-76180">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func Init(configFile string) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825402-76180" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477889-53109">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func Init(configFile string) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477889-53109" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -313,7 +317,7 @@ the module</p>
 	<span class="hljs-comment">// key file.</span>
 	Key <span class="hljs-keyword">string</span>
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825402-99021">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Host struct {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477889-21469">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Host struct {
 	// Contains the type of the host.
 	// It can be either `HostTypeOS` or
 	// `HostTypeSSH`
@@ -338,7 +342,7 @@ the module</p>
 	// key file.
 	Key string
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825402-99021" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477889-21469" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -376,8 +380,8 @@ the module</p>
 <p>Host is struct that contains information about a host on which to run processes</p>
 <h4>type HostType</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> HostType <span class="hljs-keyword">int</span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825403-43849">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type HostType int
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825403-43849" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477890-41090">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type HostType int
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477890-41090" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -425,7 +429,7 @@ following values:</p>
 	<span class="hljs-comment">// through an SSH connection.</span>
 	HostTypeSSH
 )
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825403-5842">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="const (
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477890-58296">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="const (
 	// HostTypeOS represents an host that
 	// run processes on the local machine
 	HostTypeOS HostType = iota
@@ -435,7 +439,7 @@ following values:</p>
 	// through an SSH connection.
 	HostTypeSSH
 )
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825403-5842" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477890-58296" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -474,10 +478,10 @@ following values:</p>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Type <span class="hljs-keyword">struct</span> {
 	Hosts <span class="hljs-keyword">map</span>[<span class="hljs-keyword">string</span>]*Host
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609268825403-15422">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Type struct {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609269477890-22527">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Type struct {
 	Hosts map[string]*Host
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609268825403-15422" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609269477890-22527" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {

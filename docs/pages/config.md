@@ -1,8 +1,8 @@
 {{ useLayout(".layout.njk") }}
-{{ title("CIMA wrfda-runner") }}
+{{ title("CIMA virtual-server") }}
 {{ subtitle("config package") }}
 
-# wrfda-runner ⟶ {{ meta.subtitle }}
+# [virtual-server](./index) ⟶ {{ meta.subtitle }}
 
 
 
@@ -17,6 +17,8 @@ Once Init is called, the configuration file path is available as
 __main.go__
 
 ```go
+
+    import "github.com/meteocima/virtual-server/config"
 
     func main() {
       err := config.Init("./config.toml")

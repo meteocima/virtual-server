@@ -11,6 +11,8 @@
 // __main.go__
 //
 // ```go
+//   import "github.com/meteocima/virtual-server/config"
+//
 //   func main() {
 //     err := config.Init("./config.toml")
 //     if err != nil {

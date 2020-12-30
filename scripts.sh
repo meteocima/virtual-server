@@ -9,7 +9,7 @@ export all_tests_passed=0
 function rebuild_docs() {
   echo > docs/pages/index.md
   echo '{{ useLayout(".layout.njk") }}' >> docs/pages/index.md
-  echo '{{ title("CIMA wrfda-runner") }}' >> docs/pages/index.md
+  echo '{{ title("CIMA virtual-server") }}' >> docs/pages/index.md
   echo '{{ subtitle("config package") }}' >> docs/pages/index.md
   cat readme.md >> docs/pages/index.md
   for pkg in vpath ctx connection config; do
