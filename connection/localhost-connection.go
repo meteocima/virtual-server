@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"sort"
 	"sync"
-	"time"
 
 	"github.com/hpcloud/tail"
 	"github.com/meteocima/virtual-server/vpath"
@@ -180,8 +179,6 @@ var tailCfg = tail.Config{
 	//Logger:    tail.DiscardingLogger,
 }
 
-const supposedMaxWriteDelay = time.Second
-
 func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPath) {
 
 	defer w.Close()
@@ -191,12 +188,13 @@ func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPat
 		fmt.Fprintf(os.Stderr, "WARNING: copyLines error: (opening tail.TailFile `%s`\n): %s", outLogFile.Path, err.Error())
 		return
 	}
-	/*go func() {
-		proc.cmd.Wait()
-		time.Sleep(supposedMaxWriteDelay)
-		tailProc.StopAtEOF()
 
-	}()*/
+	go func() {
+		proc.cmd.Wait()
+		tailProc.Follow = false
+
+	}()
+
 	for l := range tailProc.Lines {
 		w.Write([]byte(l.Text + "\n"))
 		if l.Err != nil {
