@@ -191,12 +191,12 @@ func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPat
 		fmt.Fprintf(os.Stderr, "WARNING: copyLines error: (opening tail.TailFile `%s`\n): %s", outLogFile.Path, err.Error())
 		return
 	}
-	go func() {
+	/*go func() {
 		proc.cmd.Wait()
 		time.Sleep(supposedMaxWriteDelay)
 		tailProc.StopAtEOF()
 
-	}()
+	}()*/
 	for l := range tailProc.Lines {
 		w.Write([]byte(l.Text + "\n"))
 		if l.Err != nil {
