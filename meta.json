@@ -2,7 +2,7 @@
     "docs/pages/config.md": {
         "title": "CIMA virtual-server",
         "subtitle": "config package",
-        "published": "2020-12-29T19:17:57.872Z",
+        "published": "2020-12-31T12:42:09.949Z",
         "draft": true,
         "tags": [
             "untagged"
@@ -17,7 +17,7 @@
     "docs/pages/connection.md": {
         "title": "CIMA virtual-server",
         "subtitle": "connection package",
-        "published": "2020-12-29T19:17:57.895Z",
+        "published": "2020-12-31T12:42:09.971Z",
         "draft": true,
         "tags": [
             "untagged"
@@ -32,7 +32,7 @@
     "docs/pages/ctx.md": {
         "title": "CIMA virtual-server",
         "subtitle": "ctx package",
-        "published": "2020-12-29T19:17:57.909Z",
+        "published": "2020-12-31T12:42:09.985Z",
         "draft": true,
         "tags": [
             "untagged"
@@ -47,7 +47,7 @@
     "docs/pages/vpath.md": {
         "title": "CIMA virtual-server",
         "subtitle": "vpath package",
-        "published": "2020-12-29T19:17:57.916Z",
+        "published": "2020-12-31T12:42:09.992Z",
         "draft": true,
         "tags": [
             "untagged"
@@ -60,9 +60,9 @@
         "url": "website/vpath.html"
     },
     "docs/pages/index.md": {
-        "title": "CIMA wrfda-runner",
+        "title": "CIMA virtual-server",
         "subtitle": "config package",
-        "published": "2020-12-29T19:17:57.913Z",
+        "published": "2020-12-31T12:42:09.989Z",
         "draft": true,
         "tags": [
             "untagged"

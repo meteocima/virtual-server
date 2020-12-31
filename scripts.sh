@@ -43,7 +43,7 @@ function test_all() {
 
 function on_sourcechanges_retest() {
   test_all $1
-  rebuild_docs
+  #rebuild_docs
   while true; do
     event=`inotifywait -qr -e modify -e move -e create -e delete -e delete_self .`
     echo EVENT $event

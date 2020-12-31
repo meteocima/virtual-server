@@ -1,6 +1,7 @@
 package connection
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -8,8 +9,9 @@ import (
 	"os/exec"
 	"sort"
 	"sync"
+	"time"
 
-	"github.com/hpcloud/tail"
+	"github.com/meteocima/virtual-server/tailor"
 	"github.com/meteocima/virtual-server/vpath"
 )
 
@@ -171,38 +173,42 @@ func (proc *LocalProcess) Wait() (int, error) {
 	return proc.cmd.ProcessState.ExitCode(), err
 }
 
-var tailCfg = tail.Config{
+/*
+var tailCfg = tailor.Config{
 	Poll:      true,
 	Follow:    true,
 	MustExist: false,
 	ReOpen:    true,
-	//Logger:    tail.DiscardingLogger,
+	//Logger:    tailor.DiscardingLogger,
 }
-
+*/
 func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPath) {
+	var logFile *os.File
+	var err error = errors.New("empty")
+	for err != nil {
+		logFile, err = os.Open(outLogFile.Path)
+		if os.IsNotExist(err) {
+			time.Sleep(time.Second)
+			continue
+		}
 
-	defer w.Close()
-
-	tailProc, err := tail.TailFile(outLogFile.Path, tailCfg)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "WARNING: copyLines error: (opening tail.TailFile `%s`\n): %s", outLogFile.Path, err.Error())
-		return
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: copyLines error: (os.Open `%s`\n): %s", outLogFile.Path, err.Error())
+			return
+		}
 	}
 
 	go func() {
+		tailProc := tailor.New(logFile, w, 1024)
+		errs := tailProc.Start()
 		proc.cmd.Wait()
-		tailProc.Follow = false
-
-	}()
-
-	for l := range tailProc.Lines {
-		w.Write([]byte(l.Text + "\n"))
-		if l.Err != nil {
-			fmt.Fprintf(os.Stderr, "WARNING: copyLines error (looping lines from `%s`): %s\n", outLogFile.Path, l.Err.Error())
-			return
+		tailProc.Stop()
+		w.Close()
+		err := <-errs
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "WARNING: copyLines error (reading lines from `%s`): %s\n", outLogFile.Path, err.Error())
 		}
-
-	}
+	}()
 
 }
 

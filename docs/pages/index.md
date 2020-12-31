@@ -1,6 +1,6 @@
 
 {{ useLayout(".layout.njk") }}
-{{ title("CIMA wrfda-runner") }}
+{{ title("CIMA virtual-server") }}
 {{ subtitle("config package") }}
 # virtual-server
 
