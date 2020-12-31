@@ -110,7 +110,7 @@ func (s *Tailor) Start() chan error {
 		case <-s.shallStop:
 			return
 		default:
-			time.Sleep(1 * time.Second)
+			time.Sleep(200 * time.Millisecond)
 			goto InitialPositioning
 		}
 	}()

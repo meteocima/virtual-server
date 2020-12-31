@@ -188,7 +188,7 @@ func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPat
 	for err != nil {
 		logFile, err = os.Open(outLogFile.Path)
 		if os.IsNotExist(err) {
-			time.Sleep(time.Second)
+			time.Sleep(100 * time.Millisecond)
 			continue
 		}
 
