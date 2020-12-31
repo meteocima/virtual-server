@@ -38,8 +38,8 @@
 <h2>Usage</h2>
 <h4>func  NewPath</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewPath</span><span class="hljs-params">(cn Connection, path <span class="hljs-keyword">string</span>, pathArgs ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">vpath</span>.<span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549044-79998">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549044-79998" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376332-74621">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376332-74621" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -89,7 +89,7 @@
 	Link(source, target vpath.VirtualPath) error
 	Run(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...RunOptions) (Process, error)
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549044-25280">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Connection interface {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-95314">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Connection interface {
 	HostName() string
 	Open() error
 	Close() error
@@ -103,7 +103,7 @@
 	Link(source, target vpath.VirtualPath) error
 	Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549044-25280" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-95314" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -141,8 +141,8 @@
 <p>Connection ...</p>
 <h4>func  FindHost</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">FindHost</span><span class="hljs-params">(name <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">Connection</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549044-44710">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func FindHost(name string) Connection
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549044-44710" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-73503">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func FindHost(name string) Connection
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-73503" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -178,51 +178,10 @@
 })(this);
 ">copy</button></div></pre>
 <p>FindHost ...</p>
-<h4>type CopyOptions</h4>
-<pre><code class="language-go"><span class="hljs-keyword">type</span> CopyOptions <span class="hljs-keyword">struct</span> {
-}
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-32599">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type CopyOptions struct {
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-32599" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
-<p>CopyOptions ...</p>
 <h4>type LocalConnection</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> LocalConnection <span class="hljs-keyword">struct</span>{}
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-10681">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type LocalConnection struct{}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-10681" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-31613">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type LocalConnection struct{}
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-31613" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -260,8 +219,8 @@
 <p>LocalConnection ...</p>
 <h4>func (*LocalConnection) Close</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-69416">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Close() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-69416" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-93377">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Close() error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-93377" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -299,8 +258,8 @@
 <p>Close ...</p>
 <h4>func (*LocalConnection) HostName</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">HostName</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-79102">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) HostName() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-79102" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-60570">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) HostName() string
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-60570" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -338,8 +297,8 @@
 <p>HostName ...</p>
 <h4>func (*LocalConnection) Link</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Link</span><span class="hljs-params">(source, target vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-47947">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Link(source, target vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-47947" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-56683">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Link(source, target vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-56683" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -377,8 +336,8 @@
 <p>Link ...</p>
 <h4>func (*LocalConnection) MkDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">MkDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-5532">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) MkDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-5532" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-95384">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) MkDir(dir vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-95384" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -416,8 +375,8 @@
 <p>MkDir ...</p>
 <h4>func (*LocalConnection) Open</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Open</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-43881">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Open() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-43881" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-32263">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Open() error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-32263" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -455,8 +414,8 @@
 <p>Open ...</p>
 <h4>func (*LocalConnection) OpenReader</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">OpenReader</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.ReadCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-36424">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-36424" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376333-61009">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376333-61009" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -494,8 +453,8 @@
 <p>OpenReader ...</p>
 <h4>func (*LocalConnection) OpenWriter</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">OpenWriter</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.WriteCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-69848">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-69848" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-9209">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-9209" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -533,8 +492,8 @@
 <p>OpenWriter ...</p>
 <h4>func (*LocalConnection) ReadDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">ReadDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-params">(vpath.VirtualPathList, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-57494">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-57494" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-31973">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-31973" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -572,8 +531,8 @@
 <p>ReadDir ...</p>
 <h4>func (*LocalConnection) RmDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">RmDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549045-98946">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) RmDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549045-98946" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-19451">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) RmDir(dir vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-19451" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -611,8 +570,8 @@
 <p>RmDir ...</p>
 <h4>func (*LocalConnection) RmFile</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">RmFile</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-19922">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-19922" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-34138">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-34138" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -650,8 +609,8 @@
 <p>RmFile ...</p>
 <h4>func (*LocalConnection) Run</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Run</span><span class="hljs-params">(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...RunOptions)</span> <span class="hljs-params">(Process, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-92519">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-92519" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-23045">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-23045" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -689,8 +648,8 @@
 <p>Run ...</p>
 <h4>func (*LocalConnection) Stat</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Stat</span><span class="hljs-params">(path vpath.VirtualPath)</span> <span class="hljs-params">(os.FileInfo, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-79193">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-79193" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-83051">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-83051" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -729,9 +688,9 @@
 <h4>type LocalProcess</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> LocalProcess <span class="hljs-keyword">struct</span> {
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-19411">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type LocalProcess struct {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-44976">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type LocalProcess struct {
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-19411" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-44976" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -769,8 +728,8 @@
 <p>LocalProcess ...</p>
 <h4>func (*LocalProcess) CombinedOutput</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">CombinedOutput</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-93222">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) CombinedOutput() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-93222" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-55514">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) CombinedOutput() io.Reader
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-55514" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -808,8 +767,8 @@
 <p>CombinedOutput ...</p>
 <h4>func (*LocalProcess) Kill</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Kill</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-93566">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Kill() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-93566" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-83103">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Kill() error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-83103" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -847,8 +806,8 @@
 <p>Kill ...</p>
 <h4>func (*LocalProcess) Stderr</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Stderr</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-25390">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stderr() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-25390" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376334-26681">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stderr() io.Reader
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376334-26681" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -886,8 +845,8 @@
 <p>Stderr ...</p>
 <h4>func (*LocalProcess) Stdin</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Stdin</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Writer</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-79009">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stdin() io.Writer
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-79009" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-91432">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stdin() io.Writer
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-91432" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -925,8 +884,8 @@
 <p>Stdin ...</p>
 <h4>func (*LocalProcess) Stdout</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Stdout</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-25906">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stdout() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-25906" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-49734">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stdout() io.Reader
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-49734" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -964,8 +923,8 @@
 <p>Stdout ...</p>
 <h4>func (*LocalProcess) Wait</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Wait</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549046-26494">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Wait() (int, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549046-26494" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-69048">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Wait() (int, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-69048" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1001,47 +960,6 @@
 })(this);
 ">copy</button></div></pre>
 <p>Wait ...</p>
-<h4>type MoveOptions</h4>
-<pre><code class="language-go"><span class="hljs-keyword">type</span> MoveOptions <span class="hljs-keyword">struct</span> {
-}
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-23837">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type MoveOptions struct {
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-23837" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
-<p>MoveOptions ...</p>
 <h4>type Process</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Process <span class="hljs-keyword">interface</span> {
 	Kill() error
@@ -1054,7 +972,7 @@
 	Stdout() io.Reader
 
 	<span class="hljs-comment">// Stderr, if set, is an io.Reader that will be used</span>
-	<span class="hljs-comment">// to read data from process stdout</span>
+	<span class="hljs-comment">// to read data from process stderr</span>
 	Stderr() io.Reader
 
 	<span class="hljs-comment">// CombinedOutput returns an io.Reader that reads</span>
@@ -1065,7 +983,7 @@
 	<span class="hljs-comment">// and return the exit code.</span>
 	Wait() (<span class="hljs-keyword">int</span>, error)
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-92958">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Process interface {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-27130">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Process interface {
 	Kill() error
 	// Stdin, is an io.Writer that will be used
 	// to send data to process stdin
@@ -1076,7 +994,7 @@
 	Stdout() io.Reader
 
 	// Stderr, if set, is an io.Reader that will be used
-	// to read data from process stdout
+	// to read data from process stderr
 	Stderr() io.Reader
 
 	// CombinedOutput returns an io.Reader that reads
@@ -1087,7 +1005,7 @@
 	// and return the exit code.
 	Wait() (int, error)
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-92958" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-27130" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1135,26 +1053,8 @@
 
 	<span class="hljs-comment">// Cwd is set the work directory in which the process will be executed.</span>
 	Cwd vpath.VirtualPath
-
-	<span class="hljs-comment">// Stdin, if set, is an io.Reader that will be used</span>
-	<span class="hljs-comment">// as process Stdin.</span>
-	<span class="hljs-comment">// If nil, a pipe to `Process.Stdin` member is created</span>
-	<span class="hljs-comment">// and used.</span>
-	Stdin *io.Reader
-
-	<span class="hljs-comment">// Stdout, if set, is an io.Writer that will be used</span>
-	<span class="hljs-comment">// as process Stdout</span>
-	<span class="hljs-comment">// If nil, a pipe to `Process.Stdout` member is created</span>
-	<span class="hljs-comment">// and used.</span>
-	Stdout *io.Writer
-
-	<span class="hljs-comment">// Stderr, if set, is an io.Writer that will be used</span>
-	<span class="hljs-comment">// as process Stderr.</span>
-	<span class="hljs-comment">// If nil, a pipe to `Process.Stdout` member is created</span>
-	<span class="hljs-comment">// and used.</span>
-	Stderr *io.Writer
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-84457">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type RunOptions struct {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-85576">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type RunOptions struct {
 	// OutFromLog if sets, output is read from a file
 	// instead of from the process stdout
 	OutFromLog vpath.VirtualPath
@@ -1165,26 +1065,8 @@
 
 	// Cwd is set the work directory in which the process will be executed.
 	Cwd vpath.VirtualPath
-
-	// Stdin, if set, is an io.Reader that will be used
-	// as process Stdin.
-	// If nil, a pipe to `Process.Stdin` member is created
-	// and used.
-	Stdin *io.Reader
-
-	// Stdout, if set, is an io.Writer that will be used
-	// as process Stdout
-	// If nil, a pipe to `Process.Stdout` member is created
-	// and used.
-	Stdout *io.Writer
-
-	// Stderr, if set, is an io.Writer that will be used
-	// as process Stderr.
-	// If nil, a pipe to `Process.Stdout` member is created
-	// and used.
-	Stderr *io.Writer
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-84457" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-85576" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1230,7 +1112,7 @@
 	User    <span class="hljs-keyword">string</span>
 	KeyPath <span class="hljs-keyword">string</span>
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-72527">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type SSHConnection struct {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-53176">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type SSHConnection struct {
 	BackupHosts []string
 	Name        string
 
@@ -1239,7 +1121,7 @@
 	User    string
 	KeyPath string
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-72527" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-53176" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1277,8 +1159,8 @@
 <p>SSHConnection ...</p>
 <h4>func (*SSHConnection) Close</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-67810">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Close() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-67810" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-84199">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Close() error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-84199" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1316,8 +1198,8 @@
 <p>Close ...</p>
 <h4>func (*SSHConnection) HostName</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">HostName</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-20146">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) HostName() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-20146" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376335-55585">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) HostName() string
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376335-55585" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1355,8 +1237,8 @@
 <p>HostName ...</p>
 <h4>func (*SSHConnection) Link</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Link</span><span class="hljs-params">(source, target vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549047-17407">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549047-17407" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-39725">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-39725" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1394,8 +1276,8 @@
 <p>Link ...</p>
 <h4>func (*SSHConnection) MkDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">MkDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-38058">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) MkDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-38058" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-26884">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) MkDir(dir vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-26884" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1433,8 +1315,8 @@
 <p>MkDir ...</p>
 <h4>func (*SSHConnection) Open</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Open</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-39963">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Open() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-39963" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-1624">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Open() error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-1624" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1472,8 +1354,8 @@
 <p>Open ...</p>
 <h4>func (*SSHConnection) OpenReader</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">OpenReader</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.ReadCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-63755">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-63755" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-76049">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-76049" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1511,8 +1393,8 @@
 <p>OpenReader ...</p>
 <h4>func (*SSHConnection) OpenWriter</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">OpenWriter</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.WriteCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-38142">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-38142" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-59661">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-59661" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1550,8 +1432,8 @@
 <p>OpenWriter ...</p>
 <h4>func (*SSHConnection) ReadDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">ReadDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-params">(vpath.VirtualPathList, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-3640">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-3640" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-95047">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-95047" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1589,8 +1471,8 @@
 <p>ReadDir ...</p>
 <h4>func (*SSHConnection) RmDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">RmDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-75116">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) RmDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-75116" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-35168">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) RmDir(dir vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-35168" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1628,8 +1510,8 @@
 <p>RmDir ...</p>
 <h4>func (*SSHConnection) RmFile</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">RmFile</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-19755">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) RmFile(file vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-19755" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-25861">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) RmFile(file vpath.VirtualPath) error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-25861" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1667,8 +1549,8 @@
 <p>RmFile ...</p>
 <h4>func (*SSHConnection) Run</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Run</span><span class="hljs-params">(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...RunOptions)</span> <span class="hljs-params">(Process, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-67499">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-67499" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-44917">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-44917" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1706,8 +1588,8 @@
 <p>Run ...</p>
 <h4>func (*SSHConnection) Stat</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Stat</span><span class="hljs-params">(path vpath.VirtualPath)</span> <span class="hljs-params">(os.FileInfo, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-67629">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-67629" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-23029">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-23029" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1746,9 +1628,9 @@
 <h4>type SSHProcess</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> SSHProcess <span class="hljs-keyword">struct</span> {
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-4900">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type SSHProcess struct {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-24969">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type SSHProcess struct {
 }
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-4900" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-24969" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1786,8 +1668,8 @@
 <p>SSHProcess ...</p>
 <h4>func (*SSHProcess) CombinedOutput</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">CombinedOutput</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-5070">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) CombinedOutput() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-5070" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376336-4192">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) CombinedOutput() io.Reader
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376336-4192" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1825,8 +1707,8 @@
 <p>CombinedOutput ...</p>
 <h4>func (*SSHProcess) Kill</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Kill</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549048-53035">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Kill() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549048-53035" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376337-83307">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Kill() error
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376337-83307" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1864,8 +1746,8 @@
 <p>Kill ...</p>
 <h4>func (*SSHProcess) Stderr</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Stderr</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549049-96857">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stderr() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549049-96857" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376337-28454">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stderr() io.Reader
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376337-28454" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1903,8 +1785,8 @@
 <p>Stderr ...</p>
 <h4>func (*SSHProcess) Stdin</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Stdin</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Writer</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549049-72689">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stdin() io.Writer
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549049-72689" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376337-38469">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stdin() io.Writer
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376337-38469" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1942,8 +1824,8 @@
 <p>Stdin ...</p>
 <h4>func (*SSHProcess) Stdout</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Stdout</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549049-24665">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stdout() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549049-24665" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376337-58701">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stdout() io.Reader
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376337-58701" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {
@@ -1981,8 +1863,8 @@
 <p>Stdout ...</p>
 <h4>func (*SSHProcess) Wait</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Wait</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609418549049-37362">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Wait() (int, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609418549049-37362" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
+</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433376337-42834">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Wait() (int, error)
+" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433376337-42834" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
     const e = {
         copy: (t = '', e = '') =>
             new Promise((c, o) => {

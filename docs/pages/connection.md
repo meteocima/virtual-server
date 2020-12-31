@@ -44,15 +44,6 @@ func FindHost(name string) Connection
 ```
 FindHost ...
 
-#### type CopyOptions
-
-```go
-type CopyOptions struct {
-}
-```
-
-CopyOptions ...
-
 #### type LocalConnection
 
 ```go
@@ -196,15 +187,6 @@ func (proc *LocalProcess) Wait() (int, error)
 ```
 Wait ...
 
-#### type MoveOptions
-
-```go
-type MoveOptions struct {
-}
-```
-
-MoveOptions ...
-
 #### type Process
 
 ```go
@@ -219,7 +201,7 @@ type Process interface {
 	Stdout() io.Reader
 
 	// Stderr, if set, is an io.Reader that will be used
-	// to read data from process stdout
+	// to read data from process stderr
 	Stderr() io.Reader
 
 	// CombinedOutput returns an io.Reader that reads
@@ -248,24 +230,6 @@ type RunOptions struct {
 
 	// Cwd is set the work directory in which the process will be executed.
 	Cwd vpath.VirtualPath
-
-	// Stdin, if set, is an io.Reader that will be used
-	// as process Stdin.
-	// If nil, a pipe to `Process.Stdin` member is created
-	// and used.
-	Stdin *io.Reader
-
-	// Stdout, if set, is an io.Writer that will be used
-	// as process Stdout
-	// If nil, a pipe to `Process.Stdout` member is created
-	// and used.
-	Stdout *io.Writer
-
-	// Stderr, if set, is an io.Writer that will be used
-	// as process Stderr.
-	// If nil, a pipe to `Process.Stdout` member is created
-	// and used.
-	Stderr *io.Writer
 }
 ```
 
