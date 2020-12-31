@@ -94,6 +94,7 @@ type Connection interface {
 
 var connections = map[string]Connection{}
 
+// NewPath ...
 func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath {
 	return vpath.New(cn.HostName(), path, pathArgs...)
 }

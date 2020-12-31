@@ -15,6 +15,7 @@
 ```go
 func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath
 ```
+NewPath ...
 
 #### type Connection
 
