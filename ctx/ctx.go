@@ -19,6 +19,8 @@ type Context struct {
 	Err             error
 	RunningFunction string
 	RunningTask     string
+	Log             io.Writer
+	DetailLog       io.Writer
 }
 
 // ContextFailed ...
@@ -29,9 +31,18 @@ func (ctx *Context) ContextFailed(offendingFunc string, err error) {
 // SetRunning ...
 func (ctx *Context) SetRunning(msg string, args ...interface{}) func() {
 	ctx.RunningFunction = fmt.Sprintf(msg, args...)
-	fmt.Printf("\t⟶\t%s\n", ctx.RunningFunction)
+	fmt.Fprintf(ctx.Log, "\t⟶\t%s\n", ctx.RunningFunction)
 	return func() {
 		ctx.RunningFunction = ""
+	}
+}
+
+// SetTask ...
+func (ctx *Context) SetTask(msg string, args ...interface{}) func() {
+	ctx.RunningTask = fmt.Sprintf(msg, args...)
+	fmt.Fprintf(ctx.Log, "# %s\n", ctx.RunningTask)
+	return func() {
+		ctx.RunningTask = ""
 	}
 }
 
@@ -224,14 +235,14 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 
 // LogF ...
 func (ctx *Context) LogF(msg string, args ...interface{}) {
-	fmt.Printf(msg+"\n", args...)
+	fmt.Fprintf(ctx.DetailLog, msg+"\n", args...)
 }
 
 // Exec ...
 func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options ...connection.RunOptions) {
 	p := ctx.Run(command, args, options...)
 	if p != nil {
-		io.Copy(os.Stderr, p.CombinedOutput())
+		io.Copy(ctx.DetailLog, p.CombinedOutput())
 		p.Wait()
 	}
 }
