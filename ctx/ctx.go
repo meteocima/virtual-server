@@ -40,8 +40,11 @@ func (ctx *Context) SetRunning(msg string, args ...interface{}) func() {
 // SetTask ...
 func (ctx *Context) SetTask(msg string, args ...interface{}) func() {
 	ctx.RunningTask = fmt.Sprintf(msg, args...)
-	fmt.Fprintf(ctx.Log, "# %s\n", ctx.RunningTask)
+	fmt.Fprintf(ctx.Log, "\n\n# START: %s\n", ctx.RunningTask)
 	return func() {
+		if ctx.Err == nil {
+			fmt.Fprintf(ctx.Log, "# COMPLETED SUCCESSUFULLY: %s\n", ctx.RunningTask)
+		}
 		ctx.RunningTask = ""
 	}
 }
