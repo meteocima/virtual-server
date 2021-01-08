@@ -46,6 +46,29 @@ func (ctx *Context) SetTask(msg string, args ...interface{}) func() {
 	}
 }
 
+
+// IsFile ...
+func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
+	if ctx.Err != nil {
+		return false
+	}
+	defer ctx.SetRunning("IsFile `%s`", file.StringRel())()
+
+	conn := connection.FindHost(file.Host)
+
+	info, err := conn.Stat(file)
+
+	if os.IsNotExist(err) {
+		return false
+	}
+	if err != nil {
+		ctx.ContextFailed("connection.Stat", err)
+		return false
+	}
+
+	return !info.IsDir()
+}
+
 // Exists ...
 func (ctx *Context) Exists(file vpath.VirtualPath) bool {
 	if ctx.Err != nil {
@@ -109,7 +132,10 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 	}
 	defer writer.Close()
 
-	_, err = io.Copy(writer, reader)
+	bufIn := bufio.NewReaderSize(reader, 1024*1024)
+	bufOut := bufio.NewWriterSize(writer, 1024*1024)
+
+	_, err = io.Copy(bufOut, bufIn)
 	if err != nil {
 		ctx.ContextFailed("io.Copy", err)
 		return
