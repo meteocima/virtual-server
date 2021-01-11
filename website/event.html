@@ -38,7 +38,7 @@
 <p>Package event implements an event framework that allows events to be listened
 and emitted from multiple goroutins.</p>
 <h2 id="table-of-contents"><a class="header-anchor" href="#table-of-contents"></a> Table of contents</h2>
-<nav class="table-of-contents"><ol><li><a href="#virtual-server-%E2%9F%B6-event-package"> virtual-server ⟶ event package</a><ol><li><a href="#table-of-contents"> Table of contents</a></li><li><a href="#example"> Example</a></li><li><a href="#usage"> Usage</a><ol><li><a href="#type-emitter"> type Emitter</a></li><li><a href="#func-newemitter"> func  NewEmitter</a></li><li><a href="#func-(*emitter)-addlistener"> func (*Emitter) AddListener</a></li><li><a href="#func-(*emitter)-awaitany"> func (*Emitter) AwaitAny</a></li><li><a href="#func-(*emitter)-awaitone"> func (*Emitter) AwaitOne</a></li><li><a href="#func-(*emitter)-clear"> func (*Emitter) Clear</a></li><li><a href="#func-(*emitter)-count"> func (*Emitter) Count</a></li><li><a href="#func-(*emitter)-invoke"> func (*Emitter) Invoke</a></li><li><a href="#func-(*emitter)-listen"> func (*Emitter) Listen</a></li><li><a href="#func-(*emitter)-stop"> func (*Emitter) Stop</a></li><li><a href="#type-event"> type Event</a></li><li><a href="#type-handler"> type Handler</a></li><li><a href="#type-listener"> type Listener</a></li><li><a href="#func-(*listener)-stop"> func (*Listener) Stop</a></li><li><a href="#type-source"> type Source</a></li></ol></li></ol></li></ol></nav><h2 id="example"><a class="header-anchor" href="#example"></a> Example</h2>
+<nav class="table-of-contents"><ol><li><a href="#virtual-server-%E2%9F%B6-event-package"> virtual-server ⟶ event package</a><ol><li><a href="#table-of-contents"> Table of contents</a></li><li><a href="#example"> Example</a></li><li><a href="#usage"> Usage</a><ol><li><a href="#func-closeemitters"> func  CloseEmitters</a></li><li><a href="#func-initsource"> func  InitSource</a></li><li><a href="#type-emitter"> type Emitter</a></li><li><a href="#func-newemitter"> func  NewEmitter</a></li><li><a href="#func-(*emitter)-addlistener"> func (*Emitter) AddListener</a></li><li><a href="#func-(*emitter)-awaitany"> func (*Emitter) AwaitAny</a></li><li><a href="#func-(*emitter)-awaitone"> func (*Emitter) AwaitOne</a></li><li><a href="#func-(*emitter)-clear"> func (*Emitter) Clear</a></li><li><a href="#func-(*emitter)-close"> func (*Emitter) Close</a></li><li><a href="#func-(*emitter)-count"> func (*Emitter) Count</a></li><li><a href="#func-(*emitter)-invoke"> func (*Emitter) Invoke</a></li><li><a href="#func-(*emitter)-listen"> func (*Emitter) Listen</a></li><li><a href="#type-event"> type Event</a></li><li><a href="#type-handler"> type Handler</a></li><li><a href="#type-listener"> type Listener</a></li><li><a href="#func-(*listener)-stop"> func (*Listener) Stop</a></li><li><a href="#type-source"> type Source</a></li></ol></li></ol></li></ol></nav><h2 id="example"><a class="header-anchor" href="#example"></a> Example</h2>
 <pre><code class="language-go">
 <span class="hljs-keyword">package</span> main <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;event&quot;</span>
 
@@ -82,14 +82,23 @@ and emitted from multiple goroutins.</p>
 
 </code></pre>
 <h2 id="usage"><a class="header-anchor" href="#usage"></a> Usage</h2>
+<h4 id="func-closeemitters"><a class="header-anchor" href="#func-closeemitters"></a> func  CloseEmitters</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">CloseEmitters</span><span class="hljs-params">(emitters ...*Emitter)</span></span>
+</code></pre>
+<p>CloseEmitters closes all emitters of a source.</p>
+<h4 id="func-initsource"><a class="header-anchor" href="#func-initsource"></a> func  InitSource</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">InitSource</span><span class="hljs-params">(source Source, emitters ...**Emitter)</span></span>
+</code></pre>
+<p>InitSource initializes a list of fields of a <code>Source</code> object.</p>
 <h4 id="type-emitter"><a class="header-anchor" href="#type-emitter"></a> type Emitter</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Emitter <span class="hljs-keyword">struct</span> {
 }
 </code></pre>
 <p>Emitter is an object which can emits multiple events of the same kind,</p>
-<p>Event emission can be listened by multiple listeners, and can happens from
-multiple goroutines. Event invocation also is completely synchronized and can
-occur in multiple goroutines.</p>
+<p>Event can be listened to by multiple listeners.</p>
+<p>Both events emission and listening can happen in different goroutines. The
+implementation synchronizes all accesses to internal <code>listeners</code> field using a
+channel of <code>listenerAction</code> structs.</p>
 <h4 id="func-newemitter"><a class="header-anchor" href="#func-newemitter"></a> func  NewEmitter</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewEmitter</span><span class="hljs-params">(source Source)</span> *<span class="hljs-title">Emitter</span></span>
 </code></pre>
@@ -113,6 +122,12 @@ occurs on it, and finally unregisters the listener instance.</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Clear</span><span class="hljs-params">()</span></span>
 </code></pre>
 <p>Clear removes all listener of the <code>Emitter</code></p>
+<h4 id="func-(*emitter)-close"><a class="header-anchor" href="#func-(*emitter)-close"></a> func (*Emitter) Close</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span></span>
+</code></pre>
+<p>Close removes all listener of the <code>Emitter</code> calling <code>Clear</code> method, and then
+closes the <code>actionsOnListeners</code> channel, making the internal <code>Emitter</code> goroutine
+to terminate politely</p>
 <h4 id="func-(*emitter)-count"><a class="header-anchor" href="#func-(*emitter)-count"></a> func (*Emitter) Count</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Count</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span>
 </code></pre>
@@ -127,10 +142,6 @@ with <code>Emitter</code> source as source, and <code>payload</code> argument as
 </code></pre>
 <p>Listen add a listener to the emitter that executes a function for each event
 emitted.</p>
-<h4 id="func-(*emitter)-stop"><a class="header-anchor" href="#func-(*emitter)-stop"></a> func (*Emitter) Stop</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Stop</span><span class="hljs-params">()</span></span>
-</code></pre>
-<p>Stop all listeners and closes the emitter.</p>
 <h4 id="type-event"><a class="header-anchor" href="#type-event"></a> type Event</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Event <span class="hljs-keyword">struct</span> {
 	Source  Source
@@ -149,7 +160,7 @@ whic contains informations specifics to the event type.</p>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Listener <span class="hljs-keyword">struct</span> {
 }
 </code></pre>
-<p>Listener is a single listener which is listening on the event.</p>
+<p>Listener is a single listener which is listening on events of an <code>Emitter</code>.</p>
 <h4 id="func-(*listener)-stop"><a class="header-anchor" href="#func-(*listener)-stop"></a> func (*Listener) Stop</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *Listener)</span> <span class="hljs-title">Stop</span><span class="hljs-params">()</span></span>
 </code></pre>

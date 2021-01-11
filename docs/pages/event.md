@@ -61,6 +61,20 @@ func main() {
 
 ## Usage
 
+#### func  CloseEmitters
+
+```go
+func CloseEmitters(emitters ...*Emitter)
+```
+CloseEmitters closes all emitters of a source.
+
+#### func  InitSource
+
+```go
+func InitSource(source Source, emitters ...**Emitter)
+```
+InitSource initializes a list of fields of a `Source` object.
+
 #### type Emitter
 
 ```go
@@ -70,9 +84,11 @@ type Emitter struct {
 
 Emitter is an object which can emits multiple events of the same kind,
 
-Event emission can be listened by multiple listeners, and can happens from
-multiple goroutines. Event invocation also is completely synchronized and can
-occur in multiple goroutines.
+Event can be listened to by multiple listeners.
+
+Both events emission and listening can happen in different goroutines. The
+implementation synchronizes all accesses to internal `listeners` field using a
+channel of `listenerAction` structs.
 
 #### func  NewEmitter
 
@@ -112,6 +128,15 @@ func (e *Emitter) Clear()
 ```
 Clear removes all listener of the `Emitter`
 
+#### func (*Emitter) Close
+
+```go
+func (e *Emitter) Close()
+```
+Close removes all listener of the `Emitter` calling `Clear` method, and then
+closes the `actionsOnListeners` channel, making the internal `Emitter` goroutine
+to terminate politely
+
 #### func (*Emitter) Count
 
 ```go
@@ -134,13 +159,6 @@ func (e *Emitter) Listen(fn Handler) *Listener
 ```
 Listen add a listener to the emitter that executes a function for each event
 emitted.
-
-#### func (*Emitter) Stop
-
-```go
-func (e *Emitter) Stop()
-```
-Stop all listeners and closes the emitter.
 
 #### type Event
 
@@ -172,7 +190,7 @@ type Listener struct {
 }
 ```
 
-Listener is a single listener which is listening on the event.
+Listener is a single listener which is listening on events of an `Emitter`.
 
 #### func (*Listener) Stop
 

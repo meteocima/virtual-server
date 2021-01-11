@@ -17,9 +17,12 @@ type Event struct {
 // Emitter is an object which can emits
 // multiple events of the same kind,
 //
-// Event emission can be listened by multiple listeners,
-// and can happens from multiple goroutines. Event invocation also
-// is completely synchronized and can occur in multiple goroutines.
+// Event can be listened to by multiple listeners.
+//
+// Both events emission and listening can happen in different goroutines.
+// The implementation synchronizes all accesses to internal
+// `listeners` field using a channel of `listenerAction`
+// structs.
 type Emitter struct {
 	source             Source
 	listeners          map[*Listener]struct{}
@@ -38,8 +41,23 @@ func NewEmitter(source Source) *Emitter {
 	return emitter
 }
 
+// InitSource initializes a list of fields
+// of a `Source` object.
+func InitSource(source Source, emitters ...**Emitter) {
+	for _, emitter := range emitters {
+		*emitter = NewEmitter(source)
+	}
+}
+
+// CloseEmitters closes all emitters of a source.
+func CloseEmitters(emitters ...*Emitter) {
+	for _, emitter := range emitters {
+		emitter.Close()
+	}
+}
+
 // Listener is a single listener
-// which is listening on the event.
+// which is listening on events of an `Emitter`.
 type Listener struct {
 	c chan *Event
 	e *Emitter
@@ -48,14 +66,7 @@ type Listener struct {
 // Stop listening new events invoked
 // on a single listener.
 func (l *Listener) Stop() {
-	close(l.c)
 	l.e.actionsOnListeners <- removeListenerAction(l)
-}
-
-// Stop all listeners and closes
-// the emitter.
-func (e *Emitter) Stop() {
-	//e.actionsOnListeners <- removeListenerAction(&l)
 }
 
 // Invoke causes all listeners of this
@@ -98,6 +109,15 @@ func (e *Emitter) Listen(fn Handler) *Listener {
 // the `Emitter`
 func (e *Emitter) Clear() {
 	e.actionsOnListeners <- clearListenersAction()
+}
+
+// Close removes all listener of
+// the `Emitter` calling `Clear` method, and then
+// closes the `actionsOnListeners` channel, making the internal `Emitter`
+// goroutine to terminate politely
+func (e *Emitter) Close() {
+	e.actionsOnListeners <- clearListenersAction()
+	close(e.actionsOnListeners)
 }
 
 // AwaitOne registers a new `Listener` on an

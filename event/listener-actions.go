@@ -73,10 +73,14 @@ func (e *Emitter) executeListenerActions() {
 		case listenerActionAdd:
 			e.listeners[action.listener] = struct{}{}
 		case listenerActionClear:
+			for l := range e.listeners {
+				close(l.c)
+			}
 			e.listeners = map[*Listener]struct{}{}
 		case listenerActionEmit:
 			/* YODO */
 		case listenerActionRemove:
+			close(action.listener.c)
 			delete(e.listeners, action.listener)
 		case listenerActionCount:
 			action.countResp <- len(e.listeners)
