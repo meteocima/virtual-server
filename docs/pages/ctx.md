@@ -17,6 +17,8 @@ type Context struct {
 	Err             error
 	RunningFunction string
 	RunningTask     string
+	Log             io.Writer
+	DetailLog       io.Writer
 }
 ```
 
@@ -50,6 +52,13 @@ Exec ...
 func (ctx *Context) Exists(file vpath.VirtualPath) bool
 ```
 Exists ...
+
+#### func (*Context) IsFile
+
+```go
+func (ctx *Context) IsFile(file vpath.VirtualPath) bool
+```
+IsFile ...
 
 #### func (*Context) Link
 
@@ -120,6 +129,13 @@ Run ...
 func (ctx *Context) SetRunning(msg string, args ...interface{}) func()
 ```
 SetRunning ...
+
+#### func (*Context) SetTask
+
+```go
+func (ctx *Context) SetTask(msg string, args ...interface{}) func()
+```
+SetTask ...
 
 #### func (*Context) WriteString
 

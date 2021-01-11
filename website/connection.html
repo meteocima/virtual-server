@@ -34,48 +34,13 @@
   </header>
 
   <section class="post">
-    <h1><a href="./index">virtual-server</a> ⟶ connection package</h1>
-<h2>Usage</h2>
-<h4>func  NewPath</h4>
+    <h1 id="virtual-server-%E2%9F%B6-connection-package"><a class="header-anchor" href="#virtual-server-%E2%9F%B6-connection-package"></a> <a href="./index">virtual-server</a> ⟶ connection package</h1>
+<h2 id="usage"><a class="header-anchor" href="#usage"></a> Usage</h2>
+<h4 id="func-newpath"><a class="header-anchor" href="#func-newpath"></a> func  NewPath</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewPath</span><span class="hljs-params">(cn Connection, path <span class="hljs-keyword">string</span>, pathArgs ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">vpath</span>.<span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428245-17365">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428245-17365" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>NewPath ...</p>
-<h4>type Connection</h4>
+<h4 id="type-connection"><a class="header-anchor" href="#type-connection"></a> type Connection</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Connection <span class="hljs-keyword">interface</span> {
 	HostName() <span class="hljs-keyword">string</span>
 	Open() error
@@ -90,878 +55,94 @@
 	Link(source, target vpath.VirtualPath) error
 	Run(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...RunOptions) (Process, error)
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428245-92343">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Connection interface {
-	HostName() string
-	Open() error
-	Close() error
-	OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
-	OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
-	ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-	Stat(path vpath.VirtualPath) (os.FileInfo, error)
-	MkDir(dir vpath.VirtualPath) error
-	RmDir(dir vpath.VirtualPath) error
-	RmFile(file vpath.VirtualPath) error
-	Link(source, target vpath.VirtualPath) error
-	Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428245-92343" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Connection ...</p>
-<h4>func  FindHost</h4>
+<h4 id="func-findhost"><a class="header-anchor" href="#func-findhost"></a> func  FindHost</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">FindHost</span><span class="hljs-params">(name <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">Connection</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428245-86785">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func FindHost(name string) Connection
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428245-86785" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>FindHost ...</p>
-<h4>type LocalConnection</h4>
+<h4 id="type-localconnection"><a class="header-anchor" href="#type-localconnection"></a> type LocalConnection</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> LocalConnection <span class="hljs-keyword">struct</span>{}
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428245-1366">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type LocalConnection struct{}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428245-1366" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>LocalConnection ...</p>
-<h4>func (*LocalConnection) Close</h4>
+<h4 id="func-(*localconnection)-close"><a class="header-anchor" href="#func-(*localconnection)-close"></a> func (*LocalConnection) Close</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-65003">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Close() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-65003" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Close ...</p>
-<h4>func (*LocalConnection) HostName</h4>
+<h4 id="func-(*localconnection)-hostname"><a class="header-anchor" href="#func-(*localconnection)-hostname"></a> func (*LocalConnection) HostName</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">HostName</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-10709">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) HostName() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-10709" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>HostName ...</p>
-<h4>func (*LocalConnection) Link</h4>
+<h4 id="func-(*localconnection)-link"><a class="header-anchor" href="#func-(*localconnection)-link"></a> func (*LocalConnection) Link</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Link</span><span class="hljs-params">(source, target vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-80299">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Link(source, target vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-80299" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Link ...</p>
-<h4>func (*LocalConnection) MkDir</h4>
+<h4 id="func-(*localconnection)-mkdir"><a class="header-anchor" href="#func-(*localconnection)-mkdir"></a> func (*LocalConnection) MkDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">MkDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-84826">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) MkDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-84826" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>MkDir ...</p>
-<h4>func (*LocalConnection) Open</h4>
+<h4 id="func-(*localconnection)-open"><a class="header-anchor" href="#func-(*localconnection)-open"></a> func (*LocalConnection) Open</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Open</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-52704">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Open() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-52704" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Open ...</p>
-<h4>func (*LocalConnection) OpenReader</h4>
+<h4 id="func-(*localconnection)-openreader"><a class="header-anchor" href="#func-(*localconnection)-openreader"></a> func (*LocalConnection) OpenReader</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">OpenReader</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.ReadCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-75164">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-75164" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>OpenReader ...</p>
-<h4>func (*LocalConnection) OpenWriter</h4>
+<h4 id="func-(*localconnection)-openwriter"><a class="header-anchor" href="#func-(*localconnection)-openwriter"></a> func (*LocalConnection) OpenWriter</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">OpenWriter</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.WriteCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-51403">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-51403" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>OpenWriter ...</p>
-<h4>func (*LocalConnection) ReadDir</h4>
+<h4 id="func-(*localconnection)-readdir"><a class="header-anchor" href="#func-(*localconnection)-readdir"></a> func (*LocalConnection) ReadDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">ReadDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-params">(vpath.VirtualPathList, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-44532">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-44532" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>ReadDir ...</p>
-<h4>func (*LocalConnection) RmDir</h4>
+<h4 id="func-(*localconnection)-rmdir"><a class="header-anchor" href="#func-(*localconnection)-rmdir"></a> func (*LocalConnection) RmDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">RmDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-90214">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) RmDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-90214" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>RmDir ...</p>
-<h4>func (*LocalConnection) RmFile</h4>
+<h4 id="func-(*localconnection)-rmfile"><a class="header-anchor" href="#func-(*localconnection)-rmfile"></a> func (*LocalConnection) RmFile</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">RmFile</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428246-93718">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428246-93718" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>RmFile ...</p>
-<h4>func (*LocalConnection) Run</h4>
+<h4 id="func-(*localconnection)-run"><a class="header-anchor" href="#func-(*localconnection)-run"></a> func (*LocalConnection) Run</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Run</span><span class="hljs-params">(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...RunOptions)</span> <span class="hljs-params">(Process, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-37436">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-37436" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Run ...</p>
-<h4>func (*LocalConnection) Stat</h4>
+<h4 id="func-(*localconnection)-stat"><a class="header-anchor" href="#func-(*localconnection)-stat"></a> func (*LocalConnection) Stat</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *LocalConnection)</span> <span class="hljs-title">Stat</span><span class="hljs-params">(path vpath.VirtualPath)</span> <span class="hljs-params">(os.FileInfo, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-32856">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *LocalConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-32856" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stat ...</p>
-<h4>type LocalProcess</h4>
+<h4 id="type-localprocess"><a class="header-anchor" href="#type-localprocess"></a> type LocalProcess</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> LocalProcess <span class="hljs-keyword">struct</span> {
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-52560">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type LocalProcess struct {
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-52560" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>LocalProcess ...</p>
-<h4>func (*LocalProcess) CombinedOutput</h4>
+<h4 id="func-(*localprocess)-combinedoutput"><a class="header-anchor" href="#func-(*localprocess)-combinedoutput"></a> func (*LocalProcess) CombinedOutput</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">CombinedOutput</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-46376">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) CombinedOutput() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-46376" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>CombinedOutput ...</p>
-<h4>func (*LocalProcess) Kill</h4>
+<h4 id="func-(*localprocess)-kill"><a class="header-anchor" href="#func-(*localprocess)-kill"></a> func (*LocalProcess) Kill</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Kill</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-39568">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Kill() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-39568" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Kill ...</p>
-<h4>func (*LocalProcess) Stderr</h4>
+<h4 id="func-(*localprocess)-stderr"><a class="header-anchor" href="#func-(*localprocess)-stderr"></a> func (*LocalProcess) Stderr</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Stderr</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-98095">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stderr() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-98095" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stderr ...</p>
-<h4>func (*LocalProcess) Stdin</h4>
+<h4 id="func-(*localprocess)-stdin"><a class="header-anchor" href="#func-(*localprocess)-stdin"></a> func (*LocalProcess) Stdin</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Stdin</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Writer</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-59907">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stdin() io.Writer
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-59907" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stdin ...</p>
-<h4>func (*LocalProcess) Stdout</h4>
+<h4 id="func-(*localprocess)-stdout"><a class="header-anchor" href="#func-(*localprocess)-stdout"></a> func (*LocalProcess) Stdout</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Stdout</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-18379">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Stdout() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-18379" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stdout ...</p>
-<h4>func (*LocalProcess) Wait</h4>
+<h4 id="func-(*localprocess)-wait"><a class="header-anchor" href="#func-(*localprocess)-wait"></a> func (*LocalProcess) Wait</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *LocalProcess)</span> <span class="hljs-title">Wait</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-49663">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *LocalProcess) Wait() (int, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-49663" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Wait ...</p>
-<h4>type Process</h4>
+<h4 id="type-process"><a class="header-anchor" href="#type-process"></a> type Process</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Process <span class="hljs-keyword">interface</span> {
 	Kill() error
 	<span class="hljs-comment">// Stdin, is an io.Writer that will be used</span>
@@ -984,65 +165,9 @@
 	<span class="hljs-comment">// and return the exit code.</span>
 	Wait() (<span class="hljs-keyword">int</span>, error)
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428247-79706">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type Process interface {
-	Kill() error
-	// Stdin, is an io.Writer that will be used
-	// to send data to process stdin
-	Stdin() io.Writer
-
-	// Stdin, if set, is an io.Reader that will be used
-	// to read data from process stdout
-	Stdout() io.Reader
-
-	// Stderr, if set, is an io.Reader that will be used
-	// to read data from process stderr
-	Stderr() io.Reader
-
-	// CombinedOutput returns an io.Reader that reads
-	// the combined output and error streams of the process
-	CombinedOutput() io.Reader
-
-	// Wait expects the process to terminate
-	// and return the exit code.
-	Wait() (int, error)
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428247-79706" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Process represents a running process</p>
-<h4>type RunOptions</h4>
+<h4 id="type-runoptions"><a class="header-anchor" href="#type-runoptions"></a> type RunOptions</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> RunOptions <span class="hljs-keyword">struct</span> {
 	<span class="hljs-comment">// OutFromLog if sets, output is read from a file</span>
 	<span class="hljs-comment">// instead of from the process stdout</span>
@@ -1055,55 +180,9 @@
 	<span class="hljs-comment">// Cwd is set the work directory in which the process will be executed.</span>
 	Cwd vpath.VirtualPath
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-75667">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type RunOptions struct {
-	// OutFromLog if sets, output is read from a file
-	// instead of from the process stdout
-	OutFromLog vpath.VirtualPath
-
-	// OutFromLog if sets, output is read from a file
-	// instead of from the process stderr
-	ErrFromLog vpath.VirtualPath
-
-	// Cwd is set the work directory in which the process will be executed.
-	Cwd vpath.VirtualPath
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-75667" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>RunOptions ...</p>
-<h4>type SSHConnection</h4>
+<h4 id="type-sshconnection"><a class="header-anchor" href="#type-sshconnection"></a> type SSHConnection</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> SSHConnection <span class="hljs-keyword">struct</span> {
 	BackupHosts []<span class="hljs-keyword">string</span>
 	Name        <span class="hljs-keyword">string</span>
@@ -1113,793 +192,84 @@
 	User    <span class="hljs-keyword">string</span>
 	KeyPath <span class="hljs-keyword">string</span>
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-54269">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type SSHConnection struct {
-	BackupHosts []string
-	Name        string
-
-	Host    string
-	Port    int
-	User    string
-	KeyPath string
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-54269" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>SSHConnection ...</p>
-<h4>func (*SSHConnection) Close</h4>
+<h4 id="func-(*sshconnection)-close"><a class="header-anchor" href="#func-(*sshconnection)-close"></a> func (*SSHConnection) Close</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-42214">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Close() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-42214" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Close ...</p>
-<h4>func (*SSHConnection) HostName</h4>
+<h4 id="func-(*sshconnection)-hostname"><a class="header-anchor" href="#func-(*sshconnection)-hostname"></a> func (*SSHConnection) HostName</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">HostName</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-32616">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) HostName() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-32616" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>HostName ...</p>
-<h4>func (*SSHConnection) Link</h4>
+<h4 id="func-(*sshconnection)-link"><a class="header-anchor" href="#func-(*sshconnection)-link"></a> func (*SSHConnection) Link</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Link</span><span class="hljs-params">(source, target vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-7288">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-7288" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Link ...</p>
-<h4>func (*SSHConnection) MkDir</h4>
+<h4 id="func-(*sshconnection)-mkdir"><a class="header-anchor" href="#func-(*sshconnection)-mkdir"></a> func (*SSHConnection) MkDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">MkDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-45982">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) MkDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-45982" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>MkDir ...</p>
-<h4>func (*SSHConnection) Open</h4>
+<h4 id="func-(*sshconnection)-open"><a class="header-anchor" href="#func-(*sshconnection)-open"></a> func (*SSHConnection) Open</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Open</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-32660">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Open() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-32660" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Open ...</p>
-<h4>func (*SSHConnection) OpenReader</h4>
+<h4 id="func-(*sshconnection)-openreader"><a class="header-anchor" href="#func-(*sshconnection)-openreader"></a> func (*SSHConnection) OpenReader</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">OpenReader</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.ReadCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-66161">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-66161" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>OpenReader ...</p>
-<h4>func (*SSHConnection) OpenWriter</h4>
+<h4 id="func-(*sshconnection)-openwriter"><a class="header-anchor" href="#func-(*sshconnection)-openwriter"></a> func (*SSHConnection) OpenWriter</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">OpenWriter</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-params">(io.WriteCloser, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-6260">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-6260" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>OpenWriter ...</p>
-<h4>func (*SSHConnection) ReadDir</h4>
+<h4 id="func-(*sshconnection)-readdir"><a class="header-anchor" href="#func-(*sshconnection)-readdir"></a> func (*SSHConnection) ReadDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">ReadDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-params">(vpath.VirtualPathList, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428248-82779">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428248-82779" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>ReadDir ...</p>
-<h4>func (*SSHConnection) RmDir</h4>
+<h4 id="func-(*sshconnection)-rmdir"><a class="header-anchor" href="#func-(*sshconnection)-rmdir"></a> func (*SSHConnection) RmDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">RmDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-67113">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) RmDir(dir vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-67113" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>RmDir ...</p>
-<h4>func (*SSHConnection) RmFile</h4>
+<h4 id="func-(*sshconnection)-rmfile"><a class="header-anchor" href="#func-(*sshconnection)-rmfile"></a> func (*SSHConnection) RmFile</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">RmFile</span><span class="hljs-params">(file vpath.VirtualPath)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-23074">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) RmFile(file vpath.VirtualPath) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-23074" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>RmFile ...</p>
-<h4>func (*SSHConnection) Run</h4>
+<h4 id="func-(*sshconnection)-run"><a class="header-anchor" href="#func-(*sshconnection)-run"></a> func (*SSHConnection) Run</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Run</span><span class="hljs-params">(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...RunOptions)</span> <span class="hljs-params">(Process, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-71573">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-71573" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Run ...</p>
-<h4>func (*SSHConnection) Stat</h4>
+<h4 id="func-(*sshconnection)-stat"><a class="header-anchor" href="#func-(*sshconnection)-stat"></a> func (*SSHConnection) Stat</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(conn *SSHConnection)</span> <span class="hljs-title">Stat</span><span class="hljs-params">(path vpath.VirtualPath)</span> <span class="hljs-params">(os.FileInfo, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-44247">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-44247" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stat ...</p>
-<h4>type SSHProcess</h4>
+<h4 id="type-sshprocess"><a class="header-anchor" href="#type-sshprocess"></a> type SSHProcess</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> SSHProcess <span class="hljs-keyword">struct</span> {
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-31190">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type SSHProcess struct {
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-31190" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>SSHProcess ...</p>
-<h4>func (*SSHProcess) CombinedOutput</h4>
+<h4 id="func-(*sshprocess)-combinedoutput"><a class="header-anchor" href="#func-(*sshprocess)-combinedoutput"></a> func (*SSHProcess) CombinedOutput</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">CombinedOutput</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-69087">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) CombinedOutput() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-69087" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>CombinedOutput ...</p>
-<h4>func (*SSHProcess) Kill</h4>
+<h4 id="func-(*sshprocess)-kill"><a class="header-anchor" href="#func-(*sshprocess)-kill"></a> func (*SSHProcess) Kill</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Kill</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-29358">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Kill() error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-29358" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Kill ...</p>
-<h4>func (*SSHProcess) Stderr</h4>
+<h4 id="func-(*sshprocess)-stderr"><a class="header-anchor" href="#func-(*sshprocess)-stderr"></a> func (*SSHProcess) Stderr</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Stderr</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-53361">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stderr() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-53361" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stderr ...</p>
-<h4>func (*SSHProcess) Stdin</h4>
+<h4 id="func-(*sshprocess)-stdin"><a class="header-anchor" href="#func-(*sshprocess)-stdin"></a> func (*SSHProcess) Stdin</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Stdin</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Writer</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-35625">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stdin() io.Writer
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-35625" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stdin ...</p>
-<h4>func (*SSHProcess) Stdout</h4>
+<h4 id="func-(*sshprocess)-stdout"><a class="header-anchor" href="#func-(*sshprocess)-stdout"></a> func (*SSHProcess) Stdout</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Stdout</span><span class="hljs-params">()</span> <span class="hljs-title">io</span>.<span class="hljs-title">Reader</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-92491">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Stdout() io.Reader
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-92491" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stdout ...</p>
-<h4>func (*SSHProcess) Wait</h4>
+<h4 id="func-(*sshprocess)-wait"><a class="header-anchor" href="#func-(*sshprocess)-wait"></a> func (*SSHProcess) Wait</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(proc *SSHProcess)</span> <span class="hljs-title">Wait</span><span class="hljs-params">()</span> <span class="hljs-params">(<span class="hljs-keyword">int</span>, error)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428249-82511">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (proc *SSHProcess) Wait() (int, error)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428249-82511" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Wait ...</p>
 
   </section>

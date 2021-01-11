@@ -34,837 +34,125 @@
   </header>
 
   <section class="post">
-    <h1><a href="./index">virtual-server</a> ⟶ vpath package</h1>
+    <h1 id="virtual-server-%E2%9F%B6-vpath-package"><a class="header-anchor" href="#virtual-server-%E2%9F%B6-vpath-package"></a> <a href="./index">virtual-server</a> ⟶ vpath package</h1>
 <p>Package vpath represents an instance of a virtual path. It is formed by the name
 of a Host defined in configuration and by the absolute path within that file
 system. The two parts are separated by a colon when representing the
 vpath.VirtualPath as a string: host:path an empty string in Host field represent
 the localhost Host. an empty string in Path field represent the current
 directory (.).</p>
-<h2>Usage</h2>
+<h2 id="usage"><a class="header-anchor" href="#usage"></a> Usage</h2>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Stderr = &amp;VirtualPath{
 	Host: <span class="hljs-string">&quot;any&quot;</span>,
 	Path: <span class="hljs-string">&quot;stderr&quot;</span>,
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428261-51730">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Stderr = &VirtualPath{
-	Host: &quot;any&quot;,
-	Path: &quot;stderr&quot;,
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428261-51730" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stderr is a placeholder VirtualPath which represents the <code>stderr</code> stream of a
 process.</p>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Stdin = &amp;VirtualPath{
 	Host: <span class="hljs-string">&quot;any&quot;</span>,
 	Path: <span class="hljs-string">&quot;stdin&quot;</span>,
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-68149">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Stdin = &VirtualPath{
-	Host: &quot;any&quot;,
-	Path: &quot;stdin&quot;,
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-68149" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stdin is a placeholder VirtualPath which represents the <code>stdin</code> stream of a
 process.</p>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Stdout = &amp;VirtualPath{
 	Host: <span class="hljs-string">&quot;any&quot;</span>,
 	Path: <span class="hljs-string">&quot;stdout&quot;</span>,
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-89153">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="var Stdout = &VirtualPath{
-	Host: &quot;any&quot;,
-	Path: &quot;stdout&quot;,
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-89153" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Stdout is a placeholder VirtualPath which represents the <code>stdout</code> stream of a
 process.</p>
-<h4>type VirtualPath</h4>
+<h4 id="type-virtualpath"><a class="header-anchor" href="#type-virtualpath"></a> type VirtualPath</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> VirtualPath <span class="hljs-keyword">struct</span> {
 	Host <span class="hljs-keyword">string</span>
 	Path <span class="hljs-keyword">string</span>
 }
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-59965">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type VirtualPath struct {
-	Host string
-	Path string
-}
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-59965" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>VirtualPath represents an instance of a virtual path. It is formed by the name
 of a Host defined in configuration and by the absolute path within that file
 system. The two parts are separated by a colon when representing the
 vpath.VirtualPath as a string: host:path an empty string in Host field represent
 the localhost Host. an empty string in Path field represent the current
 directory (.).</p>
-<h4>func  FromS</h4>
+<h4 id="func-froms"><a class="header-anchor" href="#func-froms"></a> func  FromS</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">FromS</span><span class="hljs-params">(pathRepr <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-65106">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func FromS(pathRepr string) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-65106" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>FromS returns a new VirtualPath with host and path parsed from pathRepr string
 argument.</p>
-<h4>func  Local</h4>
+<h4 id="func-local"><a class="header-anchor" href="#func-local"></a> func  Local</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Local</span><span class="hljs-params">(pathFormat <span class="hljs-keyword">string</span>, pathArgs ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-15755">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func Local(pathFormat string, pathArgs ...interface{}) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-15755" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Local returns a new VirtualPath on localhost with the given path</p>
-<h4>func  New</h4>
+<h4 id="func-new"><a class="header-anchor" href="#func-new"></a> func  New</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(host <span class="hljs-keyword">string</span>, pathFormat <span class="hljs-keyword">string</span>, pathArgs ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-14597">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func New(host string, pathFormat string, pathArgs ...interface{}) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-14597" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>New returns an VirtualPath given its host and path parts. The path is built
 using pathFormat argument as fmt.Sprintf format string and any pathArgs as
 fmt.Sprintf arguments.</p>
-<h4>func (VirtualPath) AddExt</h4>
+<h4 id="func-(virtualpath)-addext"><a class="header-anchor" href="#func-(virtualpath)-addext"></a> func (VirtualPath) AddExt</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">AddExt</span><span class="hljs-params">(newExt <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-69806">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) AddExt(newExt string) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-69806" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>AddExt returns a new virtual path where the specified extension is appended to
 the current filename.</p>
-<h4>func (VirtualPath) Dir</h4>
+<h4 id="func-(virtualpath)-dir"><a class="header-anchor" href="#func-(virtualpath)-dir"></a> func (VirtualPath) Dir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">Dir</span><span class="hljs-params">()</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-62092">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) Dir() VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-62092" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Dir returns a new VirtualPath formed by the same host and a path that is the
 directory path of the original instance.</p>
-<h4>func (VirtualPath) Filename</h4>
+<h4 id="func-(virtualpath)-filename"><a class="header-anchor" href="#func-(virtualpath)-filename"></a> func (VirtualPath) Filename</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">Filename</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-74927">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) Filename() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-74927" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Filename returns the filename (with extension, but without directory path) of
 the virtual path</p>
-<h4>func (VirtualPath) Join</h4>
+<h4 id="func-(virtualpath)-join"><a class="header-anchor" href="#func-(virtualpath)-join"></a> func (VirtualPath) Join</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">Join</span><span class="hljs-params">(pathFormat <span class="hljs-keyword">string</span>, pathArgs ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-86779">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) Join(pathFormat string, pathArgs ...interface{}) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-86779" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Join returns a new virtual path formed by the same host and a path that is the
 joining of the original path and and an additional one. The additional path is
 built using pathFormat argument as fmt.Sprintf format string and any pathArgs as
 fmt.Sprintf arguments.</p>
-<h4>func (VirtualPath) JoinP</h4>
+<h4 id="func-(virtualpath)-joinp"><a class="header-anchor" href="#func-(virtualpath)-joinp"></a> func (VirtualPath) JoinP</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">JoinP</span><span class="hljs-params">(other VirtualPath)</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428262-53625">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) JoinP(other VirtualPath) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428262-53625" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>JoinP returns a new virtual path formed by the same host of the instance and a
 path that is the joining of the original path and the path of an additional
 VirtualPath</p>
-<h4>func (VirtualPath) ReplaceExt</h4>
+<h4 id="func-(virtualpath)-replaceext"><a class="header-anchor" href="#func-(virtualpath)-replaceext"></a> func (VirtualPath) ReplaceExt</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">ReplaceExt</span><span class="hljs-params">(newExt <span class="hljs-keyword">string</span>)</span> <span class="hljs-title">VirtualPath</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-81254">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) ReplaceExt(newExt string) VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-81254" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>ReplaceExt returns a new virtual path where the extension of the file is
 replaced with the given one.</p>
-<h4>func (VirtualPath) String</h4>
+<h4 id="func-(virtualpath)-string"><a class="header-anchor" href="#func-(virtualpath)-string"></a> func (VirtualPath) String</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">String</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-66356">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) String() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-66356" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>String returns a string representing the virtual path Host and path parts are
 separated by a colon: host:path</p>
-<h4>func (VirtualPath) StringRel</h4>
+<h4 id="func-(virtualpath)-stringrel"><a class="header-anchor" href="#func-(virtualpath)-stringrel"></a> func (VirtualPath) StringRel</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath VirtualPath)</span> <span class="hljs-title">StringRel</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-69538">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath VirtualPath) StringRel() string
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-69538" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>StringRel returns a string representing the virtual path Host and path parts are
 separated by a colon: host:path</p>
-<h4>func (*VirtualPath) UnmarshalText</h4>
+<h4 id="func-(*virtualpath)-unmarshaltext"><a class="header-anchor" href="#func-(*virtualpath)-unmarshaltext"></a> func (*VirtualPath) UnmarshalText</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(vPath *VirtualPath)</span> <span class="hljs-title">UnmarshalText</span><span class="hljs-params">(data []<span class="hljs-keyword">byte</span>)</span> <span class="hljs-title">error</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-29027">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (vPath *VirtualPath) UnmarshalText(data []byte) error
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-29027" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>UnmarshalText ...</p>
-<h4>type VirtualPathList</h4>
+<h4 id="type-virtualpathlist"><a class="header-anchor" href="#type-virtualpathlist"></a> type VirtualPathList</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> VirtualPathList []VirtualPath
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-8368">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="type VirtualPathList []VirtualPath
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-8368" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>VirtualPathList ...</p>
-<h4>func (VirtualPathList) Len</h4>
+<h4 id="func-(virtualpathlist)-len"><a class="header-anchor" href="#func-(virtualpathlist)-len"></a> func (VirtualPathList) Len</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(list VirtualPathList)</span> <span class="hljs-title">Len</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-27642">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (list VirtualPathList) Len() int
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-27642" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Len is the number of elements in the collection.</p>
-<h4>func (VirtualPathList) Less</h4>
+<h4 id="func-(virtualpathlist)-less"><a class="header-anchor" href="#func-(virtualpathlist)-less"></a> func (VirtualPathList) Less</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(list VirtualPathList)</span> <span class="hljs-title">Less</span><span class="hljs-params">(i, j <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">bool</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-59287">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (list VirtualPathList) Less(i, j int) bool
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-59287" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Less reports whether the element with index i should sort before the element
 with index j.</p>
-<h4>func (VirtualPathList) Swap</h4>
+<h4 id="func-(virtualpathlist)-swap"><a class="header-anchor" href="#func-(virtualpathlist)-swap"></a> func (VirtualPathList) Swap</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(list VirtualPathList)</span> <span class="hljs-title">Swap</span><span class="hljs-params">(i, j <span class="hljs-keyword">int</span>)</span></span>
-</code><div class="m-mdic-copy-wrapper"><span class="u-mdic-copy-code_lang">go</span><div class="u-mdic-copy-notify" id="j-notify-1609433428263-97815">copy success</div><button class="u-mdic-copy-btn j-mdic-copy-btn" data-mdic-content="func (list VirtualPathList) Swap(i, j int)
-" data-mdic-attach-content="" data-mdic-notify-id="j-notify-1609433428263-97815" data-mdic-notify-delay="2000" data-mdic-copy-fail-text="copy fail" onclick="!(function (t) {
-    const e = {
-        copy: (t = '', e = '') =>
-            new Promise((c, o) => {
-                const n = document.createElement('textarea'),
-                    d = e ? `\n\n${e}` : e;
-                (n.value = `${t}${d}`), document.body.appendChild(n), n.select();
-                try {
-                    const t = document.execCommand('copy');
-                    document.body.removeChild(n), t ? c() : o();
-                } catch (t) {
-                    document.body.removeChild(n), o();
-                }
-            }),
-        btnClick(t) {
-            const c = t && t.dataset ? t.dataset : {},
-                o = c.mdicNotifyId,
-                n = document.getElementById(o),
-                d = c.mdicNotifyDelay,
-                i = c.mdicCopyFailText;
-            e.copy(c.mdicContent, c.mdicAttachContent)
-                .then(() => {
-                    (n.style.display = 'block'),
-                        setTimeout(() => {
-                            n.style.display = 'none';
-                        }, d);
-                })
-                .catch(() => {
-                    alert(i);
-                });
-        },
-    };
-    e.btnClick(t);
-})(this);
-">copy</button></div></pre>
+</code></pre>
 <p>Swap swaps the elements with indexes i and j.</p>
 
   </section>

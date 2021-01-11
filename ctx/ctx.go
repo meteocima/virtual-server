@@ -31,7 +31,10 @@ func (ctx *Context) ContextFailed(offendingFunc string, err error) {
 // SetRunning ...
 func (ctx *Context) SetRunning(msg string, args ...interface{}) func() {
 	ctx.RunningFunction = fmt.Sprintf(msg, args...)
-	fmt.Fprintf(ctx.Log, "\t⟶\t%s\n", ctx.RunningFunction)
+
+	if ctx.Log != nil {
+		fmt.Fprintf(ctx.Log, "\t⟶\t%s\n", ctx.RunningFunction)
+	}
 	return func() {
 		ctx.RunningFunction = ""
 	}
@@ -40,15 +43,16 @@ func (ctx *Context) SetRunning(msg string, args ...interface{}) func() {
 // SetTask ...
 func (ctx *Context) SetTask(msg string, args ...interface{}) func() {
 	ctx.RunningTask = fmt.Sprintf(msg, args...)
-	fmt.Fprintf(ctx.Log, "\n\n# START: %s\n", ctx.RunningTask)
+	if ctx.Log != nil {
+		fmt.Fprintf(ctx.Log, "\n\n# START: %s\n", ctx.RunningTask)
+	}
 	return func() {
-		if ctx.Err == nil {
+		if ctx.Err == nil && ctx.Log != nil {
 			fmt.Fprintf(ctx.Log, "# COMPLETED SUCCESSUFULLY: %s\n", ctx.RunningTask)
 		}
 		ctx.RunningTask = ""
 	}
 }
-
 
 // IsFile ...
 func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
@@ -143,6 +147,12 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 		ctx.ContextFailed("io.Copy", err)
 		return
 	}
+
+	err = bufOut.Flush()
+	if err != nil {
+		ctx.ContextFailed("bufOut.Flush", err)
+		return
+	}
 }
 
 // Move ...
@@ -177,6 +187,7 @@ func (ctx *Context) WriteString(file vpath.VirtualPath, content string) {
 		ctx.ContextFailed("writer.Write", err)
 		return
 	}
+
 }
 
 // ReadString ...
@@ -196,9 +207,9 @@ func (ctx *Context) ReadString(file vpath.VirtualPath) string {
 
 	defer reader.Close()
 
-	bufReader := bufio.NewReader(reader)
+	//bufReader := bufio.NewReader(reader)
 
-	buf, err := ioutil.ReadAll(bufReader)
+	buf, err := ioutil.ReadAll(reader)
 	if err != nil {
 		ctx.ContextFailed("ioutil.ReadAll", err)
 		return ""
@@ -264,14 +275,18 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 
 // LogF ...
 func (ctx *Context) LogF(msg string, args ...interface{}) {
-	fmt.Fprintf(ctx.DetailLog, msg+"\n", args...)
+	if ctx.DetailLog != nil {
+		fmt.Fprintf(ctx.DetailLog, msg+"\n", args...)
+	}
 }
 
 // Exec ...
 func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options ...connection.RunOptions) {
 	p := ctx.Run(command, args, options...)
 	if p != nil {
-		io.Copy(ctx.DetailLog, p.CombinedOutput())
+		if ctx.DetailLog != nil {
+			io.Copy(ctx.DetailLog, p.CombinedOutput())
+		}
 		p.Wait()
 	}
 }
