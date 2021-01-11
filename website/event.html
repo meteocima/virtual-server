@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <title>CIMA virtual-server | event package API documentation</title>
+  <meta name="description" content="golang event package documentation">
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com/">
+  <link rel="dns-prefetch" href="https://api.github.com/">
+
+  <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,400;0,700;1,400&family=Fira+Code&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/newmoon.css">
+  <link rel="stylesheet" href="./css/markdowit-copy.css">
+
+  <script src="https://livejs.com/live.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+<body>
+  
+<div class="container post">  
+  <header>
+  
+    <h1>CIMA virtual-server</h1>
+    <div class="subtitle">
+      `event package` API documentation
+    </div>
+  </header>
+
+  <section class="post">
+    <h1 id="virtual-server-%E2%9F%B6-event-package"><a class="header-anchor" href="#virtual-server-%E2%9F%B6-event-package"></a> <a href="./index">virtual-server</a> ⟶ event package</h1>
+<p>Package event implements an event framework that allows events to be listened
+and emitted from multiple goroutins.</p>
+<h2 id="table-of-contents"><a class="header-anchor" href="#table-of-contents"></a> Table of contents</h2>
+<nav class="table-of-contents"><ol><li><a href="#virtual-server-%E2%9F%B6-event-package"> virtual-server ⟶ event package</a><ol><li><a href="#table-of-contents"> Table of contents</a></li><li><a href="#example"> Example</a></li><li><a href="#usage"> Usage</a><ol><li><a href="#type-emitter"> type Emitter</a></li><li><a href="#func-newemitter"> func  NewEmitter</a></li><li><a href="#func-(*emitter)-addlistener"> func (*Emitter) AddListener</a></li><li><a href="#func-(*emitter)-awaitany"> func (*Emitter) AwaitAny</a></li><li><a href="#func-(*emitter)-awaitone"> func (*Emitter) AwaitOne</a></li><li><a href="#func-(*emitter)-clear"> func (*Emitter) Clear</a></li><li><a href="#func-(*emitter)-count"> func (*Emitter) Count</a></li><li><a href="#func-(*emitter)-invoke"> func (*Emitter) Invoke</a></li><li><a href="#func-(*emitter)-listen"> func (*Emitter) Listen</a></li><li><a href="#func-(*emitter)-stop"> func (*Emitter) Stop</a></li><li><a href="#type-event"> type Event</a></li><li><a href="#type-handler"> type Handler</a></li><li><a href="#type-listener"> type Listener</a></li><li><a href="#func-(*listener)-stop"> func (*Listener) Stop</a></li><li><a href="#type-source"> type Source</a></li></ol></li></ol></li></ol></nav><h2 id="example"><a class="header-anchor" href="#example"></a> Example</h2>
+<pre><code class="language-go">
+<span class="hljs-keyword">package</span> main <span class="hljs-keyword">import</span> <span class="hljs-string">&quot;event&quot;</span>
+
+<span class="hljs-keyword">type</span> ExampleSource <span class="hljs-keyword">struct</span> {
+
+    SomeThingChanged event.Emitter
+
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+
+    s := ExampleSource {}
+
+    <span class="hljs-comment">// create an emitter instance</span>
+    s.AnEvent = event.NewEmitter(s)
+
+    <span class="hljs-comment">// range over all emitted events</span>
+    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+      <span class="hljs-keyword">for</span> ev := <span class="hljs-keyword">range</span> s.AnEvent.AwaitAny() {
+         fmt.Println(ev.Source, ev.Payload)
+      }
+    }()
+
+    <span class="hljs-comment">// await for a single event emission</span>
+    <span class="hljs-keyword">go</span> <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+      ev, valid := s.AnEvent.AwaitOne();
+      <span class="hljs-keyword">if</span> valid {
+         fmt.Println(ev.Source, ev.Payload)
+      }
+    }()
+
+    hndl := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(ev *event.Event)</span></span> {
+      fmt.Println(ev.Source, ev.Payload)
+    }
+
+    <span class="hljs-comment">// register a function that will</span>
+    <span class="hljs-comment">// executed on each event emission</span>
+    s.AnEvent.Listen(hndl)
+
+}
+
+</code></pre>
+<h2 id="usage"><a class="header-anchor" href="#usage"></a> Usage</h2>
+<h4 id="type-emitter"><a class="header-anchor" href="#type-emitter"></a> type Emitter</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Emitter <span class="hljs-keyword">struct</span> {
+}
+</code></pre>
+<p>Emitter is an object which can emits multiple events of the same kind,</p>
+<p>Event emission can be listened by multiple listeners, and can happens from
+multiple goroutines. Event invocation also is completely synchronized and can
+occur in multiple goroutines.</p>
+<h4 id="func-newemitter"><a class="header-anchor" href="#func-newemitter"></a> func  NewEmitter</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewEmitter</span><span class="hljs-params">(source Source)</span> *<span class="hljs-title">Emitter</span></span>
+</code></pre>
+<p>NewEmitter return a new instance of Emitter, linked <code>source</code> argument.</p>
+<h4 id="func-(*emitter)-addlistener"><a class="header-anchor" href="#func-(*emitter)-addlistener"></a> func (*Emitter) AddListener</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">AddListener</span><span class="hljs-params">()</span> *<span class="hljs-title">Listener</span></span>
+</code></pre>
+<p>AddListener creates a new Listener instance, register it through
+<code>addListenerAction</code> and finally returns it.</p>
+<h4 id="func-(*emitter)-awaitany"><a class="header-anchor" href="#func-(*emitter)-awaitany"></a> func (*Emitter) AwaitAny</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">AwaitAny</span><span class="hljs-params">()</span> <span class="hljs-title">chan</span> *<span class="hljs-title">Event</span></span>
+</code></pre>
+<p>AwaitAny create a new <code>Listener</code> instance, register it and returns its channel
+to <code>range</code> through it.</p>
+<h4 id="func-(*emitter)-awaitone"><a class="header-anchor" href="#func-(*emitter)-awaitone"></a> func (*Emitter) AwaitOne</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">AwaitOne</span><span class="hljs-params">()</span> *<span class="hljs-title">Event</span></span>
+</code></pre>
+<p>AwaitOne registers a new <code>Listener</code> on an Emitter, then waits for an event to
+occurs on it, and finally unregisters the listener instance.</p>
+<h4 id="func-(*emitter)-clear"><a class="header-anchor" href="#func-(*emitter)-clear"></a> func (*Emitter) Clear</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Clear</span><span class="hljs-params">()</span></span>
+</code></pre>
+<p>Clear removes all listener of the <code>Emitter</code></p>
+<h4 id="func-(*emitter)-count"><a class="header-anchor" href="#func-(*emitter)-count"></a> func (*Emitter) Count</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Count</span><span class="hljs-params">()</span> <span class="hljs-title">int</span></span>
+</code></pre>
+<p>Count returns total number of listeners currently listening on this emitter.</p>
+<h4 id="func-(*emitter)-invoke"><a class="header-anchor" href="#func-(*emitter)-invoke"></a> func (*Emitter) Invoke</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Invoke</span><span class="hljs-params">(payload <span class="hljs-keyword">interface</span>{})</span></span>
+</code></pre>
+<p>Invoke causes all listeners of this <code>Emitter</code> to receive an <code>Event</code> instance
+with <code>Emitter</code> source as source, and <code>payload</code> argument as <code>payload</code></p>
+<h4 id="func-(*emitter)-listen"><a class="header-anchor" href="#func-(*emitter)-listen"></a> func (*Emitter) Listen</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Listen</span><span class="hljs-params">(fn Handler)</span> *<span class="hljs-title">Listener</span></span>
+</code></pre>
+<p>Listen add a listener to the emitter that executes a function for each event
+emitted.</p>
+<h4 id="func-(*emitter)-stop"><a class="header-anchor" href="#func-(*emitter)-stop"></a> func (*Emitter) Stop</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(e *Emitter)</span> <span class="hljs-title">Stop</span><span class="hljs-params">()</span></span>
+</code></pre>
+<p>Stop all listeners and closes the emitter.</p>
+<h4 id="type-event"><a class="header-anchor" href="#type-event"></a> type Event</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Event <span class="hljs-keyword">struct</span> {
+	Source  Source
+	Payload <span class="hljs-keyword">interface</span>{}
+}
+</code></pre>
+<p>Event is a struct that contains infgormations about a single event emitted. It
+contains two fields:</p>
+<p><code>Source</code>, which contains the Object which calls <code>Invoke</code> method, and <code>Payload</code>
+whic contains informations specifics to the event type.</p>
+<h4 id="type-handler"><a class="header-anchor" href="#type-handler"></a> type Handler</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Handler <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(ev *Event)</span></span>
+</code></pre>
+<p>Handler ...</p>
+<h4 id="type-listener"><a class="header-anchor" href="#type-listener"></a> type Listener</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Listener <span class="hljs-keyword">struct</span> {
+}
+</code></pre>
+<p>Listener is a single listener which is listening on the event.</p>
+<h4 id="func-(*listener)-stop"><a class="header-anchor" href="#func-(*listener)-stop"></a> func (*Listener) Stop</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(l *Listener)</span> <span class="hljs-title">Stop</span><span class="hljs-params">()</span></span>
+</code></pre>
+<p>Stop listening new events invoked on a single listener.</p>
+<h4 id="type-source"><a class="header-anchor" href="#type-source"></a> type Source</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Source <span class="hljs-keyword">interface</span>{}
+</code></pre>
+<p>Source is an interface that represents any object which emits one or more
+events.</p>
+
+  </section>
+
+  <footer>
+  </footer>
+</div>
+
+</body>
+
+</html>

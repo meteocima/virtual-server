@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+  <title>CIMA virtual-server | tailor package API documentation</title>
+  <meta name="description" content="golang tailor package documentation">
+
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com/">
+  <link rel="dns-prefetch" href="https://api.github.com/">
+
+  <link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,400;0,700;1,400&family=Fira+Code&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/newmoon.css">
+  <link rel="stylesheet" href="./css/markdowit-copy.css">
+
+  <script src="https://livejs.com/live.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+<body>
+  
+<div class="container post">  
+  <header>
+  
+    <h1>CIMA virtual-server</h1>
+    <div class="subtitle">
+      `tailor package` API documentation
+    </div>
+  </header>
+
+  <section class="post">
+    <h1 id="virtual-server-%E2%9F%B6-tailor-package"><a class="header-anchor" href="#virtual-server-%E2%9F%B6-tailor-package"></a> <a href="./index">virtual-server</a> ⟶ tailor package</h1>
+<h2 id="usage"><a class="header-anchor" href="#usage"></a> Usage</h2>
+<pre><code class="language-go"><span class="hljs-keyword">const</span> (
+	ErrNoSource      = <span class="hljs-string">&quot;cannot start scroller: no source&quot;</span>
+	ErrNoTarget      = <span class="hljs-string">&quot;cannot start scroller: no target&quot;</span>
+	ErrNegativeLines = <span class="hljs-string">&quot;negative number of lines not allowed: %d&quot;</span>
+)
+</code></pre>
+<p>Error messages ...</p>
+<h4 id="type-tailor"><a class="header-anchor" href="#type-tailor"></a> type Tailor</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> Tailor <span class="hljs-keyword">struct</span> {
+}
+</code></pre>
+<p>Tailor scrolls and filters a ReadSeeker line by line and writes the data into a
+Writer.</p>
+<h4 id="func-new"><a class="header-anchor" href="#func-new"></a> func  New</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(source io.ReadSeeker, target io.Writer, buffsz <span class="hljs-keyword">int</span>)</span> *<span class="hljs-title">Tailor</span></span>
+</code></pre>
+<p>New creates a Tailor for the given source and target.</p>
+<h4 id="func-(*tailor)-start"><a class="header-anchor" href="#func-(*tailor)-start"></a> func (*Tailor) Start</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Tailor)</span> <span class="hljs-title">Start</span><span class="hljs-params">()</span> <span class="hljs-title">chan</span> <span class="hljs-title">error</span></span>
+</code></pre>
+<p>Start is the goroutine for reading, filtering and writing. The returned chan
+emit an error in case of failure, otherwise it's closed upon tail completion
+without emitting nothing.</p>
+<h4 id="func-(*tailor)-stop"><a class="header-anchor" href="#func-(*tailor)-stop"></a> func (*Tailor) Stop</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *Tailor)</span> <span class="hljs-title">Stop</span><span class="hljs-params">()</span></span>
+</code></pre>
+<p>Stop will causes the tail operation to ends. The log file is readed until EOF
+before stopping.</p>
+
+  </section>
+
+  <footer>
+  </footer>
+</div>
+
+</body>
+
+</html>

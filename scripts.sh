@@ -12,7 +12,7 @@ function rebuild_docs() {
   echo '{{ title("CIMA virtual-server") }}' >> docs/pages/index.md
   echo '{{ subtitle("config package") }}' >> docs/pages/index.md
   cat readme.md >> docs/pages/index.md
-  for pkg in vpath ctx connection config; do
+  for pkg in vpath tailor event tasks ctx connection config; do
     godocdown -template docs/layouts/pkg-template.md ./$pkg > docs/pages/$pkg.md
   done
   orgame docs/client docs/pages website
@@ -33,9 +33,9 @@ function test_all() {
     figlet 'Some test failed.'
     printf $NORMAL
     
-    if [[ $all_tests_passed == 1 ]]; then
-      spd-say -y Italian+female5 'porco boia'
-    fi
+    # if [[ $all_tests_passed == 1 ]]; then
+    #   spd-say -y Italian+female5 'porco boia'
+    # fi
     
     all_tests_passed=0
   fi
@@ -43,7 +43,7 @@ function test_all() {
 
 function on_sourcechanges_retest() {
   test_all $1
-  #rebuild_docs
+  rebuild_docs
   while true; do
     event=`inotifywait -qr -e modify -e move -e create -e delete -e delete_self .`
     echo EVENT $event
@@ -52,9 +52,9 @@ function on_sourcechanges_retest() {
     rebuild_docs
     if [[ $all_tests_passed != $previous ]]; then
       if [[ $all_tests_passed == 1 ]]; then
-        spd-say 'All tests passed.'
+        #spd-say 'All tests passed.'
       else 
-        spd-say 'Some test failed.'
+        #spd-say 'Some test failed.'
       fi
     fi
   done

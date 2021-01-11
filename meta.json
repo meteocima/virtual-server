@@ -73,5 +73,62 @@
         "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/index.md",
         "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/index.html",
         "url": "website/index.html"
+    },
+    "docs/pages/event.md": {
+        "headingCaption": "",
+        "headingFigure": "",
+        "title": "CIMA virtual-server",
+        "subtitle": "event package",
+        "heading": "",
+        "published": "2021-01-11T13:03:21.557Z",
+        "publishedFormatted": "January 11, 2021",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/event.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/event.html",
+        "url": "website/event.html"
+    },
+    "docs/pages/tailor.md": {
+        "headingCaption": "",
+        "headingFigure": "",
+        "title": "CIMA virtual-server",
+        "subtitle": "tailor package",
+        "heading": "",
+        "published": "2021-01-11T13:03:21.563Z",
+        "publishedFormatted": "January 11, 2021",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/tailor.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/tailor.html",
+        "url": "website/tailor.html"
+    },
+    "docs/pages/tasks.md": {
+        "headingCaption": "",
+        "headingFigure": "",
+        "title": "CIMA virtual-server",
+        "subtitle": "tasks package",
+        "heading": "",
+        "published": "2021-01-11T13:03:21.566Z",
+        "publishedFormatted": "January 11, 2021",
+        "draft": true,
+        "tags": [
+            "untagged"
+        ],
+        "categories": [
+            "uncategorised"
+        ],
+        "srcPath": "/home/parroit/Desktop/cimarepos/virtual-server/docs/pages/tasks.md",
+        "outPath": "/home/parroit/Desktop/cimarepos/virtual-server/website/tasks.html",
+        "url": "website/tasks.html"
     }
 }
