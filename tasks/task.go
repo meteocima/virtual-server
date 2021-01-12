@@ -16,10 +16,12 @@ type Task struct {
 	Failed        *event.Emitter
 	Succeeded     *event.Emitter
 	Done          *event.Emitter
-	Progress      *event.Emitter
-	FileProduced  *event.Emitter
-	StartedAt     time.Time
-	CompletedAt   time.Time
+
+	Progress     *event.Emitter
+	FileProduced *event.Emitter
+
+	StartedAt   time.Time
+	CompletedAt time.Time
 
 	ID          string
 	detailedLog io.WriteCloser
@@ -49,7 +51,11 @@ func (tsk *Task) Run() {
 
 		vs.LogInfo("START: %s: %s", tsk.ID, tsk.Description)
 
+		tsk.Status = Running
 		err := tsk.runner(tsk, &vs)
+		if err == nil && vs.Err != nil {
+			err = vs.Err
+		}
 
 		if err != nil {
 			vs.LogError("%s: %s", tsk.ID, err.Error())
@@ -61,7 +67,14 @@ func (tsk *Task) Run() {
 		detailedLog.Close()
 		delete(tasks, tsk.ID)
 
-		tsk.Done.Invoke(nil)
+		tsk.Done.Invoke(err)
+		if err != nil {
+			tsk.Failed.Invoke(err)
+			tsk.Status = Failed(err)
+		} else {
+			tsk.Succeeded.Invoke(nil)
+			tsk.Status = DoneOk
+		}
 	}()
 }
 

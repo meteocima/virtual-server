@@ -142,12 +142,9 @@ func TestNew(t *testing.T) {
 		assert.NoError(t, ctx.Err)
 	})
 
-	assert.PanicsWithValue(
-		t,
-		"Wrong configuration file \"../fixtures/virt-serv.toml\": unknown host `drum`.",
-		func() {
-			ctx.Exists(vpath.New("drum", ""))
-		},
-	)
+	t.Run("Bad hostname or config", func(t *testing.T) {
+		ctx.Exists(vpath.New("drum", ""))
+		assert.Equal(t, ctx.Err.Error(), "Exists `drum:.`: connection.FindHost: wrong configuration file \"../fixtures/virt-serv.toml\": unknown host `drum`")
+	})
 
 }

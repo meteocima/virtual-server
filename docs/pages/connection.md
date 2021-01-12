@@ -41,7 +41,7 @@ Connection ...
 #### func  FindHost
 
 ```go
-func FindHost(name string) Connection
+func FindHost(name string) (Connection, error)
 ```
 FindHost ...
 

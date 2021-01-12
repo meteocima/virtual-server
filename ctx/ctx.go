@@ -73,7 +73,11 @@ func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
 	}
 	defer ctx.setRunningFunction("IsFile `%s`", file.StringRel())()
 
-	conn := connection.FindHost(file.Host)
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return false
+	}
 
 	info, err := conn.Stat(file)
 
@@ -95,9 +99,13 @@ func (ctx *Context) Exists(file vpath.VirtualPath) bool {
 	}
 	defer ctx.setRunningFunction("Exists `%s`", file.StringRel())()
 
-	conn := connection.FindHost(file.Host)
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return false
+	}
 
-	_, err := conn.Stat(file)
+	_, err = conn.Stat(file)
 
 	if os.IsNotExist(err) {
 		return false
@@ -117,9 +125,14 @@ func (ctx *Context) ReadDir(dir vpath.VirtualPath) vpath.VirtualPathList {
 	}
 	defer ctx.setRunningFunction("ReadDir `%s`", dir.StringRel())()
 
-	conn := connection.FindHost(dir.Host)
+	conn, err := connection.FindHost(dir.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
+
 	var files vpath.VirtualPathList
-	files, err := conn.ReadDir(dir)
+	files, err = conn.ReadDir(dir)
 	if err != nil {
 		ctx.ContextFailed("connection.ReadDir", err)
 		return nil
@@ -134,8 +147,16 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 	}
 	defer ctx.setRunningFunction("Copy from `%s` to `%s`", from.StringRel(), to.StringRel())()
 
-	fromConn := connection.FindHost(from.Host)
-	toConn := connection.FindHost(to.Host)
+	fromConn, err := connection.FindHost(from.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
+	toConn, err := connection.FindHost(to.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
 
 	reader, err := fromConn.OpenReader(from)
 	if err != nil {
@@ -184,7 +205,11 @@ func (ctx *Context) WriteString(file vpath.VirtualPath, content string) {
 	}
 	defer ctx.setRunningFunction("WriteString to `%s`", file.StringRel())()
 
-	toConn := connection.FindHost(file.Host)
+	toConn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
 
 	writer, err := toConn.OpenWriter(file)
 	if err != nil {
@@ -209,7 +234,11 @@ func (ctx *Context) ReadString(file vpath.VirtualPath) string {
 	}
 	defer ctx.setRunningFunction("ReadString from `%s`", file.StringRel())()
 
-	conn := connection.FindHost(file.Host)
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return ""
+	}
 
 	reader, err := conn.OpenReader(file)
 	if err != nil {
@@ -236,8 +265,12 @@ func (ctx *Context) Link(from, to vpath.VirtualPath) {
 	}
 	defer ctx.setRunningFunction("Link from %s to %s", from.StringRel(), to.StringRel())()
 
-	conn := connection.FindHost(from.Host)
-	err := conn.Link(from, to)
+	conn, err := connection.FindHost(from.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
+	err = conn.Link(from, to)
 	if err != nil {
 		ctx.ContextFailed("conn.Link", err)
 	}
@@ -250,8 +283,13 @@ func (ctx *Context) MkDir(dir vpath.VirtualPath) {
 	}
 	defer ctx.setRunningFunction("MkDir %s", dir.StringRel())()
 
-	conn := connection.FindHost(dir.Host)
-	err := conn.MkDir(dir)
+	conn, err := connection.FindHost(dir.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
+
+	err = conn.MkDir(dir)
 	if err != nil {
 		ctx.ContextFailed("conn.MkDir", err)
 	}
@@ -264,8 +302,13 @@ func (ctx *Context) RmDir(dir vpath.VirtualPath) {
 	}
 	defer ctx.setRunningFunction("RmDir %s", dir.StringRel())()
 
-	conn := connection.FindHost(dir.Host)
-	err := conn.RmDir(dir)
+	conn, err := connection.FindHost(dir.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
+
+	err = conn.RmDir(dir)
 	if err != nil {
 		ctx.ContextFailed("conn.RmDir", err)
 	}
@@ -278,8 +321,12 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 	}
 	defer ctx.setRunningFunction("RmFile %s", file.StringRel())()
 
-	conn := connection.FindHost(file.Host)
-	err := conn.RmFile(file)
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return
+	}
+	err = conn.RmFile(file)
 	if err != nil {
 		ctx.ContextFailed("conn.RmFile", err)
 	}
@@ -303,7 +350,11 @@ func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...con
 	}
 	defer ctx.setRunningFunction("Run %s %s", command.StringRel(), strings.Join(args, " "))()
 
-	conn := connection.FindHost(command.Host)
+	conn, err := connection.FindHost(command.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
 	proc, err := conn.Run(command, args, options...)
 	if err != nil {
 		ctx.ContextFailed("conn.Run", err)
@@ -339,7 +390,7 @@ func (ll LogLevel) String() string {
 	case LevelInfo:
 		return "INFO"
 	case LevelDetail:
-		return "INFO"
+		return "DETAIL"
 	case LevelDebug:
 		return "DEBUG"
 	default:
@@ -384,7 +435,7 @@ func (ctx *Context) LogInfo(msg string, args ...interface{}) {
 // the configured log level is
 // equal or great than levelDetail
 func (ctx *Context) LogDetail(msg string, args ...interface{}) {
-	ctx.logWrite(LevelInfo, msg, args)
+	ctx.logWrite(LevelDetail, msg, args)
 }
 
 // LogWarning prints a log string if

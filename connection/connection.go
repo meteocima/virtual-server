@@ -100,19 +100,16 @@ func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualP
 }
 
 // FindHost ...
-func FindHost(name string) Connection {
-	fail := func(msg string, args ...interface{}) {
-		panic(fmt.Sprintf("Wrong configuration file \"%s\": ", config.Filename) + fmt.Sprintf(msg, args...))
-	}
+func FindHost(name string) (Connection, error) {
 
 	cn, ok := connections[name]
 	if ok {
-		return cn
+		return cn, nil
 	}
 
 	host, ok := config.Hosts[name]
 	if !ok {
-		fail("unknown host `%s`.", name)
+		return nil, fmt.Errorf("wrong configuration file \"%s\": unknown host `%s`", config.Filename, name)
 	}
 
 	if host.Type == config.HostTypeOS {
@@ -127,15 +124,15 @@ func FindHost(name string) Connection {
 			hostName: name,
 		}
 	} else {
-		fail("unknown connection type %d for host `%s`.", host.Type, name)
+		return nil, fmt.Errorf("wrong configuration file \"%s\": unknown connection type %d for host `%s`", config.Filename, host.Type, name)
 	}
 
 	connections[name] = cn
 
 	err := cn.Open()
 	if err != nil {
-		fail("cannot connect to host `%s`: %w", name, err)
+		return nil, fmt.Errorf("wrong configuration file \"%s\": cannot connect to host `%s`: %w", config.Filename, name, err)
 	}
 
-	return cn
+	return cn, nil
 }
