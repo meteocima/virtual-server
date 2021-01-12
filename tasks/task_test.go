@@ -26,7 +26,7 @@ func TestTask(t *testing.T) {
 			vs.LogInfo("ciao")
 			vs.LogDetail("salve")
 			vs.LogDebug("urrà")
-			assert.Same(t, tsk.Status, Running)
+			assert.Same(t, tsk.Status(), Running)
 			tests.Done()
 
 			return nil
@@ -37,7 +37,7 @@ func TestTask(t *testing.T) {
 		tsk.Run()
 
 		tsk.Done.AwaitOne()
-		assert.Same(t, tsk.Status, DoneOk)
+		assert.Same(t, tsk.Status(), DoneOk)
 		assert.Equal(t,
 			`INFO: START: TEST: A task for tests.
 INFO: ciao
@@ -60,7 +60,7 @@ INFO: DONE: TEST
 		tsk.Run()
 
 		tsk.Done.AwaitOne()
-		assert.Same(t, tsk.Status, DoneOk)
+		assert.Same(t, tsk.Status(), DoneOk)
 
 		contentBuff, err := ioutil.ReadFile("TEST.detailed.log")
 		assert.NoError(t, err)
@@ -88,10 +88,10 @@ INFO: DONE: TEST
 
 		tsk.Done.AwaitOne()
 
-		assert.True(t, tsk.Status.IsFailure())
+		assert.True(t, tsk.Status().IsFailure())
 		assert.Equal(t,
 			"Link from peppa:./bad to peppa:./bad: connection.FindHost: wrong configuration file \"../fixtures/virt-serv.toml\": unknown host `peppa`",
-			tsk.Status.Err.Error(),
+			tsk.Status().Err.Error(),
 		)
 	})
 

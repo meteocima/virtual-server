@@ -36,75 +36,45 @@ var Stdout io.Writer
 ```
 Stdout ...
 
-#### type LoggedWriteCloser
+#### type MultiWriteCloser
 
 ```go
-type LoggedWriteCloser struct {
+type MultiWriteCloser struct {
 	io.Writer
 }
 ```
 
-LoggedWriteCloser is a wrapper io.WriteCloser that writes everything it's
-written both to the source writer and to stdout
+MultiWriteCloser is a wrapper io.WriteCloser that writes everything it's written
+both to the source writer and to stdout
 
-#### func  NewLoggedWriteCloser
+#### func  NewMultiWriteCloser
 
 ```go
-func NewLoggedWriteCloser(source io.WriteCloser, details, log io.Writer) *LoggedWriteCloser
+func NewMultiWriteCloser(closer io.WriteCloser, writers ...io.Writer) *MultiWriteCloser
 ```
-NewLoggedWriteCloser creates a new LoggedWriteCloser that wraps source
+NewMultiWriteCloser creates a new MultiWriteCloser that wraps source
 
-#### func (*LoggedWriteCloser) Close
+#### func (*MultiWriteCloser) Close
 
 ```go
-func (log *LoggedWriteCloser) Close() error
+func (mwc *MultiWriteCloser) Close() error
 ```
 Close the source io.WriteCloser
-
-#### type SimulationTaskStatus
-
-```go
-type SimulationTaskStatus struct {
-	FinalDewetraDelivery        *TaskStatus
-	VdADelivery                 []*TaskStatus
-	ArpalDelivery               []*TaskStatus
-	ArpaPiemonteDelivery        []*TaskStatus
-	ContinuumDelivery           []*TaskStatus
-	ArpaPiemonteIndexesDelivery []*TaskStatus
-
-	AUXDownloadDomain1       []*TaskStatus
-	AUXPostProcessDomain1    []*TaskStatus
-	AUXDownloadDomain3       []*TaskStatus
-	AUXPostProcessDomain3    []*TaskStatus
-	OUTPostProcess           []*TaskStatus
-	OUTPostProcessedDownload []*TaskStatus
-	FinalZTDScript           *TaskStatus
-}
-```
-
-SimulationTaskStatus is the status of a single WRF run
-
-#### func  NewSimulationTaskStatus
-
-```go
-func NewSimulationTaskStatus(totHours int) SimulationTaskStatus
-```
-NewSimulationTaskStatus returns a new SimulationTaskStatus instance initialized
-for a run of totHours hours
 
 #### type Task
 
 ```go
 type Task struct {
-	Status        *TaskStatus
 	StatusChanged *event.Emitter
 	Failed        *event.Emitter
 	Succeeded     *event.Emitter
 	Done          *event.Emitter
-	Progress      *event.Emitter
-	FileProduced  *event.Emitter
-	StartedAt     time.Time
-	CompletedAt   time.Time
+
+	Progress     *event.Emitter
+	FileProduced *event.Emitter
+
+	StartedAt   time.Time
+	CompletedAt time.Time
 
 	ID string
 
@@ -127,6 +97,20 @@ New ...
 func (tsk *Task) Run()
 ```
 Run ...
+
+#### func (*Task) SetStatus
+
+```go
+func (tsk *Task) SetStatus(newStatus *TaskStatus)
+```
+SetStatus ...
+
+#### func (*Task) Status
+
+```go
+func (tsk *Task) Status() *TaskStatus
+```
+Status ...
 
 #### type TaskRunner
 

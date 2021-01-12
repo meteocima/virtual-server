@@ -52,56 +52,33 @@ prerequisites has failed</p>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Stdout io.Writer
 </code></pre>
 <p>Stdout ...</p>
-<h4 id="type-loggedwritecloser"><a class="header-anchor" href="#type-loggedwritecloser"></a> type LoggedWriteCloser</h4>
-<pre><code class="language-go"><span class="hljs-keyword">type</span> LoggedWriteCloser <span class="hljs-keyword">struct</span> {
+<h4 id="type-multiwritecloser"><a class="header-anchor" href="#type-multiwritecloser"></a> type MultiWriteCloser</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> MultiWriteCloser <span class="hljs-keyword">struct</span> {
 	io.Writer
 }
 </code></pre>
-<p>LoggedWriteCloser is a wrapper io.WriteCloser that writes everything it's
-written both to the source writer and to stdout</p>
-<h4 id="func-newloggedwritecloser"><a class="header-anchor" href="#func-newloggedwritecloser"></a> func  NewLoggedWriteCloser</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewLoggedWriteCloser</span><span class="hljs-params">(source io.WriteCloser, details, log io.Writer)</span> *<span class="hljs-title">LoggedWriteCloser</span></span>
+<p>MultiWriteCloser is a wrapper io.WriteCloser that writes everything it's written
+both to the source writer and to stdout</p>
+<h4 id="func-newmultiwritecloser"><a class="header-anchor" href="#func-newmultiwritecloser"></a> func  NewMultiWriteCloser</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewMultiWriteCloser</span><span class="hljs-params">(closer io.WriteCloser, writers ...io.Writer)</span> *<span class="hljs-title">MultiWriteCloser</span></span>
 </code></pre>
-<p>NewLoggedWriteCloser creates a new LoggedWriteCloser that wraps source</p>
-<h4 id="func-(*loggedwritecloser)-close"><a class="header-anchor" href="#func-(*loggedwritecloser)-close"></a> func (*LoggedWriteCloser) Close</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(log *LoggedWriteCloser)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
+<p>NewMultiWriteCloser creates a new MultiWriteCloser that wraps source</p>
+<h4 id="func-(*multiwritecloser)-close"><a class="header-anchor" href="#func-(*multiwritecloser)-close"></a> func (*MultiWriteCloser) Close</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(mwc *MultiWriteCloser)</span> <span class="hljs-title">Close</span><span class="hljs-params">()</span> <span class="hljs-title">error</span></span>
 </code></pre>
 <p>Close the source io.WriteCloser</p>
-<h4 id="type-simulationtaskstatus"><a class="header-anchor" href="#type-simulationtaskstatus"></a> type SimulationTaskStatus</h4>
-<pre><code class="language-go"><span class="hljs-keyword">type</span> SimulationTaskStatus <span class="hljs-keyword">struct</span> {
-	FinalDewetraDelivery        *TaskStatus
-	VdADelivery                 []*TaskStatus
-	ArpalDelivery               []*TaskStatus
-	ArpaPiemonteDelivery        []*TaskStatus
-	ContinuumDelivery           []*TaskStatus
-	ArpaPiemonteIndexesDelivery []*TaskStatus
-
-	AUXDownloadDomain1       []*TaskStatus
-	AUXPostProcessDomain1    []*TaskStatus
-	AUXDownloadDomain3       []*TaskStatus
-	AUXPostProcessDomain3    []*TaskStatus
-	OUTPostProcess           []*TaskStatus
-	OUTPostProcessedDownload []*TaskStatus
-	FinalZTDScript           *TaskStatus
-}
-</code></pre>
-<p>SimulationTaskStatus is the status of a single WRF run</p>
-<h4 id="func-newsimulationtaskstatus"><a class="header-anchor" href="#func-newsimulationtaskstatus"></a> func  NewSimulationTaskStatus</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewSimulationTaskStatus</span><span class="hljs-params">(totHours <span class="hljs-keyword">int</span>)</span> <span class="hljs-title">SimulationTaskStatus</span></span>
-</code></pre>
-<p>NewSimulationTaskStatus returns a new SimulationTaskStatus instance initialized
-for a run of totHours hours</p>
 <h4 id="type-task"><a class="header-anchor" href="#type-task"></a> type Task</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Task <span class="hljs-keyword">struct</span> {
-	Status        *TaskStatus
 	StatusChanged *event.Emitter
 	Failed        *event.Emitter
 	Succeeded     *event.Emitter
 	Done          *event.Emitter
-	Progress      *event.Emitter
-	FileProduced  *event.Emitter
-	StartedAt     time.Time
-	CompletedAt   time.Time
+
+	Progress     *event.Emitter
+	FileProduced *event.Emitter
+
+	StartedAt   time.Time
+	CompletedAt time.Time
 
 	ID <span class="hljs-keyword">string</span>
 
@@ -117,6 +94,14 @@ for a run of totHours hours</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(tsk *Task)</span> <span class="hljs-title">Run</span><span class="hljs-params">()</span></span>
 </code></pre>
 <p>Run ...</p>
+<h4 id="func-(*task)-setstatus"><a class="header-anchor" href="#func-(*task)-setstatus"></a> func (*Task) SetStatus</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(tsk *Task)</span> <span class="hljs-title">SetStatus</span><span class="hljs-params">(newStatus *TaskStatus)</span></span>
+</code></pre>
+<p>SetStatus ...</p>
+<h4 id="func-(*task)-status"><a class="header-anchor" href="#func-(*task)-status"></a> func (*Task) Status</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(tsk *Task)</span> <span class="hljs-title">Status</span><span class="hljs-params">()</span> *<span class="hljs-title">TaskStatus</span></span>
+</code></pre>
+<p>Status ...</p>
 <h4 id="type-taskrunner"><a class="header-anchor" href="#type-taskrunner"></a> type TaskRunner</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> TaskRunner <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(tsk *Task, ctx *ctx.Context)</span> <span class="hljs-title">error</span></span>
 </code></pre>

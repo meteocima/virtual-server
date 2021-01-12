@@ -11,7 +11,7 @@ import (
 
 // Task ...
 type Task struct {
-	Status        *TaskStatus
+	status        *TaskStatus
 	StatusChanged *event.Emitter
 	Failed        *event.Emitter
 	Succeeded     *event.Emitter
@@ -38,6 +38,21 @@ var tasks = map[string]Task{}
 // Stdout ...
 var Stdout io.Writer
 
+// SetStatus ...
+func (tsk *Task) SetStatus(newStatus *TaskStatus) {
+	if tsk.status == newStatus {
+		return
+	}
+
+	tsk.status = newStatus
+	tsk.StatusChanged.Invoke(newStatus)
+}
+
+// Status ...
+func (tsk *Task) Status() *TaskStatus {
+	return tsk.status
+}
+
 // Run ...
 func (tsk *Task) Run() {
 	go func() {
@@ -45,13 +60,13 @@ func (tsk *Task) Run() {
 		infoLog := openTaskLog(tsk.ID + ".info.log")
 		detailedLog := openTaskLog(tsk.ID + ".detailed.log")
 
-		tsk.infoLog = NewLoggedWriteCloser(infoLog, detailedLog, Stdout)
+		tsk.infoLog = NewMultiWriteCloser(infoLog, detailedLog, Stdout)
 		tsk.detailedLog = detailedLog
 		vs := ctx.New(tsk.infoLog, tsk.detailedLog)
 
 		vs.LogInfo("START: %s: %s", tsk.ID, tsk.Description)
 
-		tsk.Status = Running
+		tsk.SetStatus(Running)
 		err := tsk.runner(tsk, &vs)
 		if err == nil && vs.Err != nil {
 			err = vs.Err
@@ -70,10 +85,10 @@ func (tsk *Task) Run() {
 		tsk.Done.Invoke(err)
 		if err != nil {
 			tsk.Failed.Invoke(err)
-			tsk.Status = Failed(err)
+			tsk.SetStatus(Failed(err))
 		} else {
 			tsk.Succeeded.Invoke(nil)
-			tsk.Status = DoneOk
+			tsk.SetStatus(DoneOk)
 		}
 	}()
 }
@@ -89,7 +104,7 @@ func openTaskLog(path string) io.WriteCloser {
 // New ...
 func New(ID string, runner TaskRunner) *Task {
 	t := Task{
-		Status: Scheduled,
+		status: Scheduled,
 		ID:     ID,
 		runner: runner,
 	}

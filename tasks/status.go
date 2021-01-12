@@ -1,7 +1,5 @@
 package tasks
 
-import "math"
-
 // TaskStatus represents the status of a single task
 type TaskStatus struct {
 	Err error
@@ -30,6 +28,7 @@ var Running = &TaskStatus{}
 // one of it's prerequisites has failed
 var Cancelled = &TaskStatus{}
 
+/*
 // SimulationTaskStatus is the status of a single WRF run
 type SimulationTaskStatus struct {
 	FinalDewetraDelivery        *TaskStatus
@@ -87,3 +86,4 @@ func NewSimulationTaskStatus(totHours int) SimulationTaskStatus {
 
 	return status
 }
+*/
