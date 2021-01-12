@@ -31,19 +31,35 @@ var Scheduled = &TaskStatus{}
 ```
 Scheduled is the status of a task scheduled but not yet executed
 
-#### func  List
+```go
+var Stdout io.Writer
+```
+Stdout ...
+
+#### type LoggedWriteCloser
 
 ```go
-func List(w io.Writer)
+type LoggedWriteCloser struct {
+	io.Writer
+}
 ```
-List ...
 
-#### func  Run
+LoggedWriteCloser is a wrapper io.WriteCloser that writes everything it's
+written both to the source writer and to stdout
+
+#### func  NewLoggedWriteCloser
 
 ```go
-func Run(tsk Task)
+func NewLoggedWriteCloser(source io.WriteCloser, details, log io.Writer) *LoggedWriteCloser
 ```
-Run ...
+NewLoggedWriteCloser creates a new LoggedWriteCloser that wraps source
+
+#### func (*LoggedWriteCloser) Close
+
+```go
+func (log *LoggedWriteCloser) Close() error
+```
+Close the source io.WriteCloser
 
 #### type SimulationTaskStatus
 
@@ -79,18 +95,46 @@ for a run of totHours hours
 #### type Task
 
 ```go
-type Task interface {
-	fmt.Stringer
-	Run() error
-	ID() string
-	InfoLogFilePath() string
-	DetailedLogFilePath() string
-	DetailedLog() io.WriteCloser
-	InfoLog() io.WriteCloser
+type Task struct {
+	Status        *TaskStatus
+	StatusChanged *event.Emitter
+	Failed        *event.Emitter
+	Succeeded     *event.Emitter
+	Done          *event.Emitter
+	Progress      *event.Emitter
+	FileProduced  *event.Emitter
+	StartedAt     time.Time
+	CompletedAt   time.Time
+
+	ID string
+
+	Description string
 }
 ```
 
 Task ...
+
+#### func  New
+
+```go
+func New(ID string, runner TaskRunner) *Task
+```
+New ...
+
+#### func (*Task) Run
+
+```go
+func (tsk *Task) Run()
+```
+Run ...
+
+#### type TaskRunner
+
+```go
+type TaskRunner func(tsk *Task, ctx *ctx.Context) error
+```
+
+TaskRunner ...
 
 #### type TaskStatus
 

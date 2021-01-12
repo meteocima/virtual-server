@@ -5,6 +5,7 @@ package event
 // channel, between requesting goroutines
 // and the `Emitter` internal one.
 type listenerAction struct {
+	emitter   *Emitter
 	kind      actionKind
 	listener  *Listener
 	event     *Event
@@ -29,64 +30,86 @@ const (
 // functions below create listenerAction
 // for of any possible kind of action.
 
-func countListenersAction() listenerAction {
+func countListenersAction(emitter *Emitter) listenerAction {
 	countResp := make(chan int)
 	return listenerAction{
+		emitter:   emitter,
 		kind:      listenerActionCount,
 		countResp: countResp,
 	}
 }
 
-func addListenerAction(listener *Listener) listenerAction {
+func addListenerAction(listener *Listener, emitter *Emitter) listenerAction {
 	return listenerAction{
+		emitter:  emitter,
 		kind:     listenerActionAdd,
 		listener: listener,
 	}
 }
 
-func removeListenerAction(listener *Listener) listenerAction {
+func removeListenerAction(listener *Listener, emitter *Emitter) listenerAction {
 	return listenerAction{
+		emitter:  emitter,
 		kind:     listenerActionRemove,
 		listener: listener,
 	}
 }
 
-func clearListenersAction() listenerAction {
+func closeEmitterListenersAction(emitter *Emitter) listenerAction {
 	return listenerAction{
-		kind: listenerActionClear,
+		emitter: emitter,
+		kind:    listenerActionClear,
 	}
 }
 
-func emitListenerAction(event *Event) listenerAction {
+func emitListenerAction(event *Event, emitter *Emitter) listenerAction {
+	countResp := make(chan int)
+
 	return listenerAction{
-		kind:  listenerActionEmit,
-		event: event,
+		emitter:   emitter,
+		kind:      listenerActionEmit,
+		event:     event,
+		countResp: countResp,
 	}
 }
+
+var actionsOnListeners = make(chan listenerAction)
 
 // loop though all listener actions emitted
 // from `actionsOnListeners` channel, and
 // execute the action specific for any of them.
-func (e *Emitter) executeListenerActions() {
-	for action := range e.actionsOnListeners {
-		switch action.kind {
-		case listenerActionAdd:
-			e.listeners[action.listener] = struct{}{}
-		case listenerActionClear:
-			for l := range e.listeners {
-				close(l.c)
+func init() {
+	go func() {
+		for action := range actionsOnListeners {
+			switch action.kind {
+			case listenerActionAdd:
+				action.emitter.listeners[action.listener] = struct{}{}
+			case listenerActionClear:
+				for l := range action.emitter.listeners {
+					if !l.closed {
+						close(l.c)
+						l.closed = true
+					}
+				}
+				action.emitter.listeners = map[*Listener]struct{}{}
+			case listenerActionEmit:
+				for l := range action.emitter.listeners {
+					l.c <- action.event
+				}
+				action.countResp <- 0
+			case listenerActionRemove:
+				if !action.listener.closed {
+					close(action.listener.c)
+					action.listener.closed = true
+				}
+
+				delete(action.emitter.listeners, action.listener)
+			case listenerActionCount:
+				action.countResp <- len(action.emitter.listeners)
+				close(action.countResp)
+			default:
+				panic("Unknown action kind")
 			}
-			e.listeners = map[*Listener]struct{}{}
-		case listenerActionEmit:
-			/* YODO */
-		case listenerActionRemove:
-			close(action.listener.c)
-			delete(e.listeners, action.listener)
-		case listenerActionCount:
-			action.countResp <- len(e.listeners)
-			close(action.countResp)
-		default:
-			panic("Unknown action kind")
 		}
-	}
+	}()
 }

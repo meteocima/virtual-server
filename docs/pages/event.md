@@ -64,7 +64,7 @@ func main() {
 #### func  CloseEmitters
 
 ```go
-func CloseEmitters(emitters ...*Emitter)
+func CloseEmitters(emitters ...**Emitter)
 ```
 CloseEmitters closes all emitters of a source.
 
@@ -120,13 +120,6 @@ func (e *Emitter) AwaitOne() *Event
 ```
 AwaitOne registers a new `Listener` on an Emitter, then waits for an event to
 occurs on it, and finally unregisters the listener instance.
-
-#### func (*Emitter) Clear
-
-```go
-func (e *Emitter) Clear()
-```
-Clear removes all listener of the `Emitter`
 
 #### func (*Emitter) Close
 

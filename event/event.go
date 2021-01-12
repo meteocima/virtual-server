@@ -24,21 +24,18 @@ type Event struct {
 // `listeners` field using a channel of `listenerAction`
 // structs.
 type Emitter struct {
-	source             Source
-	listeners          map[*Listener]struct{}
-	actionsOnListeners chan listenerAction
+	closed    bool
+	source    Source
+	listeners map[*Listener]struct{}
 }
 
 // NewEmitter return a new instance
 // of Emitter, linked `source` argument.
 func NewEmitter(source Source) *Emitter {
-	emitter := &Emitter{
-		source:             source,
-		listeners:          map[*Listener]struct{}{},
-		actionsOnListeners: make(chan listenerAction),
+	return &Emitter{
+		source:    source,
+		listeners: map[*Listener]struct{}{},
 	}
-	go emitter.executeListenerActions()
-	return emitter
 }
 
 // InitSource initializes a list of fields
@@ -50,23 +47,25 @@ func InitSource(source Source, emitters ...**Emitter) {
 }
 
 // CloseEmitters closes all emitters of a source.
-func CloseEmitters(emitters ...*Emitter) {
+func CloseEmitters(emitters ...**Emitter) {
 	for _, emitter := range emitters {
-		emitter.Close()
+		(*emitter).Close()
+		//*emitter = nil
 	}
 }
 
 // Listener is a single listener
 // which is listening on events of an `Emitter`.
 type Listener struct {
-	c chan *Event
-	e *Emitter
+	c      chan *Event
+	closed bool
+	e      *Emitter
 }
 
 // Stop listening new events invoked
 // on a single listener.
 func (l *Listener) Stop() {
-	l.e.actionsOnListeners <- removeListenerAction(l)
+	actionsOnListeners <- removeListenerAction(l, l.e)
 }
 
 // Invoke causes all listeners of this
@@ -78,7 +77,9 @@ func (e *Emitter) Invoke(payload interface{}) {
 		Source:  e.source,
 		Payload: payload,
 	}
-	e.actionsOnListeners <- emitListenerAction(&event)
+	action := emitListenerAction(&event, e)
+	actionsOnListeners <- action
+	<-action.countResp
 }
 
 // Handler ...
@@ -88,8 +89,8 @@ type Handler func(ev *Event)
 // listeners currently listening
 // on this emitter.
 func (e *Emitter) Count() int {
-	action := countListenersAction()
-	e.actionsOnListeners <- action
+	action := countListenersAction(e)
+	actionsOnListeners <- action
 	return <-action.countResp
 }
 
@@ -105,19 +106,14 @@ func (e *Emitter) Listen(fn Handler) *Listener {
 	return lst
 }
 
-// Clear removes all listener of
-// the `Emitter`
-func (e *Emitter) Clear() {
-	e.actionsOnListeners <- clearListenersAction()
-}
-
 // Close removes all listener of
 // the `Emitter` calling `Clear` method, and then
 // closes the `actionsOnListeners` channel, making the internal `Emitter`
 // goroutine to terminate politely
 func (e *Emitter) Close() {
-	e.actionsOnListeners <- clearListenersAction()
-	close(e.actionsOnListeners)
+	e.closed = true
+	actionsOnListeners <- closeEmitterListenersAction(e)
+	//close(e.actionsOnListeners)
 }
 
 // AwaitOne registers a new `Listener` on an
@@ -125,9 +121,12 @@ func (e *Emitter) Close() {
 // on it, and finally unregisters the listener
 // instance.
 func (e *Emitter) AwaitOne() *Event {
+	if e.closed {
+		return nil
+	}
 	lst := e.AddListener()
 	event := <-lst.c
-	e.actionsOnListeners <- removeListenerAction(lst)
+	lst.Stop()
 	return event
 }
 
@@ -135,6 +134,9 @@ func (e *Emitter) AwaitOne() *Event {
 // register it and returns its channel to `range`
 // through it.
 func (e *Emitter) AwaitAny() chan *Event {
+	if e.closed {
+		return nil
+	}
 	lst := e.AddListener()
 	return lst.c
 }
@@ -143,7 +145,13 @@ func (e *Emitter) AwaitAny() chan *Event {
 // instance, register it through `addListenerAction`
 // and finally returns it.
 func (e *Emitter) AddListener() *Listener {
-	lst := Listener{make(chan *Event), e}
-	e.actionsOnListeners <- addListenerAction(&lst)
+	if e.closed {
+		return nil
+	}
+	lst := Listener{
+		c: make(chan *Event),
+		e: e,
+	}
+	actionsOnListeners <- addListenerAction(&lst, e)
 	return &lst
 }

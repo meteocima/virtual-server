@@ -14,16 +14,19 @@
 
 ```go
 type Context struct {
-	Err             error
-	RunningFunction string
-	RunningTask     string
-	Log             io.Writer
-	DetailLog       io.Writer
+	Err error
 }
 ```
 
 Context abstract a set of operations on one or multiple FileSystem instances
 that fails or succeed as a whole
+
+#### func  New
+
+```go
+func New(infoLog io.Writer, detailLog io.Writer) Context
+```
+New ...
 
 #### func (*Context) ContextFailed
 
@@ -67,12 +70,45 @@ func (ctx *Context) Link(from, to vpath.VirtualPath)
 ```
 Link ...
 
-#### func (*Context) LogF
+#### func (*Context) LogDebug
 
 ```go
-func (ctx *Context) LogF(msg string, args ...interface{})
+func (ctx *Context) LogDebug(msg string, args ...interface{})
 ```
-LogF ...
+LogDebug prints a log string if the configured log level is equal or great than
+levelDebug
+
+#### func (*Context) LogDetail
+
+```go
+func (ctx *Context) LogDetail(msg string, args ...interface{})
+```
+LogDetail prints a log string if the configured log level is equal or great than
+levelDetail
+
+#### func (*Context) LogError
+
+```go
+func (ctx *Context) LogError(msg string, args ...interface{})
+```
+LogError prints a log string if the configured log level is equal or great than
+levelError
+
+#### func (*Context) LogInfo
+
+```go
+func (ctx *Context) LogInfo(msg string, args ...interface{})
+```
+LogInfo prints a log string if the configured log level is equal or great than
+levelInfo
+
+#### func (*Context) LogWarning
+
+```go
+func (ctx *Context) LogWarning(msg string, args ...interface{})
+```
+LogWarning prints a log string if the configured log level is equal or great
+than levelWarning
 
 #### func (*Context) MkDir
 
@@ -123,19 +159,12 @@ func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...con
 ```
 Run ...
 
-#### func (*Context) SetRunning
+#### func (*Context) SetLevel
 
 ```go
-func (ctx *Context) SetRunning(msg string, args ...interface{}) func()
+func (ctx *Context) SetLevel(value LogLevel)
 ```
-SetRunning ...
-
-#### func (*Context) SetTask
-
-```go
-func (ctx *Context) SetTask(msg string, args ...interface{}) func()
-```
-SetTask ...
+SetLevel set the maximum level a message must have to be logged.
 
 #### func (*Context) WriteString
 
@@ -143,3 +172,32 @@ SetTask ...
 func (ctx *Context) WriteString(file vpath.VirtualPath, content string)
 ```
 WriteString ...
+
+#### type LogLevel
+
+```go
+type LogLevel int
+```
+
+LogLevel is a type that represents the importance level of a log message
+
+```go
+const (
+	// LevelError identify error messages
+	LevelError LogLevel = iota
+	// LevelWarning identify Warning messages
+	LevelWarning
+	// LevelInfo identify Info messages
+	LevelInfo
+	// LevelDetail identify Detail messages
+	LevelDetail
+	// LevelDebug identify Debug messages
+	LevelDebug
+)
+```
+
+#### func (LogLevel) String
+
+```go
+func (ll LogLevel) String() string
+```

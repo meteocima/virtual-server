@@ -38,15 +38,15 @@
 <h2 id="usage"><a class="header-anchor" href="#usage"></a> Usage</h2>
 <h4 id="type-context"><a class="header-anchor" href="#type-context"></a> type Context</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> Context <span class="hljs-keyword">struct</span> {
-	Err             error
-	RunningFunction <span class="hljs-keyword">string</span>
-	RunningTask     <span class="hljs-keyword">string</span>
-	Log             io.Writer
-	DetailLog       io.Writer
+	Err error
 }
 </code></pre>
 <p>Context abstract a set of operations on one or multiple FileSystem instances
 that fails or succeed as a whole</p>
+<h4 id="func-new"><a class="header-anchor" href="#func-new"></a> func  New</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(infoLog io.Writer, detailLog io.Writer)</span> <span class="hljs-title">Context</span></span>
+</code></pre>
+<p>New ...</p>
 <h4 id="func-(*context)-contextfailed"><a class="header-anchor" href="#func-(*context)-contextfailed"></a> func (*Context) ContextFailed</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">ContextFailed</span><span class="hljs-params">(offendingFunc <span class="hljs-keyword">string</span>, err error)</span></span>
 </code></pre>
@@ -71,10 +71,31 @@ that fails or succeed as a whole</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">Link</span><span class="hljs-params">(from, to vpath.VirtualPath)</span></span>
 </code></pre>
 <p>Link ...</p>
-<h4 id="func-(*context)-logf"><a class="header-anchor" href="#func-(*context)-logf"></a> func (*Context) LogF</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">LogF</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span></span>
+<h4 id="func-(*context)-logdebug"><a class="header-anchor" href="#func-(*context)-logdebug"></a> func (*Context) LogDebug</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">LogDebug</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span></span>
 </code></pre>
-<p>LogF ...</p>
+<p>LogDebug prints a log string if the configured log level is equal or great than
+levelDebug</p>
+<h4 id="func-(*context)-logdetail"><a class="header-anchor" href="#func-(*context)-logdetail"></a> func (*Context) LogDetail</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">LogDetail</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span></span>
+</code></pre>
+<p>LogDetail prints a log string if the configured log level is equal or great than
+levelDetail</p>
+<h4 id="func-(*context)-logerror"><a class="header-anchor" href="#func-(*context)-logerror"></a> func (*Context) LogError</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">LogError</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span></span>
+</code></pre>
+<p>LogError prints a log string if the configured log level is equal or great than
+levelError</p>
+<h4 id="func-(*context)-loginfo"><a class="header-anchor" href="#func-(*context)-loginfo"></a> func (*Context) LogInfo</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">LogInfo</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span></span>
+</code></pre>
+<p>LogInfo prints a log string if the configured log level is equal or great than
+levelInfo</p>
+<h4 id="func-(*context)-logwarning"><a class="header-anchor" href="#func-(*context)-logwarning"></a> func (*Context) LogWarning</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">LogWarning</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span></span>
+</code></pre>
+<p>LogWarning prints a log string if the configured log level is equal or great
+than levelWarning</p>
 <h4 id="func-(*context)-mkdir"><a class="header-anchor" href="#func-(*context)-mkdir"></a> func (*Context) MkDir</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">MkDir</span><span class="hljs-params">(dir vpath.VirtualPath)</span></span>
 </code></pre>
@@ -103,18 +124,34 @@ that fails or succeed as a whole</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">Run</span><span class="hljs-params">(command vpath.VirtualPath, args []<span class="hljs-keyword">string</span>, options ...connection.RunOptions)</span> <span class="hljs-title">connection</span>.<span class="hljs-title">Process</span></span>
 </code></pre>
 <p>Run ...</p>
-<h4 id="func-(*context)-setrunning"><a class="header-anchor" href="#func-(*context)-setrunning"></a> func (*Context) SetRunning</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">SetRunning</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>
+<h4 id="func-(*context)-setlevel"><a class="header-anchor" href="#func-(*context)-setlevel"></a> func (*Context) SetLevel</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">SetLevel</span><span class="hljs-params">(value LogLevel)</span></span>
 </code></pre>
-<p>SetRunning ...</p>
-<h4 id="func-(*context)-settask"><a class="header-anchor" href="#func-(*context)-settask"></a> func (*Context) SetTask</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">SetTask</span><span class="hljs-params">(msg <span class="hljs-keyword">string</span>, args ...<span class="hljs-keyword">interface</span>{})</span> <span class="hljs-title">func</span><span class="hljs-params">()</span></span>
-</code></pre>
-<p>SetTask ...</p>
+<p>SetLevel set the maximum level a message must have to be logged.</p>
 <h4 id="func-(*context)-writestring"><a class="header-anchor" href="#func-(*context)-writestring"></a> func (*Context) WriteString</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ctx *Context)</span> <span class="hljs-title">WriteString</span><span class="hljs-params">(file vpath.VirtualPath, content <span class="hljs-keyword">string</span>)</span></span>
 </code></pre>
 <p>WriteString ...</p>
+<h4 id="type-loglevel"><a class="header-anchor" href="#type-loglevel"></a> type LogLevel</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> LogLevel <span class="hljs-keyword">int</span>
+</code></pre>
+<p>LogLevel is a type that represents the importance level of a log message</p>
+<pre><code class="language-go"><span class="hljs-keyword">const</span> (
+	<span class="hljs-comment">// LevelError identify error messages</span>
+	LevelError LogLevel = <span class="hljs-literal">iota</span>
+	<span class="hljs-comment">// LevelWarning identify Warning messages</span>
+	LevelWarning
+	<span class="hljs-comment">// LevelInfo identify Info messages</span>
+	LevelInfo
+	<span class="hljs-comment">// LevelDetail identify Detail messages</span>
+	LevelDetail
+	<span class="hljs-comment">// LevelDebug identify Debug messages</span>
+	LevelDebug
+)
+</code></pre>
+<h4 id="func-(loglevel)-string"><a class="header-anchor" href="#func-(loglevel)-string"></a> func (LogLevel) String</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(ll LogLevel)</span> <span class="hljs-title">String</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
+</code></pre>
 
   </section>
 
