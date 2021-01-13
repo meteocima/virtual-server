@@ -1,4 +1,4 @@
-INFO: TEST: START: TEST: A task for tests.
+INFO: TEST: START: A task for tests.
 INFO: TEST: 	⟶	Link from peppa:./bad to peppa:./bad
 
 ERROR: TEST: Link from peppa:./bad to peppa:./bad: connection.FindHost: wrong configuration file "../fixtures/virt-serv.toml": unknown host `peppa`

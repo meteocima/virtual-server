@@ -34,15 +34,16 @@ func TestTask(t *testing.T) {
 		})
 		tsk.Description = "A task for tests."
 		assert.NotNil(t, tsk)
+		assert.Equal(t, "TEST", tsk.ID)
 
 		tsk.Run()
 
 		tsk.Done.AwaitOne()
 		assert.Same(t, tsk.Status(), DoneOk)
 		assert.Equal(t,
-			`INFO: START: TEST: A task for tests.
-INFO: ciao
-INFO: DONE: TEST
+			`INFO: TEST: START: A task for tests.
+INFO: TEST: ciao
+INFO: TEST: DONE
 `, bytesWriter.String())
 
 	})
@@ -67,11 +68,11 @@ INFO: DONE: TEST
 		contentBuff, err := ioutil.ReadFile("TEST.detailed.log")
 		assert.NoError(t, err)
 		assert.Equal(t,
-			`INFO: START: TEST: A task for tests.
-INFO: ciao
-DETAIL: salve
-DEBUG: urrà
-INFO: DONE: TEST
+			`INFO: TEST: START: A task for tests.
+INFO: TEST: ciao
+DETAIL: TEST: salve
+DEBUG: TEST: urrà
+INFO: TEST: DONE
 `, string(contentBuff))
 
 	})

@@ -72,7 +72,7 @@ func (tsk *Task) Run() {
 		tsk.detailedLog = detailedLog
 		vs := ctx.New(tsk.infoLog, tsk.detailedLog)
 		vs.ID = tsk.ID
-		vs.LogInfo("START: %s: %s", tsk.ID, tsk.Description)
+		vs.LogInfo("START: %s", tsk.Description)
 
 		tsk.SetStatus(Running)
 		err := tsk.runner(&vs)

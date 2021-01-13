@@ -52,6 +52,10 @@ prerequisites has failed</p>
 <pre><code class="language-go"><span class="hljs-keyword">var</span> Stdout io.Writer
 </code></pre>
 <p>Stdout ...</p>
+<h4 id="func-list"><a class="header-anchor" href="#func-list"></a> func  List</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">List</span><span class="hljs-params">(w io.Writer)</span></span>
+</code></pre>
+<p>List ...</p>
 <h4 id="type-multiwritecloser"><a class="header-anchor" href="#type-multiwritecloser"></a> type MultiWriteCloser</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> MultiWriteCloser <span class="hljs-keyword">struct</span> {
 	io.Writer
@@ -120,6 +124,9 @@ both to the source writer and to stdout</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(status *TaskStatus)</span> <span class="hljs-title">IsFailure</span><span class="hljs-params">()</span> <span class="hljs-title">bool</span></span>
 </code></pre>
 <p>IsFailure returns whether the task status represents a failure</p>
+<h4 id="func-(*taskstatus)-string"><a class="header-anchor" href="#func-(*taskstatus)-string"></a> func (*TaskStatus) String</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(st *TaskStatus)</span> <span class="hljs-title">String</span><span class="hljs-params">()</span> <span class="hljs-title">string</span></span>
+</code></pre>
 
   </section>
 

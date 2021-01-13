@@ -36,6 +36,13 @@ var Stdout io.Writer
 ```
 Stdout ...
 
+#### func  List
+
+```go
+func List(w io.Writer)
+```
+List ...
+
 #### type MultiWriteCloser
 
 ```go
@@ -143,3 +150,9 @@ Failed returns the status of a task that failed with an error
 func (status *TaskStatus) IsFailure() bool
 ```
 IsFailure returns whether the task status represents a failure
+
+#### func (*TaskStatus) String
+
+```go
+func (st *TaskStatus) String() string
+```
