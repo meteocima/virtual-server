@@ -15,6 +15,8 @@
 ```go
 type Context struct {
 	Err error
+
+	ID string
 }
 ```
 

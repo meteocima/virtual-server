@@ -115,7 +115,7 @@ Status ...
 #### type TaskRunner
 
 ```go
-type TaskRunner func(tsk *Task, ctx *ctx.Context) error
+type TaskRunner func(ctx *ctx.Context) error
 ```
 
 TaskRunner ...

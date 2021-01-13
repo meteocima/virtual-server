@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"time"
@@ -31,9 +32,16 @@ type Task struct {
 }
 
 // TaskRunner ...
-type TaskRunner func(tsk *Task, ctx *ctx.Context) error
+type TaskRunner func(ctx *ctx.Context) error
 
-var tasks = map[string]Task{}
+var tasks = map[string]*Task{}
+
+// List ...
+func List(w io.Writer) {
+	for _, task := range tasks {
+		fmt.Fprintf(w, "%s: %s [%s]\n", task.ID, task.Description, task.Status().String())
+	}
+}
 
 // Stdout ...
 var Stdout io.Writer
@@ -63,19 +71,19 @@ func (tsk *Task) Run() {
 		tsk.infoLog = NewMultiWriteCloser(infoLog, detailedLog, Stdout)
 		tsk.detailedLog = detailedLog
 		vs := ctx.New(tsk.infoLog, tsk.detailedLog)
-
+		vs.ID = tsk.ID
 		vs.LogInfo("START: %s: %s", tsk.ID, tsk.Description)
 
 		tsk.SetStatus(Running)
-		err := tsk.runner(tsk, &vs)
+		err := tsk.runner(&vs)
 		if err == nil && vs.Err != nil {
 			err = vs.Err
 		}
 
 		if err != nil {
-			vs.LogError("%s: %s", tsk.ID, err.Error())
+			vs.LogError(err.Error())
 		} else {
-			vs.LogInfo("DONE: %s", tsk.ID)
+			vs.LogInfo("DONE")
 		}
 
 		infoLog.Close()
@@ -119,5 +127,6 @@ func New(ID string, runner TaskRunner) *Task {
 		&t.FileProduced,
 	)
 
+	tasks[ID] = &t
 	return &t
 }

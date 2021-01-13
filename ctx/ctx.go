@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	connection "github.com/meteocima/virtual-server/connection"
+	"github.com/meteocima/virtual-server/connection"
 	"github.com/meteocima/virtual-server/vpath"
 )
 
@@ -18,6 +18,7 @@ import (
 type Context struct {
 	Err             error
 	runningFunction string
+	ID              string
 	infoLog         io.Writer
 	detailLog       io.Writer
 	level           LogLevel
@@ -26,6 +27,7 @@ type Context struct {
 // New ...
 func New(infoLog io.Writer, detailLog io.Writer) Context {
 	return Context{
+		ID:        "ANON",
 		infoLog:   infoLog,
 		detailLog: detailLog,
 		level:     LevelDebug,
@@ -41,9 +43,8 @@ func (ctx *Context) ContextFailed(offendingFunc string, err error) {
 func (ctx *Context) setRunningFunction(msg string, args ...interface{}) func() {
 	ctx.runningFunction = fmt.Sprintf(msg, args...)
 
-	if ctx.infoLog != nil {
-		fmt.Fprintf(ctx.infoLog, "\t⟶\t%s\n", ctx.runningFunction)
-	}
+	ctx.LogInfo("\t⟶\t%s\n", ctx.runningFunction)
+
 	return func() {
 		ctx.runningFunction = ""
 	}
@@ -71,7 +72,7 @@ func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
 	if ctx.Err != nil {
 		return false
 	}
-	defer ctx.setRunningFunction("IsFile `%s`", file.StringRel())()
+	defer ctx.setRunningFunction("IsFile `%s`", file.String())()
 
 	conn, err := connection.FindHost(file.Host)
 	if err != nil {
@@ -97,7 +98,7 @@ func (ctx *Context) Exists(file vpath.VirtualPath) bool {
 	if ctx.Err != nil {
 		return false
 	}
-	defer ctx.setRunningFunction("Exists `%s`", file.StringRel())()
+	defer ctx.setRunningFunction("Exists `%s`", file.String())()
 
 	conn, err := connection.FindHost(file.Host)
 	if err != nil {
@@ -110,6 +111,7 @@ func (ctx *Context) Exists(file vpath.VirtualPath) bool {
 	if os.IsNotExist(err) {
 		return false
 	}
+
 	if err != nil {
 		ctx.ContextFailed("connection.Stat", err)
 		return false
@@ -123,7 +125,7 @@ func (ctx *Context) ReadDir(dir vpath.VirtualPath) vpath.VirtualPathList {
 	if ctx.Err != nil {
 		return vpath.VirtualPathList{}
 	}
-	defer ctx.setRunningFunction("ReadDir `%s`", dir.StringRel())()
+	defer ctx.setRunningFunction("ReadDir `%s`", dir.String())()
 
 	conn, err := connection.FindHost(dir.Host)
 	if err != nil {
@@ -145,7 +147,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 	if ctx.Err != nil {
 		return
 	}
-	defer ctx.setRunningFunction("Copy from `%s` to `%s`", from.StringRel(), to.StringRel())()
+	defer ctx.setRunningFunction("Copy from `%s` to `%s`", from.String(), to.String())()
 
 	fromConn, err := connection.FindHost(from.Host)
 	if err != nil {
@@ -203,7 +205,7 @@ func (ctx *Context) WriteString(file vpath.VirtualPath, content string) {
 	if ctx.Err != nil {
 		return
 	}
-	defer ctx.setRunningFunction("WriteString to `%s`", file.StringRel())()
+	defer ctx.setRunningFunction("WriteString to `%s`", file.String())()
 
 	toConn, err := connection.FindHost(file.Host)
 	if err != nil {
@@ -232,7 +234,7 @@ func (ctx *Context) ReadString(file vpath.VirtualPath) string {
 	if ctx.Err != nil {
 		return ""
 	}
-	defer ctx.setRunningFunction("ReadString from `%s`", file.StringRel())()
+	defer ctx.setRunningFunction("ReadString from `%s`", file.String())()
 
 	conn, err := connection.FindHost(file.Host)
 	if err != nil {
@@ -263,7 +265,7 @@ func (ctx *Context) Link(from, to vpath.VirtualPath) {
 	if ctx.Err != nil {
 		return
 	}
-	defer ctx.setRunningFunction("Link from %s to %s", from.StringRel(), to.StringRel())()
+	defer ctx.setRunningFunction("Link from %s to %s", from.String(), to.String())()
 
 	conn, err := connection.FindHost(from.Host)
 	if err != nil {
@@ -281,7 +283,7 @@ func (ctx *Context) MkDir(dir vpath.VirtualPath) {
 	if ctx.Err != nil {
 		return
 	}
-	defer ctx.setRunningFunction("MkDir %s", dir.StringRel())()
+	defer ctx.setRunningFunction("MkDir %s", dir.String())()
 
 	conn, err := connection.FindHost(dir.Host)
 	if err != nil {
@@ -300,7 +302,7 @@ func (ctx *Context) RmDir(dir vpath.VirtualPath) {
 	if ctx.Err != nil {
 		return
 	}
-	defer ctx.setRunningFunction("RmDir %s", dir.StringRel())()
+	defer ctx.setRunningFunction("RmDir %s", dir.String())()
 
 	conn, err := connection.FindHost(dir.Host)
 	if err != nil {
@@ -319,7 +321,7 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 	if ctx.Err != nil {
 		return
 	}
-	defer ctx.setRunningFunction("RmFile %s", file.StringRel())()
+	defer ctx.setRunningFunction("RmFile %s", file.String())()
 
 	conn, err := connection.FindHost(file.Host)
 	if err != nil {
@@ -348,7 +350,7 @@ func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...con
 	if ctx.Err != nil {
 		return nil
 	}
-	defer ctx.setRunningFunction("Run %s %s", command.StringRel(), strings.Join(args, " "))()
+	defer ctx.setRunningFunction("Run %s %s", command.String(), strings.Join(args, " "))()
 
 	conn, err := connection.FindHost(command.Host)
 	if err != nil {
@@ -407,7 +409,7 @@ func (ctx *Context) logWrite(msgLevel LogLevel, msgText string, args []interface
 		ErrStream = ctx.detailLog
 	}
 
-	fmt.Fprintf(ErrStream, msgLevel.String()+": "+msgText+"\n", args...)
+	fmt.Fprintf(ErrStream, msgLevel.String()+": "+ctx.ID+": "+msgText+"\n", args...)
 }
 
 // SetLevel set the maximum

@@ -5,6 +5,24 @@ type TaskStatus struct {
 	Err error
 }
 
+func (st *TaskStatus) String() string {
+	switch st {
+	case DoneOk:
+		return "OK"
+	case Cancelled:
+		return "Cancelled"
+	case Running:
+		return "Running"
+	case Scheduled:
+		return "Scheduled"
+	default:
+		if st.IsFailure() {
+			return "Err: " + st.Err.Error()
+		}
+		return "UNKNOWN"
+	}
+}
+
 // Scheduled is the status of a task scheduled but not yet executed
 var Scheduled = &TaskStatus{}
 

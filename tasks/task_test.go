@@ -22,7 +22,8 @@ func TestTask(t *testing.T) {
 	t.Run("Debug and details levels are not logged to stdout", func(t *testing.T) {
 		bytesWriter := bytes.Buffer{}
 		Stdout = &bytesWriter
-		tsk := New("TEST", func(tsk *Task, vs *ctx.Context) error {
+		var tsk *Task
+		tsk = New("TEST", func(vs *ctx.Context) error {
 			vs.LogInfo("ciao")
 			vs.LogDetail("salve")
 			vs.LogDebug("urrà")
@@ -47,7 +48,8 @@ INFO: DONE: TEST
 	})
 	t.Run("All log levels are logged to file", func(t *testing.T) {
 		Stdout = ioutil.Discard
-		tsk := New("TEST", func(tsk *Task, vs *ctx.Context) error {
+		var tsk *Task
+		tsk = New("TEST", func(vs *ctx.Context) error {
 			vs.LogInfo("ciao")
 			vs.LogDetail("salve")
 			vs.LogDebug("urrà")
@@ -76,7 +78,8 @@ INFO: DONE: TEST
 
 	t.Run("Non existent server", func(t *testing.T) {
 		Stdout = ioutil.Discard
-		tsk := New("TEST", func(tsk *Task, vs *ctx.Context) error {
+		var tsk *Task
+		tsk = New("TEST", func(vs *ctx.Context) error {
 			vs.Link(vpath.New("peppa", "./bad"), vpath.New("peppa", "./bad"))
 			tests.Done()
 			return nil
