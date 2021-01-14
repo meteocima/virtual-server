@@ -27,7 +27,7 @@ func TestTask(t *testing.T) {
 			vs.LogInfo("ciao")
 			vs.LogDetail("salve")
 			vs.LogDebug("urrà")
-			assert.Same(t, tsk.Status(), Running)
+			assert.NoError(t, MustBeEqual(tsk.Status(), Running))
 			tests.Done()
 
 			return nil
@@ -39,7 +39,7 @@ func TestTask(t *testing.T) {
 		tsk.Run()
 
 		tsk.Done.AwaitOne()
-		assert.Same(t, tsk.Status(), DoneOk)
+		assert.NoError(t, MustBeEqual(tsk.Status(), DoneOk))
 		assert.Equal(t,
 			`INFO: TEST: START: A task for tests.
 INFO: TEST: ciao
@@ -63,7 +63,7 @@ INFO: TEST: DONE
 		tsk.Run()
 
 		tsk.Done.AwaitOne()
-		assert.Same(t, tsk.Status(), DoneOk)
+		assert.NoError(t, MustBeEqual(tsk.Status(), DoneOk))
 
 		contentBuff, err := ioutil.ReadFile("TEST.detailed.log")
 		assert.NoError(t, err)

@@ -98,6 +98,14 @@ func New(ID string, runner TaskRunner) *Task
 ```
 New ...
 
+#### func  NewFilesBucketTask
+
+```go
+func NewFilesBucketTask(factory func(*TaskFile) *Task, tasks ...*Task) *Task
+```
+NewFilesBucketTask creates a Task that listen to one or more tasks for file
+produced.
+
 #### func (*Task) Run
 
 ```go
@@ -118,6 +126,17 @@ SetStatus ...
 func (tsk *Task) Status() *TaskStatus
 ```
 Status ...
+
+#### type TaskFile
+
+```go
+type TaskFile struct {
+	Path vpath.VirtualPath
+	Meta interface{}
+}
+```
+
+TaskFile ...
 
 #### type TaskRunner
 
@@ -147,7 +166,7 @@ Failed returns the status of a task that failed with an error
 #### func (*TaskStatus) IsFailure
 
 ```go
-func (status *TaskStatus) IsFailure() bool
+func (st *TaskStatus) IsFailure() bool
 ```
 IsFailure returns whether the task status represents a failure
 

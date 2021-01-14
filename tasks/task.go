@@ -4,11 +4,19 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/meteocima/virtual-server/ctx"
 	"github.com/meteocima/virtual-server/event"
+	"github.com/meteocima/virtual-server/vpath"
 )
+
+// TaskFile ...
+type TaskFile struct {
+	Path vpath.VirtualPath
+	Meta interface{}
+}
 
 // Task ...
 type Task struct {
@@ -34,11 +42,47 @@ type Task struct {
 // TaskRunner ...
 type TaskRunner func(ctx *ctx.Context) error
 
-var tasks = map[string]*Task{}
+// TaskRegistry ...
+type TaskRegistry struct {
+	tasks    map[string]*Task
+	taskLock sync.Mutex
+}
+
+// AllTasks ...
+func (reg *TaskRegistry) AllTasks() []*Task {
+	reg.taskLock.Lock()
+	defer reg.taskLock.Unlock()
+	res := make([]*Task, len(reg.tasks))
+	idx := 0
+	for _, task := range reg.tasks {
+		res[idx] = task
+		idx++
+	}
+	return res
+}
+
+// RemoveTask ...
+func (reg *TaskRegistry) RemoveTask(ID string) {
+	reg.taskLock.Lock()
+	defer reg.taskLock.Unlock()
+	delete(reg.tasks, ID)
+}
+
+// AddTask ...
+func (reg *TaskRegistry) AddTask(tsk *Task) {
+	reg.taskLock.Lock()
+	defer reg.taskLock.Unlock()
+	reg.tasks[tsk.ID] = tsk
+}
+
+var registry = &TaskRegistry{
+	tasks:    map[string]*Task{},
+	taskLock: sync.Mutex{},
+}
 
 // List ...
 func List(w io.Writer) {
-	for _, task := range tasks {
+	for _, task := range registry.AllTasks() {
 		fmt.Fprintf(w, "%s: %s [%s]\n", task.ID, task.Description, task.Status().String())
 	}
 }
@@ -88,9 +132,7 @@ func (tsk *Task) Run() {
 
 		infoLog.Close()
 		detailedLog.Close()
-		delete(tasks, tsk.ID)
 
-		tsk.Done.Invoke(err)
 		if err != nil {
 			tsk.Failed.Invoke(err)
 			tsk.SetStatus(Failed(err))
@@ -98,6 +140,19 @@ func (tsk *Task) Run() {
 			tsk.Succeeded.Invoke(nil)
 			tsk.SetStatus(DoneOk)
 		}
+		tsk.Done.Invoke(err)
+
+		event.CloseEmitters(
+			&tsk.StatusChanged,
+			&tsk.Failed,
+			&tsk.Succeeded,
+			&tsk.Done,
+			&tsk.Progress,
+			&tsk.FileProduced,
+		)
+
+		registry.RemoveTask(tsk.ID)
+
 	}()
 }
 
@@ -127,6 +182,6 @@ func New(ID string, runner TaskRunner) *Task {
 		&t.FileProduced,
 	)
 
-	tasks[ID] = &t
+	registry.AddTask(&t)
 	return &t
 }

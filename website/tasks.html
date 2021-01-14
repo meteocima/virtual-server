@@ -94,6 +94,11 @@ both to the source writer and to stdout</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">New</span><span class="hljs-params">(ID <span class="hljs-keyword">string</span>, runner TaskRunner)</span> *<span class="hljs-title">Task</span></span>
 </code></pre>
 <p>New ...</p>
+<h4 id="func-newfilesbuckettask"><a class="header-anchor" href="#func-newfilesbuckettask"></a> func  NewFilesBucketTask</h4>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewFilesBucketTask</span><span class="hljs-params">(factory <span class="hljs-keyword">func</span>(*TaskFile)</span> *<span class="hljs-title">Task</span>, <span class="hljs-title">tasks</span> ...*<span class="hljs-title">Task</span>) *<span class="hljs-title">Task</span></span>
+</code></pre>
+<p>NewFilesBucketTask creates a Task that listen to one or more tasks for file
+produced.</p>
 <h4 id="func-(*task)-run"><a class="header-anchor" href="#func-(*task)-run"></a> func (*Task) Run</h4>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(tsk *Task)</span> <span class="hljs-title">Run</span><span class="hljs-params">()</span></span>
 </code></pre>
@@ -106,6 +111,13 @@ both to the source writer and to stdout</p>
 <pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(tsk *Task)</span> <span class="hljs-title">Status</span><span class="hljs-params">()</span> *<span class="hljs-title">TaskStatus</span></span>
 </code></pre>
 <p>Status ...</p>
+<h4 id="type-taskfile"><a class="header-anchor" href="#type-taskfile"></a> type TaskFile</h4>
+<pre><code class="language-go"><span class="hljs-keyword">type</span> TaskFile <span class="hljs-keyword">struct</span> {
+	Path vpath.VirtualPath
+	Meta <span class="hljs-keyword">interface</span>{}
+}
+</code></pre>
+<p>TaskFile ...</p>
 <h4 id="type-taskrunner"><a class="header-anchor" href="#type-taskrunner"></a> type TaskRunner</h4>
 <pre><code class="language-go"><span class="hljs-keyword">type</span> TaskRunner <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(ctx *ctx.Context)</span> <span class="hljs-title">error</span></span>
 </code></pre>
@@ -121,7 +133,7 @@ both to the source writer and to stdout</p>
 </code></pre>
 <p>Failed returns the status of a task that failed with an error</p>
 <h4 id="func-(*taskstatus)-isfailure"><a class="header-anchor" href="#func-(*taskstatus)-isfailure"></a> func (*TaskStatus) IsFailure</h4>
-<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(status *TaskStatus)</span> <span class="hljs-title">IsFailure</span><span class="hljs-params">()</span> <span class="hljs-title">bool</span></span>
+<pre><code class="language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(st *TaskStatus)</span> <span class="hljs-title">IsFailure</span><span class="hljs-params">()</span> <span class="hljs-title">bool</span></span>
 </code></pre>
 <p>IsFailure returns whether the task status represents a failure</p>
 <h4 id="func-(*taskstatus)-string"><a class="header-anchor" href="#func-(*taskstatus)-string"></a> func (*TaskStatus) String</h4>

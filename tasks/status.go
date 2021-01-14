@@ -1,8 +1,19 @@
 package tasks
 
+import "fmt"
+
 // TaskStatus represents the status of a single task
 type TaskStatus struct {
 	Err error
+}
+
+// MustBeEqual ...
+func MustBeEqual(st1, st2 *TaskStatus) error {
+	if st1 == st2 {
+		return nil
+	}
+	return fmt.Errorf("Tasks differ: task1 is `%s`, task2 is `%s`", st1.String(), st2.String())
+
 }
 
 func (st *TaskStatus) String() string {
@@ -35,8 +46,8 @@ func Failed(err error) *TaskStatus {
 }
 
 // IsFailure returns whether the task status represents a failure
-func (status *TaskStatus) IsFailure() bool {
-	return status.Err != nil
+func (st *TaskStatus) IsFailure() bool {
+	return st.Err != nil
 }
 
 // Running is the status of a running task
