@@ -1,5 +1,7 @@
 package event
 
+import "sync"
+
 // Source is an interface that represents
 // any object which emits one or more events.
 type Source interface{}
@@ -24,17 +26,19 @@ type Event struct {
 // `listeners` field using a channel of `listenerAction`
 // structs.
 type Emitter struct {
-	closed    bool
-	source    Source
-	listeners map[*Listener]struct{}
+	closed     bool
+	closedLock *sync.Mutex
+	source     Source
+	listeners  map[*Listener]struct{}
 }
 
 // NewEmitter return a new instance
 // of Emitter, linked `source` argument.
 func NewEmitter(source Source) *Emitter {
 	return &Emitter{
-		source:    source,
-		listeners: map[*Listener]struct{}{},
+		closedLock: &sync.Mutex{},
+		source:     source,
+		listeners:  map[*Listener]struct{}{},
 	}
 }
 
@@ -57,15 +61,25 @@ func CloseEmitters(emitters ...**Emitter) {
 // Listener is a single listener
 // which is listening on events of an `Emitter`.
 type Listener struct {
-	c      chan *Event
-	closed bool
-	e      *Emitter
+	c          chan *Event
+	closed     bool
+	closedLock *sync.Mutex
+	e          *Emitter
 }
 
 // Stop listening new events invoked
 // on a single listener.
 func (l *Listener) Stop() {
 	actionsOnListeners <- removeListenerAction(l, l.e)
+}
+
+func (l *Listener) killChannel() {
+	l.closedLock.Lock()
+	if !l.closed {
+		l.closed = true
+		close(l.c)
+	}
+	l.closedLock.Unlock()
 }
 
 // Invoke causes all listeners of this
@@ -111,9 +125,17 @@ func (e *Emitter) Listen(fn Handler) *Listener {
 // closes the `actionsOnListeners` channel, making the internal `Emitter`
 // goroutine to terminate politely
 func (e *Emitter) Close() {
+	e.closedLock.Lock()
 	e.closed = true
+	e.closedLock.Unlock()
 	actionsOnListeners <- closeEmitterListenersAction(e)
-	//close(e.actionsOnListeners)
+}
+
+// IsClosed ...
+func (e *Emitter) IsClosed() bool {
+	e.closedLock.Lock()
+	defer e.closedLock.Unlock()
+	return e.closed
 }
 
 // AwaitOne registers a new `Listener` on an
@@ -121,7 +143,7 @@ func (e *Emitter) Close() {
 // on it, and finally unregisters the listener
 // instance.
 func (e *Emitter) AwaitOne() *Event {
-	if e.closed {
+	if e.IsClosed() {
 		return nil
 	}
 	lst := e.AddListener()
@@ -134,9 +156,10 @@ func (e *Emitter) AwaitOne() *Event {
 // register it and returns its channel to `range`
 // through it.
 func (e *Emitter) AwaitAny() chan *Event {
-	if e.closed {
+	if e.IsClosed() {
 		return nil
 	}
+
 	lst := e.AddListener()
 	return lst.c
 }
@@ -145,12 +168,14 @@ func (e *Emitter) AwaitAny() chan *Event {
 // instance, register it through `addListenerAction`
 // and finally returns it.
 func (e *Emitter) AddListener() *Listener {
-	if e.closed {
+	if e.IsClosed() {
 		return nil
 	}
+
 	lst := Listener{
-		c: make(chan *Event),
-		e: e,
+		c:          make(chan *Event),
+		e:          e,
+		closedLock: &sync.Mutex{},
 	}
 	actionsOnListeners <- addListenerAction(&lst, e)
 	return &lst

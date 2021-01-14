@@ -20,7 +20,7 @@ const (
 	// action used to remove an existing listener
 	listenerActionRemove
 	// action used to remove all listeners
-	listenerActionClear
+	listenerActionCloseEmitter
 	// action used to emit a new event
 	listenerActionEmit
 	// action used to query for listeners count
@@ -58,7 +58,7 @@ func removeListenerAction(listener *Listener, emitter *Emitter) listenerAction {
 func closeEmitterListenersAction(emitter *Emitter) listenerAction {
 	return listenerAction{
 		emitter: emitter,
-		kind:    listenerActionClear,
+		kind:    listenerActionCloseEmitter,
 	}
 }
 
@@ -84,12 +84,9 @@ func init() {
 			switch action.kind {
 			case listenerActionAdd:
 				action.emitter.listeners[action.listener] = struct{}{}
-			case listenerActionClear:
+			case listenerActionCloseEmitter:
 				for l := range action.emitter.listeners {
-					if !l.closed {
-						close(l.c)
-						l.closed = true
-					}
+					l.killChannel()
 				}
 				action.emitter.listeners = map[*Listener]struct{}{}
 			case listenerActionEmit:
@@ -98,11 +95,7 @@ func init() {
 				}
 				action.countResp <- 0
 			case listenerActionRemove:
-				if !action.listener.closed {
-					close(action.listener.c)
-					action.listener.closed = true
-				}
-
+				action.listener.killChannel()
 				delete(action.emitter.listeners, action.listener)
 			case listenerActionCount:
 				action.countResp <- len(action.emitter.listeners)

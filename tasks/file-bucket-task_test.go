@@ -56,10 +56,17 @@ func TestBucketTask(t *testing.T) {
 
 		assert.NoError(t, MustBeEqual(bucket.Status(), DoneOk))
 		assert.Equal(t, 2, len(results))
-		assert.Equal(t, results, []TaskFile{
-			{vpath.Local("/test1"), 42.1},
-			{vpath.Local("/test2"), 42.2},
-		})
+		if results[0].Meta == 42.1 {
+			assert.Equal(t, results, []TaskFile{
+				{vpath.Local("/test1"), 42.1},
+				{vpath.Local("/test2"), 42.2},
+			})
+		} else {
+			assert.Equal(t, results, []TaskFile{
+				{vpath.Local("/test2"), 42.2},
+				{vpath.Local("/test1"), 42.1},
+			})
+		}
 	})
 
 }

@@ -60,6 +60,5 @@ func NewFilesBucketTask(factory func(TaskFile) *Task, tasks ...*Task) *Task {
 
 		return nil
 	})
-	tsk.Description = fmt.Sprintf("CDO regrid of AUX n° s [domain ]")
 	return tsk
 }
