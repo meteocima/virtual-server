@@ -119,7 +119,7 @@ func (tsk *Task) Run() {
 		vs.LogInfo("START: %s", tsk.Description)
 
 		tsk.SetStatus(Running)
-		err := tsk.runner(&vs)
+		err := tsk.runner(vs)
 		if err == nil && vs.Err != nil {
 			err = vs.Err
 		}
@@ -130,6 +130,7 @@ func (tsk *Task) Run() {
 			vs.LogInfo("DONE")
 		}
 
+		vs.Close()
 		infoLog.Close()
 		detailedLog.Close()
 

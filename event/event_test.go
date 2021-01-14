@@ -1,6 +1,7 @@
 package event
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -53,16 +54,23 @@ func TestEvent(t *testing.T) {
 		t.Run("Listen", func(t *testing.T) {
 			source := newTestSource()
 			counter := 0
+			counterLock := sync.Mutex{}
 
 			source.Ready.Listen(func(e *Event) {
 				assert.NotNil(t, e)
 				assert.Equal(t, e.Source, source)
 				assert.Equal(t, e.Payload, counter)
+				counterLock.Lock()
 				counter++
+				counterLock.Unlock()
 			})
 
 			time.Sleep(500 * time.Millisecond)
+			counterLock.Lock()
+			defer counterLock.Unlock()
+
 			assert.Equal(t, 10, counter)
+
 		})
 	})
 

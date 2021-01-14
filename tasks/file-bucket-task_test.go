@@ -1,7 +1,8 @@
 package tasks
 
 import (
-	"bytes"
+	"io/ioutil"
+	"sync"
 	"testing"
 	"time"
 
@@ -17,8 +18,8 @@ func TestBucketTask(t *testing.T) {
 	assert.NoError(t, err)
 
 	t.Run("Works", func(t *testing.T) {
-		bytesWriter := bytes.Buffer{}
-		Stdout = &bytesWriter
+		//bytesWriter := bytes.Buffer{}
+		Stdout = ioutil.Discard
 
 		var tsk1 *Task
 		var tsk2 *Task
@@ -29,15 +30,18 @@ func TestBucketTask(t *testing.T) {
 		})
 
 		tsk2 = New("TEST2", func(vs *ctx.Context) error {
-			time.Sleep(time.Millisecond)
+			time.Sleep(4 * time.Millisecond)
 			tsk2.FileProduced.Invoke(TaskFile{vpath.Local("/test2"), 42.2})
 			return nil
 		})
 
 		results := []TaskFile{}
+		resultsLock := sync.Mutex{}
 		mkPostProcTask := func(file TaskFile) *Task {
 			return New("POSTPROC-"+file.Path.Filename(), func(vs *ctx.Context) error {
+				resultsLock.Lock()
 				results = append(results, file)
+				resultsLock.Unlock()
 				return nil
 			})
 		}

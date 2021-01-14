@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"sync"
 
 	"github.com/meteocima/virtual-server/connection"
 	"github.com/meteocima/virtual-server/vpath"
@@ -19,19 +20,29 @@ type Context struct {
 	Err             error
 	runningFunction string
 	ID              string
-	infoLog         io.Writer
-	detailLog       io.Writer
-	level           LogLevel
+
+	infoLog       io.Writer
+	detailLog     io.Writer
+	infoChannel   chan string
+	detailChannel chan string
+	logCompleted  chan struct{}
+	running       bool
+	runningLock   *sync.Mutex
+	level         LogLevel
 }
 
 // New ...
-func New(infoLog io.Writer, detailLog io.Writer) Context {
-	return Context{
-		ID:        "ANON",
-		infoLog:   infoLog,
-		detailLog: detailLog,
-		level:     LevelDebug,
+func New(infoLog io.Writer, detailLog io.Writer) *Context {
+	ctx := Context{
+		ID:           "ANON",
+		infoLog:      infoLog,
+		detailLog:    detailLog,
+		level:        LevelDebug,
+		logCompleted: make(chan struct{}),
+		runningLock:  &sync.Mutex{},
 	}
+	ctx.startLogWriter()
+	return &ctx
 }
 
 // ContextFailed ...
@@ -49,23 +60,6 @@ func (ctx *Context) setRunningFunction(msg string, args ...interface{}) func() {
 		ctx.runningFunction = ""
 	}
 }
-
-/*
-
-// SetTask ...
-func (ctx *Context) SetTask(msg string, args ...interface{}) func() {
-	ctx.RunningTask = fmt.Sprintf(msg, args...)
-	if ctx.infoLog != nil {
-		fmt.Fprintf(ctx.infoLog, "\n\n# START: %s\n", ctx.RunningTask)
-	}
-	return func() {
-		if ctx.Err == nil && ctx.infoLog != nil {
-			fmt.Fprintf(ctx.infoLog, "# COMPLETED SUCCESSUFULLY: %s\n", ctx.RunningTask)
-		}
-		ctx.RunningTask = ""
-	}
-}
-*/
 
 // IsFile ...
 func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
@@ -400,16 +394,60 @@ func (ll LogLevel) String() string {
 	}
 }
 
+// Close ...
+func (ctx *Context) Close() {
+	ctx.runningLock.Lock()
+	ctx.running = false
+	ctx.runningLock.Unlock()
+	<-ctx.logCompleted
+	close(ctx.infoChannel)
+	close(ctx.detailChannel)
+}
+
+func (ctx *Context) startLogWriter() {
+	ctx.infoChannel = make(chan string)
+	ctx.detailChannel = make(chan string)
+	ctx.runningLock.Lock()
+	defer ctx.runningLock.Unlock()
+	ctx.running = true
+	go func() {
+		for {
+			haveChunks := true
+			for haveChunks {
+				var chunk string
+				select {
+				case chunk = <-ctx.infoChannel:
+					fmt.Fprintf(ctx.infoLog, chunk)
+					haveChunks = true
+				case chunk = <-ctx.detailChannel:
+					fmt.Fprintf(ctx.detailLog, chunk)
+					haveChunks = true
+				default:
+					haveChunks = false
+				}
+			}
+
+			ctx.runningLock.Lock()
+			if !ctx.running {
+				ctx.runningLock.Unlock()
+				break
+			}
+			ctx.runningLock.Unlock()
+		}
+		close(ctx.logCompleted)
+	}()
+}
+
 func (ctx *Context) logWrite(msgLevel LogLevel, msgText string, args []interface{}) {
 	if msgLevel > ctx.level {
 		return
 	}
-	ErrStream := ctx.infoLog
+	channel := ctx.infoChannel
 	if msgLevel >= LevelDetail {
-		ErrStream = ctx.detailLog
+		channel = ctx.detailChannel
 	}
 
-	fmt.Fprintf(ErrStream, msgLevel.String()+": "+ctx.ID+": "+msgText+"\n", args...)
+	channel <- fmt.Sprintf(msgLevel.String()+": "+ctx.ID+": "+msgText+"\n", args...)
 }
 
 // SetLevel set the maximum

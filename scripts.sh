@@ -21,17 +21,17 @@ function rebuild_docs() {
 export passes=0
 
 function test_all() {
-  verbose=$1
-  clear
+  #clear
+  echo $passes - go test $1 $2 $3 ./...
   go clean -testcache
-  if go test $verbose ./tasks; then
+  if go test $1 $2 $3 ./...; then
     printf $GREEN
     figlet 'All tests passed.'
     printf $NORMAL
     
     all_tests_passed=1
     passes=$((passes + 1))
-    test_all
+    test_all $1 $2 $3
 
   else
     printf $RED
@@ -51,13 +51,13 @@ function test_all() {
 
 function on_sourcechanges_retest() {
   passes=0
-  test_all $1
+  test_all $1 $2 $3
   #rebuild_docs
   while true; do
     event=`inotifywait -qr -e modify -e move -e create -e delete -e delete_self .`
     echo EVENT $event
     previous=$all_tests_passed
-    test_all $1
+    test_all $1 $2 $3
     #rebuild_docs
     if [[ $all_tests_passed != $previous ]]; then
       if [[ $all_tests_passed == 1 ]]; then

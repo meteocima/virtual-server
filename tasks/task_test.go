@@ -39,6 +39,7 @@ func TestTask(t *testing.T) {
 		tsk.Run()
 
 		tsk.Done.AwaitOne()
+		//time.Sleep(time.Second)
 		assert.NoError(t, MustBeEqual(tsk.Status(), DoneOk))
 		assert.Equal(t,
 			`INFO: TEST: START: A task for tests.
