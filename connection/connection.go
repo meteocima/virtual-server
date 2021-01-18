@@ -155,12 +155,11 @@ func FindHost(name string) (Connection, error) {
 		return nil, fmt.Errorf("wrong configuration file \"%s\": unknown connection type %d for host `%s`", config.Filename, host.Type, name)
 	}
 
-	connections.Add(name, cn)
-
 	err := cn.Open()
 	if err != nil {
 		return nil, fmt.Errorf("wrong configuration file \"%s\": cannot connect to host `%s`: %w", config.Filename, name, err)
 	}
+	connections.Add(name, cn)
 
 	return cn, nil
 }

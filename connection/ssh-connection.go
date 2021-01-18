@@ -86,6 +86,7 @@ const maxRetries = 5
 
 // Open ...
 func (conn *SSHConnection) Open() error {
+	fmt.Println("OPEN CN")
 	conn.config = &ssh.ClientConfig{
 		User:            conn.User,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
@@ -111,7 +112,12 @@ func (conn *SSHConnection) Open() error {
 				conn.Host,
 			)
 		}
-
+		fmt.Printf(
+			"VPE: successfully connected to server `%s` using hostname %s. Subsequents requests will use hostname %s\n",
+			conn.Name,
+			conn.Host,
+			conn.Host,
+		)
 		if failed = err != nil; failed {
 			retryHost := conn.Host
 			failedHost := conn.Host
