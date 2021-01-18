@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -301,10 +302,13 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 	}
 
 	cmd := command.Path
+	cmd = fmt.Sprintf("%s %s", cmd, strings.Join(args, " "))
+
 	if len(options) > 0 && options[0].Cwd.Path != "" {
 		cmd = fmt.Sprintf("cd %s && %s", options[0].Cwd.Path, cmd)
 	}
-	err = sess.Start(cmd) //(command.Path, args...)
+	fmt.Println("ssh running command is " + cmd)
+	err = sess.Start(cmd)
 
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: session.Start error: %w", command, err)
