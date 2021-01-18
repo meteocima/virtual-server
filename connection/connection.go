@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
 
 	"github.com/meteocima/virtual-server/config"
 	"github.com/meteocima/virtual-server/vpath"
@@ -92,7 +93,33 @@ type Connection interface {
 	Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
 }
 
-var connections = map[string]Connection{}
+type connectionRegistry struct {
+	connections    map[string]Connection
+	connectionsSem sync.Mutex
+}
+
+var connections = connectionRegistry{
+	connections:    map[string]Connection{},
+	connectionsSem: sync.Mutex{},
+}
+
+func (reg *connectionRegistry) Exists(name string) bool {
+	reg.connectionsSem.Lock()
+	defer reg.connectionsSem.Unlock()
+	_, exists := reg.connections[name]
+	return exists
+}
+func (reg *connectionRegistry) Get(name string) Connection {
+	reg.connectionsSem.Lock()
+	defer reg.connectionsSem.Unlock()
+	cn, _ := reg.connections[name]
+	return cn
+}
+func (reg *connectionRegistry) Add(name string, cn Connection) {
+	reg.connectionsSem.Lock()
+	defer reg.connectionsSem.Unlock()
+	reg.connections[name] = cn
+}
 
 // NewPath ...
 func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath {
@@ -102,15 +129,16 @@ func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualP
 // FindHost ...
 func FindHost(name string) (Connection, error) {
 
-	cn, ok := connections[name]
-	if ok {
-		return cn, nil
+	if connections.Exists(name) {
+		return connections.Get(name), nil
 	}
 
 	host, ok := config.Hosts[name]
 	if !ok {
 		return nil, fmt.Errorf("wrong configuration file \"%s\": unknown host `%s`", config.Filename, name)
 	}
+
+	var cn Connection
 
 	if host.Type == config.HostTypeOS {
 		cn = &LocalConnection{}
@@ -127,7 +155,7 @@ func FindHost(name string) (Connection, error) {
 		return nil, fmt.Errorf("wrong configuration file \"%s\": unknown connection type %d for host `%s`", config.Filename, host.Type, name)
 	}
 
-	connections[name] = cn
+	connections.Add(name, cn)
 
 	err := cn.Open()
 	if err != nil {
