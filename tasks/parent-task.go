@@ -50,29 +50,30 @@ func (tsk *ParentTask) AppendChildren(children ...*Task) {
 
 // RunChild ...
 func (tsk *ParentTask) RunChild(child *Task) {
-	if tsk.runningChild != nil {
-		select {
-		case tsk.runningChild <- struct{}{}:
-			fmt.Println("TASK ENTER", child.ID)
-			child.Run()
-			go func() {
-				child.Done.AwaitOne()
-				<-tsk.runningChild
-				if len(tsk.waitingChildren) > 0 {
-					fmt.Println("TASK RECOVERED", child.ID)
-					next := tsk.waitingChildren[0]
-					tsk.waitingChildren = tsk.waitingChildren[1:]
-					tsk.RunChild(next)
-				}
-			}()
-		default:
-			fmt.Println("TASK WAIT", child.ID)
-			tsk.waitingChildren = append(tsk.waitingChildren, child)
-		}
-
+	if tsk.runningChild == nil {
+		child.Run()
 		return
 	}
-	child.Run()
+
+	select {
+	case tsk.runningChild <- struct{}{}:
+		fmt.Println("TASK ENTER", child.ID)
+		child.Run()
+		go func() {
+			child.Done.AwaitOne()
+			fmt.Println("TASK COMPLETED", child.ID)
+			<-tsk.runningChild
+			if len(tsk.waitingChildren) > 0 {
+				fmt.Println("TASK RECOVERING", child.ID)
+				next := tsk.waitingChildren[0]
+				tsk.waitingChildren = tsk.waitingChildren[1:]
+				tsk.RunChild(next)
+			}
+		}()
+	default:
+		fmt.Println("TASK WAIT", child.ID)
+		tsk.waitingChildren = append(tsk.waitingChildren, child)
+	}
 
 }
 
@@ -103,9 +104,9 @@ func NewParent(ID string, runner TaskRunner) *ParentTask {
 func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 	return func(vs *ctx.Context) error {
 		err := runner(vs)
-		/*for child := range tsk.children {
+		for child := range tsk.children {
 			child.Done.AwaitOne()
-		}*/
+		}
 		return err
 	}
 }

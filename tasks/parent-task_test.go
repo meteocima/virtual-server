@@ -99,19 +99,21 @@ func TestParentTask(t *testing.T) {
 		var parent *ParentTask
 		results := make(chan string)
 		parent = NewParent("PARENT", func(vs *ctx.Context) error {
-			tsks := createsTestTasks(results, 8)
+			tsks := createsTestTasks(results, 4)
 			parent.AppendChildren(tsks...)
-			parent.RunChild(tsks[7])
-			parent.RunChild(tsks[2])
 			parent.RunChild(tsks[1])
+			parent.RunChild(tsks[0])
+			parent.RunChild(tsks[2])
+			parent.RunChild(tsks[3])
+
 			return nil
 		})
-		parent.SetMaxParallelism(2)
+		parent.SetMaxParallelism(3)
 		parent.Run()
 
 		assert.Equal(t,
-			[]string{"TEST3", "TEST2", "TEST8"},
-			readResults(t, results, 3),
+			[]string{"TEST1", "TEST2", "TEST3", "TEST4"},
+			readResults(t, results, 4),
 		)
 
 		parent.Done.AwaitOne()
