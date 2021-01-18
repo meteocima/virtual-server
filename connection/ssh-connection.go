@@ -300,7 +300,11 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 		streamsCompleted: &sync.WaitGroup{},
 	}
 
-	err = sess.Start(command.Path) //(command.Path, args...)
+	cmd := command.Path
+	if len(options) > 0 && options[0].Cwd.Path != "" {
+		cmd = fmt.Sprintf("cd %s && %s", options[0].Cwd.Path, cmd)
+	}
+	err = sess.Start(cmd) //(command.Path, args...)
 
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: session.Start error: %w", command, err)
