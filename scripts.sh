@@ -31,7 +31,7 @@ function test_all() {
     
     all_tests_passed=1
     passes=$((passes + 1))
-    test_all $1 $2 $3
+    #test_all $1 $2 $3
 
   else
     printf $RED

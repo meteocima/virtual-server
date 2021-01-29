@@ -16,7 +16,7 @@ func resultEmit(results chan string, i int) func(vs *ctx.Context) error {
 	ID := fmt.Sprintf("TEST%d", i+1)
 
 	return func(vs *ctx.Context) error {
-		time.Sleep(time.Duration(i*10) * time.Millisecond)
+		time.Sleep(time.Duration(i*50) * time.Millisecond)
 		results <- ID
 		return nil
 	}
