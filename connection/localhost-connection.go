@@ -8,7 +8,6 @@ import (
 	"os"
 	"os/exec"
 	"sort"
-	"sync"
 	"time"
 
 	"github.com/meteocima/virtual-server/tailor"
@@ -94,16 +93,18 @@ func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error {
 
 // LocalProcess ...
 type LocalProcess struct {
-	cmd              *exec.Cmd
-	stdout           io.Reader
-	stderr           io.Reader
-	combinedOutput   io.Reader
-	streamsCompleted *sync.WaitGroup
+	cmd *exec.Cmd
+	//stdout           io.Reader
+	//stderr           io.Reader
+	combinedOutput io.Reader
+	completed      chan struct{}
+	state          int
+	//streamsCompleted *sync.WaitGroup
 }
 
 // CombinedOutput ...
 func (proc *LocalProcess) CombinedOutput() io.Reader {
-	proc.streamsCompleted.Add(1)
+	/*proc.streamsCompleted.Add(1)
 	combined, combinedWriter := io.Pipe()
 
 	done := sync.WaitGroup{}
@@ -124,8 +125,8 @@ func (proc *LocalProcess) CombinedOutput() io.Reader {
 		combinedWriter.Close()
 		proc.streamsCompleted.Done()
 	}()
-
-	return combined
+	*/
+	return proc.combinedOutput
 }
 
 // Kill ...
@@ -133,6 +134,7 @@ func (proc *LocalProcess) Kill() error {
 	return nil
 }
 
+/*
 // Stdin ...
 func (proc *LocalProcess) Stdin() io.Writer {
 	return nil
@@ -165,12 +167,13 @@ func (proc *LocalProcess) Stderr() io.Reader {
 
 	return processStderr
 }
+*/
 
 // Wait ...
 func (proc *LocalProcess) Wait() (int, error) {
-	proc.streamsCompleted.Wait()
-	err := proc.cmd.Wait()
-	return proc.cmd.ProcessState.ExitCode(), err
+	//proc.streamsCompleted.Wait()
+	<-proc.completed
+	return proc.state, nil
 }
 
 /*
@@ -219,52 +222,54 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 	//fmt.Println(strings.Repeat("*", 20))
 
 	cmd := exec.Command(command.Path, args...)
+	combinedOutput, writer := io.Pipe()
+	cmd.Stdout = writer
+	cmd.Stderr = writer
+
 	process := &LocalProcess{
-		cmd:              cmd,
-		streamsCompleted: &sync.WaitGroup{},
+		cmd:            cmd,
+		combinedOutput: combinedOutput,
+		completed:      make(chan struct{}),
 	}
 
-	errLogFile := vpath.Stderr
-	outLogFile := vpath.Stdout
-	if len(options) > 0 {
-		if options[0].OutFromLog.Host != "" {
-			outLogFile = &options[0].OutFromLog
+	/*
+		errLogFile := vpath.Stderr
+		outLogFile := vpath.Stdout
+		if len(options) > 0 {
+			if options[0].OutFromLog.Host != "" {
+				outLogFile = &options[0].OutFromLog
+			}
+			if options[0].ErrFromLog.Host != "" {
+				errLogFile = &options[0].ErrFromLog
+			}
 		}
-		if options[0].ErrFromLog.Host != "" {
-			errLogFile = &options[0].ErrFromLog
+
+		if outLogFile != vpath.Stdout {
+
+			output, pwrite := io.Pipe()
+			process.stdout = output
+
+			go copyLines(process, pwrite, *outLogFile)
+		} else {
+
+			process.combinedOutput = combinedOutput
+
 		}
-	}
 
-	if outLogFile != vpath.Stdout {
+		if errLogFile != vpath.Stderr {
 
-		output, pwrite := io.Pipe()
-		process.stdout = output
+			output, pwrite := io.Pipe()
+			process.stderr = output
 
-		go copyLines(process, pwrite, *outLogFile)
-	} else {
-
-		output, err := cmd.StdoutPipe()
-		if err != nil {
-			return nil, fmt.Errorf("Run `%s`: StdoutPipe error: %w", command, err)
+			go copyLines(process, pwrite, *errLogFile)
+		} else {
+			output, err := cmd.StderrPipe()
+			if err != nil {
+				return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
+			}
+			process.stderr = output
 		}
-		process.stdout = output
-
-	}
-
-	if errLogFile != vpath.Stderr {
-
-		output, pwrite := io.Pipe()
-		process.stderr = output
-
-		go copyLines(process, pwrite, *errLogFile)
-	} else {
-		output, err := cmd.StderrPipe()
-		if err != nil {
-			return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
-		}
-		process.stderr = output
-	}
-
+	*/
 	if len(options) > 0 {
 		cmd.Dir = options[0].Cwd.Path
 	}
@@ -273,6 +278,17 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: Start error: %w", command, err)
 	}
+
+	go func() {
+		state, err := cmd.Process.Wait()
+		if err != nil {
+			panic(err)
+		}
+		process.state = state.ExitCode()
+		writer.Close()
+		//combinedOutput.Close()
+		close(process.completed)
+	}()
 
 	return process, nil
 

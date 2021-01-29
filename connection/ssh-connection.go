@@ -7,7 +7,6 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/meteocima/virtual-server/vpath"
@@ -273,6 +272,19 @@ func (conn *SSHConnection) RmFile(file vpath.VirtualPath) error {
 	return nil
 }
 
+/*
+type singleWriter struct {
+	b  bytes.Buffer
+	mu sync.Mutex
+}
+
+func (w *singleWriter) Write(p []byte) (int, error) {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+	return w.b.Write(p)
+}
+*/
+
 // Run ...
 func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
 	client, err := sftp.NewClient(conn.client)
@@ -284,27 +296,16 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: client.NewSession: %w", command.String(), err)
 	}
-	//defer sess.Close()
 
-	//fmt.Println(strings.Repeat("*", 120))
-	//fmt.Println("EXECUTING", command.Path)
-	//fmt.Println(strings.Repeat("*", 120))
+	combinedOutput, writer := io.Pipe()
 
-	stdout, err := sess.StdoutPipe()
-	if err != nil {
-		return nil, fmt.Errorf("Run `%s`: session.StdoutPipe error: %w", command, err)
-	}
-
-	stderr, err := sess.StderrPipe()
-	if err != nil {
-		return nil, fmt.Errorf("Run `%s`: session.StderrPipe error: %w", command, err)
-	}
+	sess.Stdout = writer
+	sess.Stderr = writer
 
 	process := &SSHProcess{
-		stdout:           stdout,
-		stderr:           stderr,
-		cmd:              sess,
-		streamsCompleted: &sync.WaitGroup{},
+		combinedOutput: combinedOutput,
+		cmd:            sess,
+		completed:      make(chan struct{}),
 	}
 
 	cmd := command.Path
@@ -320,49 +321,72 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 		return nil, fmt.Errorf("Run `%s`: session.Start error: %w", command, err)
 	}
 
+	go func() {
+		err := sess.Wait()
+		if err == nil {
+			process.state = 0
+		} else {
+			if exerr, ok := err.(*ssh.ExitError); ok {
+				process.state = exerr.ExitStatus()
+			} else {
+				panic(err)
+			}
+
+		}
+
+		writer.Close()
+		close(process.completed)
+	}()
+
 	return process, nil
 }
 
 // SSHProcess ...
 type SSHProcess struct {
-	cmd              *ssh.Session
-	stdout           io.Reader
-	stderr           io.Reader
-	combinedOutput   io.Reader
-	streamsCompleted *sync.WaitGroup
+	cmd *ssh.Session
+	//stdout io.Reader
+	//stderr io.Reader
+	combinedOutput io.Reader
+	completed      chan struct{}
+	state          int
+
+	//streamsCompleted *sync.WaitGroup
 }
 
 // CombinedOutput ...
 func (proc *SSHProcess) CombinedOutput() io.Reader {
-	proc.streamsCompleted.Add(1)
-	combined, combinedWriter := io.Pipe()
+	/*
+		proc.streamsCompleted.Add(1)
+		combined, combinedWriter := io.Pipe()
 
-	done := sync.WaitGroup{}
-	done.Add(2)
+		done := sync.WaitGroup{}
+		done.Add(2)
 
-	go func() {
-		io.Copy(combinedWriter, proc.stdout)
-		done.Done()
-	}()
+		go func() {
+			io.Copy(combinedWriter, proc.stdout)
+			done.Done()
+		}()
 
-	go func() {
-		io.Copy(combinedWriter, proc.stderr)
-		done.Done()
-	}()
+		go func() {
+			io.Copy(combinedWriter, proc.stderr)
+			done.Done()
+		}()
 
-	go func() {
-		done.Wait()
-		combinedWriter.Close()
-		proc.streamsCompleted.Done()
-	}()
-
-	return combined
+		go func() {
+			done.Wait()
+			combinedWriter.Close()
+			proc.streamsCompleted.Done()
+		}()
+	*/
+	return proc.combinedOutput
 }
 
 // Kill ...
 func (proc *SSHProcess) Kill() error {
 	return nil
 }
+
+/*
 
 // Stdin ...
 func (proc *SSHProcess) Stdin() io.Writer {
@@ -396,16 +420,11 @@ func (proc *SSHProcess) Stderr() io.Reader {
 
 	return processStderr
 }
+*/
 
 // Wait ...
 func (proc *SSHProcess) Wait() (int, error) {
-	proc.streamsCompleted.Wait()
-	err := proc.cmd.Wait()
-	if exerr, ok := err.(*ssh.ExitError); ok {
-		return exerr.ExitStatus(), nil
-	}
-	if err != nil {
-		return -1, nil
-	}
-	return 0, nil
+	<-proc.completed
+	return proc.state, nil
+
 }

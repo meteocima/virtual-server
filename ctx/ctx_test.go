@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const sOut = "THIS IS A TEST COMMAND\n"
+const sOut = "THIS IS AN ERROR COMMAND\nTHIS IS A TEST COMMAND\n"
 
 func TestNew(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
@@ -28,7 +28,7 @@ func TestNew(t *testing.T) {
 		testcmd := drihmFixt.Join("testcmd")
 		process := ctx.Run(testcmd, []string{"/var/fixtures/"})
 
-		out, err := ioutil.ReadAll(process.Stdout())
+		out, err := ioutil.ReadAll(process.CombinedOutput())
 		assert.NoError(t, err)
 		assert.Equal(t, sOut, string(out))
 
