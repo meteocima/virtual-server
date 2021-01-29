@@ -109,10 +109,10 @@ func (tsk *Task) Status() *TaskStatus {
 func (tsk *Task) Run() {
 	go func() {
 
-		infoLog := openTaskLog(tsk.ID + ".info.log")
-		detailedLog := openTaskLog(tsk.ID + ".detailed.log")
+		//infoLog := openTaskLog(tsk.ID + ".info.log")
+		detailedLog := openTaskLog(tsk.ID + ".log")
 
-		tsk.infoLog = NewMultiWriteCloser(infoLog, detailedLog, Stdout)
+		tsk.infoLog = NewMultiWriteCloser(detailedLog, Stdout)
 		tsk.detailedLog = detailedLog
 		vs := ctx.New(tsk.infoLog, tsk.detailedLog)
 		vs.ID = tsk.ID
@@ -131,7 +131,7 @@ func (tsk *Task) Run() {
 		}
 
 		vs.Close()
-		infoLog.Close()
+		//infoLog.Close()
 		detailedLog.Close()
 
 		if err != nil {
