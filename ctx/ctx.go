@@ -329,18 +329,18 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 }
 
 // Exec ...
-func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options ...connection.RunOptions) {
-	p := ctx.Run(command, args, options...)
+func (ctx *Context) Exec(command vpath.VirtualPath, args []string) {
+	p := ctx.Run(command, args, connection.RunOptions{})
 	if p != nil {
 		if ctx.detailLog != nil {
-			io.Copy(ctx.detailLog, p.CombinedOutput())
+			//io.Copy(ctx.detailLog, p.CombinedOutput())
 		}
 		p.Wait()
 	}
 }
 
 // Run ...
-func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...connection.RunOptions) connection.Process {
+func (ctx *Context) Run(command vpath.VirtualPath, args []string, options connection.RunOptions) connection.Process {
 	if ctx.Err != nil {
 		return nil
 	}
@@ -351,7 +351,8 @@ func (ctx *Context) Run(command vpath.VirtualPath, args []string, options ...con
 		ctx.ContextFailed("connection.FindHost", err)
 		return nil
 	}
-	proc, err := conn.Run(command, args, options...)
+
+	proc, err := conn.Run(command, args, options)
 	if err != nil {
 		ctx.ContextFailed("conn.Run", err)
 		return nil

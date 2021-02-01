@@ -13,58 +13,40 @@ import (
 // Process represents a running process
 type Process interface {
 	Kill() error
-	// Stdin, is an io.Writer that will be used
-	// to send data to process stdin
-	//Stdin() io.Writer
-
-	// Stdin, if set, is an io.Reader that will be used
-	// to read data from process stdout
-	//Stdout() io.Reader
-
-	// Stderr, if set, is an io.Reader that will be used
-	// to read data from process stderr
-	//Stderr() io.Reader
-
-	// CombinedOutput returns an io.Reader that reads
-	// the combined output and error streams of the process
-	CombinedOutput() io.Reader
 
 	// Wait expects the process to terminate
-	// and return the exit code.
+	// and returns the exit code.
 	Wait() (int, error)
 }
 
 // RunOptions ...
 type RunOptions struct {
-	// OutFromLog if sets, output is read from a file
-	// instead of from the process stdout
-	OutFromLog vpath.VirtualPath
+	// OutFromLog if sets, a log file
+	// is read and written to Stdout
+	OutFromLog *vpath.VirtualPath
 
-	// OutFromLog if sets, output is read from a file
-	// instead of from the process stderr
-	ErrFromLog vpath.VirtualPath
+	// ErrFromLog if sets, a log file
+	// is read and written to Stderr
+	ErrFromLog *vpath.VirtualPath
 
-	// Cwd is set the work directory in which the process will be executed.
+	// Cwd is the work directory in which the
+	// process will be executed.
 	Cwd vpath.VirtualPath
-	/*
-		// Stdin, if set, is an io.Reader that will be used
-		// as process Stdin.
-		// If nil, a pipe to `Process.Stdin` member is created
-		// and used.
-		Stdin *io.Reader
 
-		// Stdout, if set, is an io.Writer that will be used
-		// as process Stdout
-		// If nil, a pipe to `Process.Stdout` member is created
-		// and used.
-		Stdout *io.Writer
+	// Stdin, if set, is an io.Reader that will be used
+	// as process Stdin.
+	// If nil, `os.Stdin` will be used.
+	Stdin io.Reader
 
-		// Stderr, if set, is an io.Writer that will be used
-		// as process Stderr.
-		// If nil, a pipe to `Process.Stdout` member is created
-		// and used.
-		Stderr *io.Writer
-	*/
+	// Stdout, if set, is an io.Writer that will be used
+	// as process Stdout
+	// If nil, `os.Stdout` will be used.
+	Stdout io.Writer
+
+	// Stderr, if set, is an io.Writer that will be used
+	// as process Stderr.
+	// If nil, `os.Stderr` will be used.
+	Stderr io.Writer
 }
 
 /*
@@ -90,7 +72,7 @@ type Connection interface {
 	RmDir(dir vpath.VirtualPath) error
 	RmFile(file vpath.VirtualPath) error
 	Link(source, target vpath.VirtualPath) error
-	Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error)
+	Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error)
 }
 
 type connectionRegistry struct {

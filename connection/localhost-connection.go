@@ -93,40 +93,9 @@ func (conn *LocalConnection) RmFile(file vpath.VirtualPath) error {
 
 // LocalProcess ...
 type LocalProcess struct {
-	cmd *exec.Cmd
-	//stdout           io.Reader
-	//stderr           io.Reader
-	combinedOutput io.Reader
-	completed      chan struct{}
-	state          int
-	//streamsCompleted *sync.WaitGroup
-}
-
-// CombinedOutput ...
-func (proc *LocalProcess) CombinedOutput() io.Reader {
-	/*proc.streamsCompleted.Add(1)
-	combined, combinedWriter := io.Pipe()
-
-	done := sync.WaitGroup{}
-	done.Add(2)
-
-	go func() {
-		io.Copy(combinedWriter, proc.stdout)
-		done.Done()
-	}()
-
-	go func() {
-		io.Copy(combinedWriter, proc.stderr)
-		done.Done()
-	}()
-
-	go func() {
-		done.Wait()
-		combinedWriter.Close()
-		proc.streamsCompleted.Done()
-	}()
-	*/
-	return proc.combinedOutput
+	cmd       *exec.Cmd
+	completed chan struct{}
+	state     int
 }
 
 // Kill ...
@@ -134,44 +103,8 @@ func (proc *LocalProcess) Kill() error {
 	return nil
 }
 
-/*
-// Stdin ...
-func (proc *LocalProcess) Stdin() io.Writer {
-	return nil
-}
-
-// Stdout ...
-func (proc *LocalProcess) Stdout() io.Reader {
-	proc.streamsCompleted.Add(1)
-	processStdout, processStdoutWriter := io.Pipe()
-
-	go func() {
-		io.Copy(processStdoutWriter, proc.stdout)
-		processStdoutWriter.Close()
-		proc.streamsCompleted.Done()
-	}()
-
-	return processStdout
-}
-
-// Stderr ...
-func (proc *LocalProcess) Stderr() io.Reader {
-	proc.streamsCompleted.Add(1)
-	processStderr, processStderrWriter := io.Pipe()
-
-	go func() {
-		io.Copy(processStderrWriter, proc.stderr)
-		processStderrWriter.Close()
-		proc.streamsCompleted.Done()
-	}()
-
-	return processStderr
-}
-*/
-
 // Wait ...
 func (proc *LocalProcess) Wait() (int, error) {
-	//proc.streamsCompleted.Wait()
 	<-proc.completed
 	return proc.state, nil
 }
@@ -185,7 +118,7 @@ var tailCfg = tailor.Config{
 	//Logger:    tailor.DiscardingLogger,
 }
 */
-func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPath) {
+func copyLines(proc *LocalProcess, w io.Writer, outLogFile vpath.VirtualPath) {
 	var logFile *os.File
 	var err error = errors.New("empty")
 	for err != nil {
@@ -206,7 +139,6 @@ func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPat
 		errs := tailProc.Start()
 		proc.cmd.Wait()
 		tailProc.Stop()
-		w.Close()
 		err := <-errs
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "WARNING: copyLines error (reading lines from `%s`): %s\n", outLogFile.Path, err.Error())
@@ -216,63 +148,42 @@ func copyLines(proc *LocalProcess, w io.WriteCloser, outLogFile vpath.VirtualPat
 }
 
 // Run ...
-func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
-	//fmt.Println(strings.Repeat("*", 20))
-	//fmt.Println("EXECUTING", command.Path)
-	//fmt.Println(strings.Repeat("*", 20))
+func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error) {
 
 	cmd := exec.Command(command.Path, args...)
-	combinedOutput, writer := io.Pipe()
-	cmd.Stdout = writer
-	cmd.Stderr = writer
 
 	process := &LocalProcess{
-		cmd:            cmd,
-		combinedOutput: combinedOutput,
-		completed:      make(chan struct{}),
+		cmd:       cmd,
+		completed: make(chan struct{}),
 	}
 
-	/*
-		errLogFile := vpath.Stderr
-		outLogFile := vpath.Stdout
-		if len(options) > 0 {
-			if options[0].OutFromLog.Host != "" {
-				outLogFile = &options[0].OutFromLog
-			}
-			if options[0].ErrFromLog.Host != "" {
-				errLogFile = &options[0].ErrFromLog
-			}
-		}
-
-		if outLogFile != vpath.Stdout {
-
-			output, pwrite := io.Pipe()
-			process.stdout = output
-
-			go copyLines(process, pwrite, *outLogFile)
-		} else {
-
-			process.combinedOutput = combinedOutput
-
-		}
-
-		if errLogFile != vpath.Stderr {
-
-			output, pwrite := io.Pipe()
-			process.stderr = output
-
-			go copyLines(process, pwrite, *errLogFile)
-		} else {
-			output, err := cmd.StderrPipe()
-			if err != nil {
-				return nil, fmt.Errorf("Run `%s`: StderrPipe error: %w", command, err)
-			}
-			process.stderr = output
-		}
-	*/
-	if len(options) > 0 {
-		cmd.Dir = options[0].Cwd.Path
+	if options.Stderr == nil {
+		cmd.Stderr = os.Stderr
+	} else {
+		cmd.Stderr = options.Stderr
 	}
+
+	if options.Stdout == nil {
+		cmd.Stdout = os.Stdout
+	} else {
+		cmd.Stdout = options.Stdout
+	}
+
+	if options.Stdin == nil {
+		cmd.Stdin = os.Stdin
+	} else {
+		cmd.Stdin = options.Stdin
+	}
+
+	if options.OutFromLog != nil {
+		go copyLines(process, cmd.Stdout, *options.OutFromLog)
+	}
+
+	if options.ErrFromLog != nil {
+		go copyLines(process, cmd.Stderr, *options.ErrFromLog)
+	}
+
+	cmd.Dir = options.Cwd.Path
 
 	err := cmd.Start()
 	if err != nil {
@@ -285,8 +196,6 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 			panic(err)
 		}
 		process.state = state.ExitCode()
-		writer.Close()
-		//combinedOutput.Close()
 		close(process.completed)
 	}()
 

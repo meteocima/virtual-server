@@ -286,7 +286,7 @@ func (w *singleWriter) Write(p []byte) (int, error) {
 */
 
 // Run ...
-func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options ...RunOptions) (Process, error) {
+func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error) {
 	client, err := sftp.NewClient(conn.client)
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: sftp.NewClient: %w", command.String(), err)
@@ -311,8 +311,8 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 	cmd := command.Path
 	cmd = fmt.Sprintf("%s %s", cmd, strings.Join(args, " "))
 
-	if len(options) > 0 && options[0].Cwd.Path != "" {
-		cmd = fmt.Sprintf("cd %s && %s", options[0].Cwd.Path, cmd)
+	if options.Cwd.Path != "" {
+		cmd = fmt.Sprintf("cd %s && %s", options.Cwd.Path, cmd)
 	}
 	fmt.Println("ssh running command is " + cmd)
 	err = sess.Start(cmd)

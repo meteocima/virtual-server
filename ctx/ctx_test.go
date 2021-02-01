@@ -1,16 +1,18 @@
 package ctx
 
 import (
+	"io"
 	"io/ioutil"
 	"testing"
 
 	"github.com/meteocima/virtual-server/config"
+	"github.com/meteocima/virtual-server/connection"
 	"github.com/meteocima/virtual-server/testutil"
 	"github.com/meteocima/virtual-server/vpath"
 	"github.com/stretchr/testify/assert"
 )
 
-const sOut = "THIS IS AN ERROR COMMAND\nTHIS IS A TEST COMMAND\n"
+const sOut = "THIS IS A TEST COMMAND\nTHIS IS AN ERROR COMMAND\n"
 
 func TestNew(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
@@ -25,15 +27,27 @@ func TestNew(t *testing.T) {
 	})
 
 	t.Run("Run", func(t *testing.T) {
-		testcmd := drihmFixt.Join("testcmd")
-		process := ctx.Run(testcmd, []string{"/var/fixtures/"})
-
-		out, err := ioutil.ReadAll(process.CombinedOutput())
-		assert.NoError(t, err)
-		assert.Equal(t, sOut, string(out))
-
+		testcmd := vpath.Local("/var/fixtures/testcmd")
+		combOut, outWriter := io.Pipe()
+		process := ctx.Run(testcmd, []string{"/var/fixtures/"}, connection.RunOptions{
+			Stdout: outWriter,
+			Stderr: outWriter,
+		})
 		assert.NoError(t, ctx.Err)
 
+		testDone := make(chan int)
+		go func() {
+			out, err := ioutil.ReadAll(combOut)
+			assert.NoError(t, err)
+			assert.Equal(t, sOut, string(out))
+
+			assert.NoError(t, ctx.Err)
+			testDone <- 0
+		}()
+
+		process.Wait()
+		outWriter.Close()
+		<-testDone
 	})
 
 	t.Run("ReadDir", func(t *testing.T) {
