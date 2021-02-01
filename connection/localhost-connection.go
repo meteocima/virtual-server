@@ -1,16 +1,13 @@
 package connection
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"sort"
-	"time"
 
-	"github.com/meteocima/virtual-server/tailor"
 	"github.com/meteocima/virtual-server/vpath"
 )
 
@@ -109,44 +106,6 @@ func (proc *LocalProcess) Kill() error {
 func (proc *LocalProcess) Wait() (int, error) {
 	<-proc.completed
 	return proc.state, nil
-}
-
-/*
-var tailCfg = tailor.Config{
-	Poll:      true,
-	Follow:    true,
-	MustExist: false,
-	ReOpen:    true,
-	//Logger:    tailor.DiscardingLogger,
-}
-*/
-func copyLines(proc *LocalProcess, w io.Writer, outLogFile vpath.VirtualPath) {
-	var logFile *os.File
-	var err error = errors.New("empty")
-	for err != nil {
-		logFile, err = os.Open(outLogFile.Path)
-		if os.IsNotExist(err) {
-			time.Sleep(100 * time.Millisecond)
-			continue
-		}
-
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "WARNING: copyLines error: (os.Open `%s`\n): %s", outLogFile.Path, err.Error())
-			return
-		}
-	}
-
-	go func() {
-		tailProc := tailor.New(logFile, w, 1024)
-		errs := tailProc.Start()
-		proc.cmd.Wait()
-		tailProc.Stop()
-		err := <-errs
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "WARNING: copyLines error (reading lines from `%s`): %s\n", outLogFile.Path, err.Error())
-		}
-	}()
-
 }
 
 // Run ...

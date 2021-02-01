@@ -21,8 +21,8 @@ type Context struct {
 	runningFunction string
 	ID              string
 
-	infoLog       io.Writer
-	detailLog     io.Writer
+	stdout        io.Writer
+	stderr        io.Writer
 	infoChannel   chan string
 	detailChannel chan string
 	logCompleted  chan struct{}
@@ -32,11 +32,11 @@ type Context struct {
 }
 
 // New ...
-func New(infoLog io.Writer, detailLog io.Writer) *Context {
+func New(stdout io.Writer, stderr io.Writer) *Context {
 	ctx := Context{
 		ID:           "ANON",
-		infoLog:      infoLog,
-		detailLog:    detailLog,
+		stdout:       stdout,
+		stderr:       stderr,
 		level:        LevelDebug,
 		logCompleted: make(chan struct{}),
 		runningLock:  &sync.Mutex{},
@@ -329,14 +329,15 @@ func (ctx *Context) RmFile(file vpath.VirtualPath) {
 }
 
 // Exec ...
-func (ctx *Context) Exec(command vpath.VirtualPath, args []string) {
-	p := ctx.Run(command, args, connection.RunOptions{})
-	if p != nil {
-		if ctx.detailLog != nil {
-			//io.Copy(ctx.detailLog, p.CombinedOutput())
-		}
-		p.Wait()
+func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options *connection.RunOptions) {
+	if options == nil {
+		options = &connection.RunOptions{}
 	}
+
+	options.Stdout = ctx.stdout
+	options.Stderr = ctx.stderr
+	p := ctx.Run(command, args, *options)
+	p.Wait()
 }
 
 // Run ...
@@ -418,10 +419,10 @@ func (ctx *Context) startLogWriter() {
 				var chunk string
 				select {
 				case chunk = <-ctx.infoChannel:
-					fmt.Fprintf(ctx.infoLog, chunk)
+					fmt.Fprintf(ctx.stdout, chunk)
 					haveChunks = true
 				case chunk = <-ctx.detailChannel:
-					fmt.Fprintf(ctx.detailLog, chunk)
+					fmt.Fprintf(ctx.stderr, chunk)
 					haveChunks = true
 				default:
 					haveChunks = false

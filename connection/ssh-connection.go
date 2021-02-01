@@ -321,15 +321,14 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 		cmd:       cmd,
 		completed: make(chan struct{}),
 	}
-	/*
-		if options.OutFromLog != nil {
-			go copyLines(process, cmd.Stdout, *options.OutFromLog)
-		}
 
-		if options.ErrFromLog != nil {
-			go copyLines(process, cmd.Stderr, *options.ErrFromLog)
-		}
-	*/
+	if options.OutFromLog != nil {
+		go copyLines(process, cmd.Stdout, *options.OutFromLog)
+	}
+
+	if options.ErrFromLog != nil {
+		go copyLines(process, cmd.Stderr, *options.ErrFromLog)
+	}
 
 	cmdStr := command.Path
 	cmdStr = fmt.Sprintf("%s %s", cmdStr, strings.Join(args, " "))
