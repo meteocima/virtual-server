@@ -1,8 +1,7 @@
 package connection
 
 import (
-	"bytes"
-	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -177,23 +176,33 @@ func CheckRun(conn Connection) func(t *testing.T) {
 		sOut := "THIS IS A TEST COMMAND\n"
 		sErr := "THIS IS AN ERROR COMMAND\n"
 		t.Run("CombinedOutput", func(t *testing.T) {
-			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"}, RunOptions{})
+			outReader, writer := io.Pipe()
+
+			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"}, RunOptions{
+				Stdout: writer,
+				Stderr: writer,
+			})
 
 			assert.NotNil(t, process)
 			assert.NoError(t, err)
 
-			outReader := bytes.NewReader([]byte{}) //process.CombinedOutput()
-			assert.NotNil(t, outReader)
-			out, err := ioutil.ReadAll(outReader)
-			assert.NoError(t, err)
-			s := string(out)
-			fmt.Println(s)
+			testDone := make(chan int)
+			go func() {
+				out, err := ioutil.ReadAll(outReader)
+				assert.NoError(t, err)
+				s := string(out)
+				assert.Contains(t, s, sOut)
+				assert.Contains(t, s, sErr)
+				assert.Equal(t, len(sOut)+len(sErr), len(s))
 
-			assert.Contains(t, s, sOut)
-			assert.Contains(t, s, sErr)
-			assert.Equal(t, len(sOut)+len(sErr), len(s))
+				testDone <- 0
+			}()
+
 			exitCode, err := process.Wait()
 			assert.Equal(t, 0, exitCode)
+			assert.NoError(t, err)
+			writer.Close()
+			<-testDone
 		})
 		/*
 			t.Run("Output", func(t *testing.T) {

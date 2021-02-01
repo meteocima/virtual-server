@@ -61,7 +61,7 @@ type MoveOptions struct {
 
 // Connection ...
 type Connection interface {
-	HostName() string
+	Name() string
 	Open() error
 	Close() error
 	OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
@@ -105,7 +105,7 @@ func (reg *connectionRegistry) Add(name string, cn Connection) {
 
 // NewPath ...
 func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath {
-	return vpath.New(cn.HostName(), path, pathArgs...)
+	return vpath.New(cn.Name(), path, pathArgs...)
 }
 
 // FindHost ...
@@ -123,15 +123,16 @@ func FindHost(name string) (Connection, error) {
 	var cn Connection
 
 	if host.Type == config.HostTypeOS {
-		cn = &LocalConnection{}
+		cn = &LocalConnection{
+			name: name,
+		}
 	} else if host.Type == config.HostTypeSSH {
 		cn = &SSHConnection{
-			Name:     host.Name,
-			Host:     host.Host,
-			Port:     host.Port,
-			User:     host.User,
-			KeyPath:  host.Key,
-			hostName: name,
+			name:    name,
+			Host:    host.Host,
+			Port:    host.Port,
+			User:    host.User,
+			KeyPath: host.Key,
 		}
 	} else {
 		return nil, fmt.Errorf("wrong configuration file \"%s\": unknown connection type %d for host `%s`", config.Filename, host.Type, name)

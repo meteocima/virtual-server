@@ -17,7 +17,7 @@ import (
 // SSHConnection ...
 type SSHConnection struct {
 	BackupHosts []string
-	Name        string
+	name        string
 
 	Host     string
 	Port     int
@@ -28,9 +28,9 @@ type SSHConnection struct {
 	client   *ssh.Client
 }
 
-// HostName ...
-func (conn *SSHConnection) HostName() string {
-	return conn.hostName
+// Name ...
+func (conn *SSHConnection) Name() string {
+	return conn.name
 }
 
 func privateSSHKey(path string) (ssh.AuthMethod, error) {
@@ -57,6 +57,7 @@ type sshReader struct {
 func (r sshReader) Read(p []byte) (n int, err error) {
 	return r.reader.Read(p)
 }
+
 func (r sshReader) Close() error {
 	err := r.reader.Close()
 	if err != nil {
@@ -106,14 +107,14 @@ func (conn *SSHConnection) Open() error {
 		if err == nil && retryCount > 0 && len(conn.BackupHosts) > 0 {
 			fmt.Printf(
 				"VPE: successfully connected to server `%s` using hostname %s. Subsequents requests will use hostname %s\n",
-				conn.Name,
+				conn.Name(),
 				conn.Host,
 				conn.Host,
 			)
 		}
 		fmt.Printf(
 			"VPE: successfully connected to server `%s` using hostname %s. Subsequents requests will use hostname %s\n",
-			conn.Name,
+			conn.Name(),
 			conn.Host,
 			conn.Host,
 		)
@@ -127,7 +128,7 @@ func (conn *SSHConnection) Open() error {
 			}
 			fmt.Printf(
 				"VPE: cannot connect to server `%s` using hostname %s: %v\nThe operation will be retried in 10 seconds on %s\n",
-				conn.Name,
+				conn.Name(),
 				failedHost,
 				err,
 				retryHost,
@@ -292,37 +293,60 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 		return nil, fmt.Errorf("Run `%s`: sftp.NewClient: %w", command.String(), err)
 	}
 	defer client.Close()
-	sess, err := conn.client.NewSession()
+
+	cmd, err := conn.client.NewSession()
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: client.NewSession: %w", command.String(), err)
 	}
 
-	combinedOutput, writer := io.Pipe()
+	if options.Stderr == nil {
+		cmd.Stderr = os.Stderr
+	} else {
+		cmd.Stderr = options.Stderr
+	}
 
-	sess.Stdout = writer
-	sess.Stderr = writer
+	if options.Stdout == nil {
+		cmd.Stdout = os.Stdout
+	} else {
+		cmd.Stdout = options.Stdout
+	}
+
+	if options.Stdin == nil {
+		cmd.Stdin = os.Stdin
+	} else {
+		cmd.Stdin = options.Stdin
+	}
 
 	process := &SSHProcess{
-		combinedOutput: combinedOutput,
-		cmd:            sess,
-		completed:      make(chan struct{}),
+		cmd:       cmd,
+		completed: make(chan struct{}),
 	}
+	/*
+		if options.OutFromLog != nil {
+			go copyLines(process, cmd.Stdout, *options.OutFromLog)
+		}
 
-	cmd := command.Path
-	cmd = fmt.Sprintf("%s %s", cmd, strings.Join(args, " "))
+		if options.ErrFromLog != nil {
+			go copyLines(process, cmd.Stderr, *options.ErrFromLog)
+		}
+	*/
+
+	cmdStr := command.Path
+	cmdStr = fmt.Sprintf("%s %s", cmdStr, strings.Join(args, " "))
 
 	if options.Cwd.Path != "" {
-		cmd = fmt.Sprintf("cd %s && %s", options.Cwd.Path, cmd)
+		cmdStr = fmt.Sprintf("cd %s && %s", options.Cwd.Path, cmdStr)
 	}
-	fmt.Println("ssh running command is " + cmd)
-	err = sess.Start(cmd)
+
+	fmt.Println("ssh running command is " + cmdStr)
+	err = cmd.Start(cmdStr)
 
 	if err != nil {
 		return nil, fmt.Errorf("Run `%s`: session.Start error: %w", command, err)
 	}
 
 	go func() {
-		err := sess.Wait()
+		err := cmd.Wait()
 		if err == nil {
 			process.state = 0
 		} else {
@@ -331,10 +355,7 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 			} else {
 				panic(err)
 			}
-
 		}
-
-		writer.Close()
 		close(process.completed)
 	}()
 
@@ -343,84 +364,15 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 
 // SSHProcess ...
 type SSHProcess struct {
-	cmd *ssh.Session
-	//stdout io.Reader
-	//stderr io.Reader
-	combinedOutput io.Reader
-	completed      chan struct{}
-	state          int
-
-	//streamsCompleted *sync.WaitGroup
-}
-
-// CombinedOutput ...
-func (proc *SSHProcess) CombinedOutput() io.Reader {
-	/*
-		proc.streamsCompleted.Add(1)
-		combined, combinedWriter := io.Pipe()
-
-		done := sync.WaitGroup{}
-		done.Add(2)
-
-		go func() {
-			io.Copy(combinedWriter, proc.stdout)
-			done.Done()
-		}()
-
-		go func() {
-			io.Copy(combinedWriter, proc.stderr)
-			done.Done()
-		}()
-
-		go func() {
-			done.Wait()
-			combinedWriter.Close()
-			proc.streamsCompleted.Done()
-		}()
-	*/
-	return proc.combinedOutput
+	cmd       *ssh.Session
+	completed chan struct{}
+	state     int
 }
 
 // Kill ...
 func (proc *SSHProcess) Kill() error {
 	return nil
 }
-
-/*
-
-// Stdin ...
-func (proc *SSHProcess) Stdin() io.Writer {
-	return nil
-}
-
-// Stdout ...
-func (proc *SSHProcess) Stdout() io.Reader {
-	proc.streamsCompleted.Add(1)
-	processStdout, processStdoutWriter := io.Pipe()
-
-	go func() {
-		io.Copy(processStdoutWriter, proc.stdout)
-		processStdoutWriter.Close()
-		proc.streamsCompleted.Done()
-	}()
-
-	return processStdout
-}
-
-// Stderr ...
-func (proc *SSHProcess) Stderr() io.Reader {
-	proc.streamsCompleted.Add(1)
-	processStderr, processStderrWriter := io.Pipe()
-
-	go func() {
-		io.Copy(processStderrWriter, proc.stderr)
-		processStderrWriter.Close()
-		proc.streamsCompleted.Done()
-	}()
-
-	return processStderr
-}
-*/
 
 // Wait ...
 func (proc *SSHProcess) Wait() (int, error) {

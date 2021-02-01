@@ -15,11 +15,13 @@ import (
 )
 
 // LocalConnection ...
-type LocalConnection struct{}
+type LocalConnection struct {
+	name string
+}
 
-// HostName ...
-func (conn *LocalConnection) HostName() string {
-	return "localhost"
+// Name ...
+func (conn *LocalConnection) Name() string {
+	return conn.name
 }
 
 // OpenReader ...
@@ -200,5 +202,4 @@ func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, optio
 	}()
 
 	return process, nil
-
 }

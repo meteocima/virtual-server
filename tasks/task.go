@@ -33,8 +33,8 @@ type Task struct {
 	CompletedAt time.Time
 
 	ID          string
-	detailedLog io.WriteCloser
-	infoLog     io.WriteCloser
+	stdout      io.WriteCloser
+	stderr      io.WriteCloser
 	Description string
 	runner      TaskRunner
 }
@@ -110,11 +110,11 @@ func (tsk *Task) Run() {
 	go func() {
 
 		//infoLog := openTaskLog(tsk.ID + ".info.log")
-		detailedLog := openTaskLog(tsk.ID + ".log")
+		stderr := openTaskLog(tsk.ID + ".log")
 
-		tsk.infoLog = NewMultiWriteCloser(detailedLog, Stdout)
-		tsk.detailedLog = detailedLog
-		vs := ctx.New(tsk.infoLog, tsk.detailedLog)
+		tsk.stdout = NewMultiWriteCloser(stderr, Stdout)
+		tsk.stderr = stderr
+		vs := ctx.New(tsk.stdout, tsk.stderr)
 		vs.ID = tsk.ID
 		vs.LogInfo("START: %s", tsk.Description)
 
@@ -131,8 +131,8 @@ func (tsk *Task) Run() {
 		}
 
 		vs.Close()
-		//infoLog.Close()
-		detailedLog.Close()
+
+		stderr.Close()
 
 		if err != nil {
 			tsk.Failed.Invoke(err)
@@ -141,6 +141,7 @@ func (tsk *Task) Run() {
 			tsk.Succeeded.Invoke(nil)
 			tsk.SetStatus(DoneOk)
 		}
+
 		tsk.Done.Invoke(err)
 
 		event.CloseEmitters(

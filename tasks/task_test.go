@@ -66,7 +66,7 @@ INFO: TEST: DONE
 		tsk.Done.AwaitOne()
 		assert.NoError(t, MustBeEqual(tsk.Status(), DoneOk))
 
-		contentBuff, err := ioutil.ReadFile("TEST.detailed.log")
+		contentBuff, err := ioutil.ReadFile("TEST.log")
 		assert.NoError(t, err)
 		assert.Equal(t,
 			`INFO: TEST: START: A task for tests.
