@@ -51,7 +51,9 @@ func (tsk *ParentTask) AppendChildren(children ...*Task) {
 // RunChild ...
 func (tsk *ParentTask) RunChild(child *Task) {
 	if tsk.runningChild == nil {
+
 		child.Run()
+
 		return
 	}
 
@@ -107,6 +109,7 @@ func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 		for child := range tsk.children {
 			child.Done.AwaitOne()
 		}
+
 		return err
 	}
 }

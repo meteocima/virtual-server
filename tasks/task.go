@@ -141,7 +141,7 @@ func (tsk *Task) Run() {
 			tsk.Succeeded.Invoke(nil)
 			tsk.SetStatus(DoneOk)
 		}
-
+		fmt.Printf("Invoke Done %v\n", tsk.Done)
 		tsk.Done.Invoke(err)
 
 		event.CloseEmitters(

@@ -1,7 +1,7 @@
 package tasks
 
 import (
-	"io/ioutil"
+	"os"
 	"sync"
 	"testing"
 	"time"
@@ -19,7 +19,7 @@ func TestBucketTask(t *testing.T) {
 
 	t.Run("Works", func(t *testing.T) {
 		//bytesWriter := bytes.Buffer{}
-		Stdout = ioutil.Discard
+		Stdout = os.Stdout
 
 		var tsk1 *Task
 		var tsk2 *Task

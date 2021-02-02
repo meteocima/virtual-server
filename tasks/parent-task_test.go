@@ -2,7 +2,7 @@ package tasks
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"testing"
 	"time"
 
@@ -50,7 +50,7 @@ func readResults(t *testing.T, results chan string, count int) []string {
 func TestParentTask(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
 	assert.NoError(t, err)
-	Stdout = ioutil.Discard
+	Stdout = os.Stdout
 
 	t.Run("no max parallelism", func(t *testing.T) {
 		var parent *ParentTask

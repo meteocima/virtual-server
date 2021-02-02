@@ -1,6 +1,9 @@
 package event
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // Source is an interface that represents
 // any object which emits one or more events.
@@ -143,6 +146,7 @@ func (e *Emitter) IsClosed() bool {
 // on it, and finally unregisters the listener
 // instance.
 func (e *Emitter) AwaitOne() *Event {
+	fmt.Printf("AwaitOne %v\n", e)
 	if e.IsClosed() {
 		return nil
 	}

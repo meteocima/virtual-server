@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/meteocima/virtual-server/connection"
 	"github.com/meteocima/virtual-server/vpath"
@@ -54,7 +55,7 @@ func (ctx *Context) ContextFailed(offendingFunc string, err error) {
 func (ctx *Context) setRunningFunction(msg string, args ...interface{}) func() {
 	ctx.runningFunction = fmt.Sprintf(msg, args...)
 
-	ctx.LogInfo("\t⟶\t%s\n", ctx.runningFunction)
+	ctx.LogDetail("\t⟶\t%s\n", ctx.runningFunction)
 
 	return func() {
 		ctx.runningFunction = ""
@@ -192,6 +193,28 @@ func (ctx *Context) Move(from, to vpath.VirtualPath) {
 
 	ctx.Copy(from, to)
 	ctx.RmFile(from)
+}
+
+// OpenWriter ...
+func (ctx *Context) OpenWriter(file vpath.VirtualPath, content string) io.WriteCloser {
+	if ctx.Err != nil {
+		return nil
+	}
+	defer ctx.setRunningFunction("OpenWriter to `%s`", file.String())()
+
+	toConn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
+
+	writer, err := toConn.OpenWriter(file)
+	if err != nil {
+		ctx.ContextFailed("toConn.OpenWriter", err)
+		return nil
+	}
+
+	return writer
 }
 
 // WriteString ...
@@ -334,10 +357,20 @@ func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options *conn
 		options = &connection.RunOptions{}
 	}
 
-	options.Stdout = ctx.stdout
-	options.Stderr = ctx.stderr
+	devNull, err := os.Open(os.DevNull)
+	if err != nil {
+		ctx.ContextFailed("os.Open(os.DevNull)", err)
+	}
+
+	options.Stdout = devNull // ctx.stdout
+	options.Stderr = devNull // ctx.stderr
+
+	ctx.LogInfo("START %s %s", command.String(), strings.Join(args, " "))
 	p := ctx.Run(command, args, *options)
 	p.Wait()
+	if ctx.Err == nil {
+		ctx.LogInfo("COMPLETED OK %s", command.String())
+	}
 }
 
 // Run ...
@@ -407,36 +440,32 @@ func (ctx *Context) Close() {
 }
 
 func (ctx *Context) startLogWriter() {
-	ctx.infoChannel = make(chan string)
-	ctx.detailChannel = make(chan string)
+	ctx.infoChannel = make(chan string, 1024)
+	ctx.detailChannel = make(chan string, 1024)
 	ctx.runningLock.Lock()
-	defer ctx.runningLock.Unlock()
 	ctx.running = true
+	ctx.runningLock.Unlock()
 	go func() {
+		defer close(ctx.logCompleted)
 		for {
-			haveChunks := true
-			for haveChunks {
-				var chunk string
-				select {
-				case chunk = <-ctx.infoChannel:
-					fmt.Fprintf(ctx.stdout, chunk)
-					haveChunks = true
-				case chunk = <-ctx.detailChannel:
-					fmt.Fprintf(ctx.stderr, chunk)
-					haveChunks = true
-				default:
-					haveChunks = false
+			var chunk string
+			select {
+			case chunk = <-ctx.infoChannel:
+				fmt.Fprintf(ctx.stdout, chunk)
+			case chunk = <-ctx.detailChannel:
+				fmt.Fprintf(ctx.stderr, chunk)
+			case <-time.After(100 * time.Millisecond):
+				ctx.runningLock.Lock()
+				running := ctx.running
+				ctx.runningLock.Unlock()
+				if !running {
+
+					return
 				}
 			}
 
-			ctx.runningLock.Lock()
-			if !ctx.running {
-				ctx.runningLock.Unlock()
-				break
-			}
-			ctx.runningLock.Unlock()
 		}
-		close(ctx.logCompleted)
+
 	}()
 }
 

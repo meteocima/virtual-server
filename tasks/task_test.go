@@ -3,6 +3,7 @@ package tasks
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 	"sync"
 	"testing"
 
@@ -42,10 +43,7 @@ func TestTask(t *testing.T) {
 		//time.Sleep(time.Second)
 		assert.NoError(t, MustBeEqual(tsk.Status(), DoneOk))
 		assert.Equal(t,
-			`INFO: TEST: START: A task for tests.
-INFO: TEST: ciao
-INFO: TEST: DONE
-`, bytesWriter.String())
+			"INFO: TEST: START: A task for tests.\nINFO: TEST: ciao\nINFO: TEST: DONE\n", bytesWriter.String())
 
 	})
 	t.Run("All log levels are logged to file", func(t *testing.T) {
@@ -68,13 +66,21 @@ INFO: TEST: DONE
 
 		contentBuff, err := ioutil.ReadFile("TEST.log")
 		assert.NoError(t, err)
-		assert.Equal(t,
-			`INFO: TEST: START: A task for tests.
-INFO: TEST: ciao
-DETAIL: TEST: salve
-DEBUG: TEST: urrà
-INFO: TEST: DONE
-`, string(contentBuff))
+
+		lines := []string{
+			"DETAIL: TEST: salve",
+			"INFO: TEST: START: A task for tests.",
+			"DEBUG: TEST: urrà",
+			"INFO: TEST: ciao",
+			"INFO: TEST: DONE",
+		}
+
+		for _, line := range strings.Split(string(contentBuff), "\n") {
+			if line == "" {
+				continue
+			}
+			assert.Contains(t, lines, line)
+		}
 
 	})
 
