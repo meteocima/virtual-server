@@ -357,13 +357,13 @@ func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options *conn
 		options = &connection.RunOptions{}
 	}
 
-	devNull, err := os.Open(os.DevNull)
+	/*devNull, err := os.Open(os.DevNull)
 	if err != nil {
 		ctx.ContextFailed("os.Open(os.DevNull)", err)
-	}
+	}*/
 
-	options.Stdout = devNull // ctx.stdout
-	options.Stderr = devNull // ctx.stderr
+	options.Stdout = ctx.stdout
+	options.Stderr = ctx.stderr
 
 	ctx.LogInfo("START %s %s", command.String(), strings.Join(args, " "))
 	p := ctx.Run(command, args, *options)
