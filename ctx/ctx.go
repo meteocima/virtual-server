@@ -48,7 +48,12 @@ func New(stdout io.Writer, stderr io.Writer) *Context {
 
 // ContextFailed ...
 func (ctx *Context) ContextFailed(offendingFunc string, err error) {
-	ctx.Err = fmt.Errorf("%s: %s: %w", ctx.runningFunction, offendingFunc, err)
+	ctx.SetContextFailed("%s: %s: %w", ctx.runningFunction, offendingFunc, err)
+}
+
+// SetContextFailed ...
+func (ctx *Context) SetContextFailed(format string, args ...interface{}) {
+	ctx.Err = fmt.Errorf(format, args...)
 }
 
 // setRunningFunction ...
