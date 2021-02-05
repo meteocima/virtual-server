@@ -83,6 +83,12 @@ func (s *Tailor) Start() chan error {
 			errs <- err
 			return
 		}*/
+		shallStop := false
+		select {
+		case <-s.shallStop:
+			shallStop = true
+		default:
+		}
 
 		for {
 			line, readErr := s.readLine()
@@ -106,13 +112,11 @@ func (s *Tailor) Start() chan error {
 			return
 		}
 
-		select {
-		case <-s.shallStop:
-			return
-		default:
+		if !shallStop {
 			time.Sleep(200 * time.Millisecond)
 			goto InitialPositioning
 		}
+
 	}()
 
 	return errs

@@ -54,6 +54,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/mikkeloscar/sshconfig"
+
 	"github.com/BurntSushi/toml"
 )
 
@@ -109,7 +111,12 @@ type Host struct {
 // _Used internally and exported only
 // to properly unmasharl the `toml` configuration_
 type Type struct {
+	// Hosts contains the hosts to which
+	// would be possible to connect.
 	Hosts map[string]*Host
+	// If true, the system will try to use
+	// the given SSHConfig file to configure Hosts.
+	SSHConfigPath string
 }
 
 // Hosts contains the configuration public instance
@@ -127,6 +134,37 @@ func Init(configFile string) error {
 	_, err := toml.DecodeFile(configFile, &cfg)
 	if err != nil {
 		return err
+	}
+
+	if cfg.Hosts == nil {
+		cfg.Hosts = make(map[string]*Host)
+	}
+
+	if cfg.SSHConfigPath != "" {
+		cfg.Hosts["localhost"] = &Host{
+			Type: HostTypeOS,
+		}
+		hosts, err := sshconfig.ParseSSHConfig(cfg.SSHConfigPath)
+		if err != nil {
+			return err
+		}
+
+		for _, host := range hosts {
+			sshHost := Host{
+				Type:        HostTypeSSH,
+				Name:        host.Host[0],
+				Host:        host.HostName,
+				BackupHosts: []string{},
+				Port:        host.Port,
+				User:        host.User,
+				Key:         host.IdentityFile,
+			}
+			if sshHost.Name != "*" {
+				cfg.Hosts[sshHost.Name] = &sshHost
+			}
+		}
+
+		//panic("SSHConfigPath")
 	}
 
 	for name, host := range cfg.Hosts {

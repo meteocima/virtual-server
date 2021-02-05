@@ -385,11 +385,16 @@ func (ctx *Context) Run(command vpath.VirtualPath, args []string, options connec
 	}
 	defer ctx.setRunningFunction("Run %s %s", command.String(), strings.Join(args, " "))()
 
+	fmt.Println("find host ", command.Host)
 	conn, err := connection.FindHost(command.Host)
 	if err != nil {
+		fmt.Println("err host ", err)
+
 		ctx.ContextFailed("connection.FindHost", err)
 		return nil
 	}
+
+	fmt.Println("using host ", conn)
 
 	proc, err := conn.Run(command, args, options)
 	if err != nil {
