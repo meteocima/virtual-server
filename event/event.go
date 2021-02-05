@@ -1,7 +1,6 @@
 package event
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -146,7 +145,7 @@ func (e *Emitter) IsClosed() bool {
 // on it, and finally unregisters the listener
 // instance.
 func (e *Emitter) AwaitOne() *Event {
-	fmt.Printf("AwaitOne %v\n", e)
+	//fmt.Printf("AwaitOne %v\n", e)
 	if e.IsClosed() {
 		return nil
 	}

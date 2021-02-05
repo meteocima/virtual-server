@@ -343,6 +343,7 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 
 	go func() {
 		err := cmd.Wait()
+
 		if err == nil {
 			process.state = 0
 		} else {

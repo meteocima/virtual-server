@@ -1,8 +1,6 @@
 package tasks
 
 import (
-	"fmt"
-
 	"github.com/meteocima/virtual-server/ctx"
 )
 
@@ -59,21 +57,21 @@ func (tsk *ParentTask) RunChild(child *Task) {
 
 	select {
 	case tsk.runningChild <- struct{}{}:
-		fmt.Println("TASK ENTER", child.ID)
+		//fmt.Println("TASK ENTER", child.ID)
 		child.Run()
 		go func() {
 			child.Done.AwaitOne()
-			fmt.Println("TASK COMPLETED", child.ID)
+			//fmt.Println("TASK COMPLETED", child.ID)
 			<-tsk.runningChild
 			if len(tsk.waitingChildren) > 0 {
-				fmt.Println("TASK RECOVERING", child.ID)
+				//fmt.Println("TASK RECOVERING", child.ID)
 				next := tsk.waitingChildren[0]
 				tsk.waitingChildren = tsk.waitingChildren[1:]
 				tsk.RunChild(next)
 			}
 		}()
 	default:
-		fmt.Println("TASK WAIT", child.ID)
+		//fmt.Println("TASK WAIT", child.ID)
 		tsk.waitingChildren = append(tsk.waitingChildren, child)
 	}
 

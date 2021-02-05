@@ -178,16 +178,21 @@ func CheckRun(conn Connection) func(t *testing.T) {
 		t.Run("CombinedOutput", func(t *testing.T) {
 			outReader, writer := io.Pipe()
 
-			process, err := conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"}, RunOptions{
-				Stdout: writer,
-				Stderr: writer,
-			})
-
-			assert.NotNil(t, process)
-			assert.NoError(t, err)
+			var process Process
 
 			testDone := make(chan int)
+			processStarted := make(chan int)
 			go func() {
+				var err error
+				process, err = conn.Run(fixtures.Join("testcmd"), []string{"/var/fixtures/"}, RunOptions{
+					Stdout: writer,
+					Stderr: writer,
+				})
+				processStarted <- 0
+
+				assert.NotNil(t, process)
+				assert.NoError(t, err)
+
 				out, err := ioutil.ReadAll(outReader)
 				assert.NoError(t, err)
 				s := string(out)
@@ -198,6 +203,7 @@ func CheckRun(conn Connection) func(t *testing.T) {
 				testDone <- 0
 			}()
 
+			<-processStarted
 			exitCode, err := process.Wait()
 			assert.Equal(t, 0, exitCode)
 			assert.NoError(t, err)
