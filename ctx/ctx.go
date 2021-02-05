@@ -491,6 +491,18 @@ func (ctx *Context) logWrite(msgLevel LogLevel, msgText string, args []interface
 	channel <- fmt.Sprintf(msgLevel.String()+": "+ctx.ID+": "+msgText+"\n", args...)
 }
 
+// OutPrintf ...
+func (ctx *Context) OutPrintf(format string, args ...interface{}) {
+	channel := ctx.infoChannel
+	channel <- fmt.Sprintf(format, args...)
+}
+
+// ErrPrintf ...
+func (ctx *Context) ErrPrintf(format string, args ...interface{}) {
+	channel := ctx.detailChannel
+	channel <- fmt.Sprintf(format, args...)
+}
+
 // SetLevel set the maximum
 // level a message must have to be
 // logged.
