@@ -86,7 +86,6 @@ const maxRetries = 5
 
 // Open ...
 func (conn *SSHConnection) Open() error {
-	fmt.Println("OPEN CN")
 	conn.config = &ssh.ClientConfig{
 		User:            conn.User,
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
@@ -143,7 +142,6 @@ func (conn *SSHConnection) Open() error {
 	if err != nil {
 		return fmt.Errorf("cannot dial ssh server %s: %w", conn.Host, err)
 	}
-	fmt.Println("CONNECTED")
 	return nil
 }
 
@@ -337,7 +335,6 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 		cmdStr = fmt.Sprintf("cd %s && %s", options.Cwd.Path, cmdStr)
 	}
 
-	fmt.Println("ssh running command is " + cmdStr)
 	err = cmd.Start(cmdStr)
 
 	if err != nil {
