@@ -35,6 +35,7 @@ func (vPath *VirtualPath) UnmarshalText(data []byte) error {
 	return nil
 }
 
+/*
 // Stdin is a placeholder VirtualPath which represents the `stdin` stream of a process.
 var Stdin = &VirtualPath{
 	Host: "any",
@@ -52,7 +53,7 @@ var Stderr = &VirtualPath{
 	Host: "any",
 	Path: "stderr",
 }
-
+*/
 // private method that resolve
 // nil fields to their corresponding
 // values
@@ -96,6 +97,11 @@ func FromS(pathRepr string) VirtualPath {
 	}
 
 	return New(parts[0], parts[1])
+}
+
+// HasHostSpecifier ...
+func HasHostSpecifier(pathRepr string) bool {
+	return strings.Contains(pathRepr, ":")
 }
 
 // String returns a string representing the virtual path
