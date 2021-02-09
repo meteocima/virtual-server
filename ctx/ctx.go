@@ -32,6 +32,10 @@ type Context struct {
 	level         LogLevel
 }
 
+func (ctx *Context) Clone() *Context {
+	return New(ctx.stdout, ctx.stderr)
+}
+
 // New ...
 func New(stdout io.Writer, stderr io.Writer) *Context {
 	ctx := Context{
