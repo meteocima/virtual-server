@@ -73,6 +73,7 @@ type Connection interface {
 	RmFile(file vpath.VirtualPath) error
 	Link(source, target vpath.VirtualPath) error
 	Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error)
+	Glob(pattern vpath.VirtualPath) (vpath.VirtualPathList, error)
 }
 
 type connectionRegistry struct {

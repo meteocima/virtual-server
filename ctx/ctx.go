@@ -108,6 +108,29 @@ func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
 	return !info.IsDir()
 }
 
+// Glob ...
+func (ctx *Context) Glob(pattern vpath.VirtualPath) vpath.VirtualPathList {
+	if ctx.Err != nil {
+		return nil
+	}
+	defer ctx.setRunningFunction("Glob `%s`", pattern.String())()
+
+	conn, err := connection.FindHost(pattern.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
+
+	files, err := conn.Glob(pattern)
+
+	if err != nil {
+		ctx.ContextFailed("connection.Glob", err)
+		return nil
+	}
+
+	return files
+}
+
 // Exists ...
 func (ctx *Context) Exists(file vpath.VirtualPath) bool {
 	if ctx.Err != nil {

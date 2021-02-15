@@ -214,6 +214,25 @@ func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error) {
 	return client.Stat(path.Path)
 }
 
+// Glob ...
+func (conn *SSHConnection) Glob(pattern vpath.VirtualPath) (vpath.VirtualPathList, error) {
+	client, err := sftp.NewClient(conn.client)
+	if err != nil {
+		return nil, err
+	}
+	defer client.Close()
+
+	files, err := client.Glob(pattern.Path)
+	if err != nil {
+		return nil, err
+	}
+	result := make(vpath.VirtualPathList, len(files))
+	for idx, file := range files {
+		result[idx] = vpath.New(pattern.Host, file)
+	}
+	return result, nil
+}
+
 // Link ...
 func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error {
 	client, err := sftp.NewClient(conn.client)

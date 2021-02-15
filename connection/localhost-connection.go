@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"sort"
 
 	"github.com/meteocima/virtual-server/vpath"
@@ -25,6 +26,20 @@ func (conn *LocalConnection) Name() string {
 func (conn *LocalConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error) {
 	freader, err := os.Open(file.Path)
 	return freader, err
+}
+
+// Glob ...
+func (conn *LocalConnection) Glob(pattern vpath.VirtualPath) (vpath.VirtualPathList, error) {
+
+	files, err := filepath.Glob(pattern.Path)
+	if err != nil {
+		return nil, err
+	}
+	result := make(vpath.VirtualPathList, len(files))
+	for idx, file := range files {
+		result[idx] = vpath.New(pattern.Host, file)
+	}
+	return result, nil
 }
 
 // OpenWriter ...
