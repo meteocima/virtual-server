@@ -114,7 +114,7 @@ func (tsk *Task) Run() {
 
 		tsk.stdout = NewMultiWriteCloser(stderr, Stdout)
 		tsk.stderr = stderr
-		vs := ctx.New(tsk.stdout, tsk.stderr)
+		vs := ctx.New(os.Stdin, tsk.stdout, tsk.stderr)
 		vs.ID = tsk.ID
 		vs.LogInfo("START: %s", tsk.Description)
 

@@ -48,6 +48,12 @@ func (conn *LocalConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser,
 	return fwriter, err
 }
 
+// OpenAppendWriter ...
+func (conn *LocalConnection) OpenAppendWriter(file vpath.VirtualPath) (io.WriteCloser, error) {
+	fwriter, err := os.OpenFile(file.Path, os.O_CREATE|os.O_APPEND|os.O_WRONLY, os.FileMode(0664))
+	return fwriter, err
+}
+
 // ReadDir ...
 func (conn *LocalConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error) {
 	files, err := ioutil.ReadDir(dir.Path)

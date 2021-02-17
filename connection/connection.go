@@ -66,6 +66,7 @@ type Connection interface {
 	Close() error
 	OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
 	OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
+	OpenAppendWriter(file vpath.VirtualPath) (io.WriteCloser, error)
 	ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
 	Stat(path vpath.VirtualPath) (os.FileInfo, error)
 	MkDir(dir vpath.VirtualPath) error

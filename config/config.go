@@ -53,6 +53,7 @@ package config
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/mikkeloscar/sshconfig"
 
@@ -150,6 +151,11 @@ func Init(configFile string) error {
 		}
 
 		for _, host := range hosts {
+			if strings.Contains(host.IdentityFile, "~") {
+				home, _ := os.UserHomeDir()
+				host.IdentityFile = strings.ReplaceAll(host.IdentityFile, "~", home)
+			}
+
 			sshHost := Host{
 				Type:        HostTypeSSH,
 				Name:        host.Host[0],

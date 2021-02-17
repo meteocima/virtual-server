@@ -23,6 +23,8 @@ type Context struct {
 
 	stdout io.Writer
 	stderr io.Writer
+	stdin  io.Reader
+
 	//infoChannel   chan string
 	//detailChannel chan string
 	logCompleted chan struct{}
@@ -32,7 +34,7 @@ type Context struct {
 }
 
 func (ctx *Context) Clone() *Context {
-	return New(ctx.stdout, ctx.stderr)
+	return New(ctx.stdin, ctx.stdout, ctx.stderr)
 }
 
 func (ctx *Context) GetStdOut() io.Writer {
@@ -40,17 +42,30 @@ func (ctx *Context) GetStdOut() io.Writer {
 }
 
 func (ctx *Context) GetStdIn() io.Reader {
-	return nil
+	return ctx.stdin
 }
 
 func (ctx *Context) GetStdErr() io.Writer {
 	return ctx.stderr
 }
 
+func (ctx *Context) SetStdOut(v io.Writer) {
+	ctx.stdout = v
+}
+
+func (ctx *Context) SetStdIn(v io.Reader) {
+	ctx.stdin = v
+}
+
+func (ctx *Context) SetStdErr(v io.Writer) {
+	ctx.stderr = v
+}
+
 // New ...
-func New(stdout io.Writer, stderr io.Writer) *Context {
+func New(stdin io.Reader, stdout io.Writer, stderr io.Writer) *Context {
 	ctx := Context{
 		ID:     "ANON",
+		stdin:  stdin,
 		stdout: stdout,
 		stderr: stderr,
 		level:  LevelDebug,
@@ -129,6 +144,30 @@ func (ctx *Context) Glob(pattern vpath.VirtualPath) vpath.VirtualPathList {
 	}
 
 	return files
+
+}
+
+// Stat ...
+func (ctx *Context) Stat(file vpath.VirtualPath) os.FileInfo {
+	if ctx.Err != nil {
+		return nil
+	}
+	defer ctx.setRunningFunction("Stat `%s`", file.String())()
+
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
+
+	info, err := conn.Stat(file)
+
+	if err != nil {
+		ctx.ContextFailed("connection.Stat", err)
+		return nil
+	}
+
+	return info
 }
 
 // Exists ...
@@ -239,7 +278,7 @@ func (ctx *Context) Move(from, to vpath.VirtualPath) {
 }
 
 // OpenWriter ...
-func (ctx *Context) OpenWriter(file vpath.VirtualPath, content string) io.WriteCloser {
+func (ctx *Context) OpenWriter(file vpath.VirtualPath) io.WriteCloser {
 	if ctx.Err != nil {
 		return nil
 	}
@@ -254,6 +293,28 @@ func (ctx *Context) OpenWriter(file vpath.VirtualPath, content string) io.WriteC
 	writer, err := toConn.OpenWriter(file)
 	if err != nil {
 		ctx.ContextFailed("toConn.OpenWriter", err)
+		return nil
+	}
+
+	return writer
+}
+
+// OpenAppendWriter ...
+func (ctx *Context) OpenAppendWriter(file vpath.VirtualPath) io.WriteCloser {
+	if ctx.Err != nil {
+		return nil
+	}
+	defer ctx.setRunningFunction("OpenAppendWriter to `%s`", file.String())()
+
+	toConn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
+
+	writer, err := toConn.OpenAppendWriter(file)
+	if err != nil {
+		ctx.ContextFailed("toConn.OpenAppendWriter", err)
 		return nil
 	}
 
@@ -286,6 +347,29 @@ func (ctx *Context) WriteString(file vpath.VirtualPath, content string) {
 		ctx.ContextFailed("writer.Write", err)
 		return
 	}
+
+}
+
+// OpenReader ...
+func (ctx *Context) OpenReader(file vpath.VirtualPath) io.ReadCloser {
+	if ctx.Err != nil {
+		return nil
+	}
+	defer ctx.setRunningFunction("OpenReader from `%s`", file.String())()
+
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return nil
+	}
+
+	reader, err := conn.OpenReader(file)
+	if err != nil {
+		ctx.ContextFailed("conn.OpenReader", err)
+		return nil
+	}
+
+	return reader
 
 }
 
@@ -407,6 +491,7 @@ func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options *conn
 
 	options.Stdout = ctx.stdout
 	options.Stderr = ctx.stderr
+	options.Stdin = ctx.stdin
 
 	ctx.LogInfo("START %s %s", command.String(), strings.Join(args, " "))
 	p := ctx.Run(command, args, *options)

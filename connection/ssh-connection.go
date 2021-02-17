@@ -183,6 +183,16 @@ func (conn *SSHConnection) OpenWriter(file vpath.VirtualPath) (io.WriteCloser, e
 	return sshWriter{client, writer}, nil
 }
 
+// OpenAppendWriter ...
+func (conn *SSHConnection) OpenAppendWriter(file vpath.VirtualPath) (io.WriteCloser, error) {
+	client, err := sftp.NewClient(conn.client)
+	if err != nil {
+		return nil, err
+	}
+	writer, err := client.OpenFile(file.Path, os.O_CREATE|os.O_APPEND|os.O_WRONLY)
+	return sshWriter{client, writer}, nil
+}
+
 // ReadDir ...
 func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error) {
 	client, err := sftp.NewClient(conn.client)
@@ -205,9 +215,10 @@ func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList
 
 // Stat ...
 func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error) {
+
 	client, err := sftp.NewClient(conn.client)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("cannot create new sftp client: %w", err)
 	}
 	defer client.Close()
 
