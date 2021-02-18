@@ -7,7 +7,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"sort"
+	"sync"
 
 	"github.com/meteocima/virtual-server/vpath"
 )
@@ -74,9 +76,57 @@ func (conn *LocalConnection) Open() error { return nil }
 // Close ...
 func (conn *LocalConnection) Close() error { return nil }
 
+func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan VirtualFileInfo, errors chan error) {
+	defer allInputsDone.Done()
+	for path := range input {
+		info, err := os.Stat(path.Path)
+		if err != nil {
+			select {
+			case errors <- err:
+			default:
+			}
+
+			return
+		}
+		output <- VirtualFileInfo{
+			FileInfo: info,
+			Path:     path,
+		}
+	}
+
+}
+
 // Stat ...
-func (conn *LocalConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error) {
-	return os.Stat(path.Path)
+func (conn *LocalConnection) Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo, error) {
+	input := make(chan vpath.VirtualPath)
+	output := make(chan VirtualFileInfo)
+	errors := make(chan error, 1)
+
+	allInputsDone := sync.WaitGroup{}
+	allInputsDone.Add(runtime.NumCPU())
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		go conn.statProcessor(&allInputsDone, input, output, errors)
+	}
+	go func() {
+		allInputsDone.Wait()
+		close(output)
+		close(errors)
+	}()
+
+	for _, p := range paths {
+		input <- p
+	}
+	close(input)
+	results := []VirtualFileInfo{}
+	for info := range output {
+		results = append(results, info)
+	}
+	err := <-errors
+	if err != nil {
+		return nil, err
+	}
+	return results, err
 }
 
 // Link ...

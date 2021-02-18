@@ -33,30 +33,37 @@ type Context struct {
 	level        LogLevel
 }
 
+// Clone ...
 func (ctx *Context) Clone() *Context {
 	return New(ctx.stdin, ctx.stdout, ctx.stderr)
 }
 
+// GetStdOut ...
 func (ctx *Context) GetStdOut() io.Writer {
 	return ctx.stdout
 }
 
+// GetStdIn ...
 func (ctx *Context) GetStdIn() io.Reader {
 	return ctx.stdin
 }
 
+// GetStdErr ...
 func (ctx *Context) GetStdErr() io.Writer {
 	return ctx.stderr
 }
 
+// SetStdOut ...
 func (ctx *Context) SetStdOut(v io.Writer) {
 	ctx.stdout = v
 }
 
+// SetStdIn ...
 func (ctx *Context) SetStdIn(v io.Reader) {
 	ctx.stdin = v
 }
 
+// SetStdErr ...
 func (ctx *Context) SetStdErr(v io.Writer) {
 	ctx.stderr = v
 }
@@ -120,7 +127,11 @@ func (ctx *Context) IsFile(file vpath.VirtualPath) bool {
 		return false
 	}
 
-	return !info.IsDir()
+	if info == nil || len(info) != 1 {
+		return false
+	}
+
+	return !info[0].IsDir()
 }
 
 // Glob ...
@@ -148,26 +159,56 @@ func (ctx *Context) Glob(pattern vpath.VirtualPath) vpath.VirtualPathList {
 }
 
 // Stat ...
-func (ctx *Context) Stat(file vpath.VirtualPath) os.FileInfo {
+func (ctx *Context) Stat(files ...vpath.VirtualPath) []connection.VirtualFileInfo {
 	if ctx.Err != nil {
 		return nil
 	}
-	defer ctx.setRunningFunction("Stat `%s`", file.String())()
+	defer ctx.setRunningFunction("Stat `%v`", files)()
 
-	conn, err := connection.FindHost(file.Host)
-	if err != nil {
-		ctx.ContextFailed("connection.FindHost", err)
-		return nil
+	connections := map[connection.Connection][]connection.VirtualFileInfo{}
+	result := []connection.VirtualFileInfo{}
+
+	for _, file := range files {
+		conn, err := connection.FindHost(file.Host)
+		if err != nil {
+			ctx.ContextFailed("connection.FindHost", err)
+			return nil
+		}
+
+		info := connection.VirtualFileInfo{
+			Path: file,
+		}
+
+		hostFiles, ok := connections[conn]
+		if !ok {
+			hostFiles = []connection.VirtualFileInfo{info}
+			connections[conn] = hostFiles
+			continue
+		}
+
+		connections[conn] = append(hostFiles, info)
 	}
 
-	info, err := conn.Stat(file)
+	for conn, filesInfo := range connections {
+		files := make([]vpath.VirtualPath, len(filesInfo))
+		for i := 0; i < len(filesInfo); i++ {
+			files[i] = filesInfo[i].Path
+		}
 
-	if err != nil {
-		ctx.ContextFailed("connection.Stat", err)
-		return nil
+		infos, err := conn.Stat(files...)
+		for i := 0; i < len(filesInfo); i++ {
+			filesInfo[i].FileInfo = infos[i]
+		}
+
+		result = append(result, filesInfo...)
+
+		if err != nil {
+			ctx.ContextFailed("connection.Stat", err)
+			return nil
+		}
 	}
 
-	return info
+	return result
 }
 
 // Exists ...

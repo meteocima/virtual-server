@@ -7,6 +7,7 @@ import (
 	"os"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/meteocima/virtual-server/vpath"
@@ -213,16 +214,68 @@ func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList
 	return filenames, nil
 }
 
-// Stat ...
-func (conn *SSHConnection) Stat(path vpath.VirtualPath) (os.FileInfo, error) {
-
+func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan VirtualFileInfo, errors chan error) {
+	defer allInputsDone.Done()
 	client, err := sftp.NewClient(conn.client)
 	if err != nil {
-		return nil, fmt.Errorf("cannot create new sftp client: %w", err)
+		err = fmt.Errorf("cannot create new sftp client: %w", err)
+		select {
+		case errors <- err:
+		default:
+		}
+		return
 	}
 	defer client.Close()
+	for path := range input {
+		info, err := client.Stat(path.Path)
+		if err != nil {
+			select {
+			case errors <- err:
+			default:
+			}
 
-	return client.Stat(path.Path)
+			return
+		}
+		output <- VirtualFileInfo{
+			FileInfo: info,
+			Path:     path,
+		}
+	}
+
+}
+
+// Stat ...
+func (conn *SSHConnection) Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo, error) {
+
+	input := make(chan vpath.VirtualPath)
+	output := make(chan VirtualFileInfo)
+	errors := make(chan error, 1)
+
+	allInputsDone := sync.WaitGroup{}
+	allInputsDone.Add(1)
+
+	for i := 0; i < 1; i++ {
+		go conn.statProcessor(&allInputsDone, input, output, errors)
+	}
+	go func() {
+		allInputsDone.Wait()
+		close(output)
+		close(errors)
+	}()
+
+	for _, p := range paths {
+		input <- p
+	}
+	close(input)
+	results := []VirtualFileInfo{}
+	for info := range output {
+		results = append(results, info)
+	}
+	err := <-errors
+	if err != nil {
+		return nil, err
+	}
+	return results, nil
 }
 
 // Glob ...

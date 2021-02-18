@@ -68,7 +68,7 @@ type Connection interface {
 	OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
 	OpenAppendWriter(file vpath.VirtualPath) (io.WriteCloser, error)
 	ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-	Stat(path vpath.VirtualPath) (os.FileInfo, error)
+	Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo, error)
 	MkDir(dir vpath.VirtualPath) error
 	RmDir(dir vpath.VirtualPath) error
 	RmFile(file vpath.VirtualPath) error
@@ -108,6 +108,12 @@ func (reg *connectionRegistry) Add(name string, cn Connection) {
 // NewPath ...
 func NewPath(cn Connection, path string, pathArgs ...interface{}) vpath.VirtualPath {
 	return vpath.New(cn.Name(), path, pathArgs...)
+}
+
+// VirtualFileInfo ...
+type VirtualFileInfo struct {
+	os.FileInfo
+	Path vpath.VirtualPath
 }
 
 // FindHost ...

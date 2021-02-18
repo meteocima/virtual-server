@@ -50,13 +50,13 @@ func CheckRmDir(conn Connection) func(t *testing.T) {
 
 func CheckStat(conn Connection) func(t *testing.T) {
 	return func(t *testing.T) {
-		info, err := conn.Stat(vpath.VirtualPath{Path: "/tmp"})
+		infos, err := conn.Stat(vpath.VirtualPath{Path: "/tmp"})
 		assert.NoError(t, err)
-		assert.Equal(t, "tmp", info.Name())
+		assert.Equal(t, "tmp", infos[0].Name())
 
-		info, err = conn.Stat(vpath.VirtualPath{Path: "/timpa/tompa"})
+		infos, err = conn.Stat(vpath.VirtualPath{Path: "/timpa/tompa"})
 		assert.Error(t, err)
-		assert.Equal(t, nil, info)
+		assert.Nil(t, infos)
 	}
 }
 
@@ -145,29 +145,6 @@ func CheckOpenWriter(conn Connection) func(t *testing.T) {
 		err = reader.Close()
 		assert.NoError(t, err)
 	}
-}
-
-func TestLocalHost(t *testing.T) {
-	osConn := LocalConnection{}
-	err := osConn.Open()
-	assert.NoError(t, err)
-	DoAllChecks(t, &osConn)
-	t.Run("CheckStat", CheckStat(&osConn))
-	assert.NoError(t, osConn.Close())
-}
-
-func TestSSH(t *testing.T) {
-	conn := SSHConnection{
-		Host:    "localhost",
-		Port:    2222,
-		User:    "andrea.parodi",
-		KeyPath: "/var/fixtures/private-key",
-	}
-
-	err := conn.Open()
-	assert.NoError(t, err)
-	DoAllChecks(t, &conn)
-	assert.NoError(t, conn.Close())
 }
 
 func CheckRun(conn Connection) func(t *testing.T) {
@@ -297,4 +274,27 @@ func DoAllChecks(t *testing.T, conn Connection) {
 	t.Run("CheckRmFile", CheckRmFile(conn))
 	t.Run("CheckReadDir", CheckReadDir(conn))
 	t.Run("CheckRun", CheckRun(conn))
+}
+
+func TestLocalHost(t *testing.T) {
+	osConn := LocalConnection{}
+	err := osConn.Open()
+	assert.NoError(t, err)
+	DoAllChecks(t, &osConn)
+	t.Run("CheckStat", CheckStat(&osConn))
+	assert.NoError(t, osConn.Close())
+}
+
+func TestSSH(t *testing.T) {
+	conn := SSHConnection{
+		Host:    "localhost",
+		Port:    2222,
+		User:    "andrea.parodi",
+		KeyPath: "/var/fixtures/private-key",
+	}
+
+	err := conn.Open()
+	assert.NoError(t, err)
+	DoAllChecks(t, &conn)
+	assert.NoError(t, conn.Close())
 }

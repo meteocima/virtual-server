@@ -20,6 +20,17 @@ func TestNew(t *testing.T) {
 	drihmFixt := vpath.New("drihm", "/var/fixtures/")
 	ctx := Context{}
 
+	t.Run("MkDir", func(t *testing.T) {
+		dir := drihmFixt.Join("created-by-tests")
+		ctx.RmDir(dir)
+		ctx.Err = nil
+
+		assert.False(t, ctx.Exists(dir))
+		ctx.MkDir(dir)
+
+		assert.True(t, ctx.Exists(dir))
+		assert.NoError(t, ctx.Err)
+	})
 	t.Run("Exists", func(t *testing.T) {
 		found := ctx.Exists(drihmFixt.Join("drihm"))
 		assert.True(t, found)
@@ -82,18 +93,6 @@ func TestNew(t *testing.T) {
 		assert.NoError(t, ctx.Err)
 		actual2 := ctx.ReadString(drihmFixt.Join("added"))
 		assert.Equal(t, "ciao\n", actual2)
-	})
-
-	t.Run("MkDir", func(t *testing.T) {
-		dir := drihmFixt.Join("created-by-tests")
-		ctx.RmDir(dir)
-		ctx.Err = nil
-
-		assert.False(t, ctx.Exists(dir))
-		ctx.MkDir(dir)
-
-		assert.True(t, ctx.Exists(dir))
-		assert.NoError(t, ctx.Err)
 	})
 
 	t.Run("RmDir", func(t *testing.T) {
