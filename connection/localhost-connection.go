@@ -76,10 +76,12 @@ func (conn *LocalConnection) Open() error { return nil }
 // Close ...
 func (conn *LocalConnection) Close() error { return nil }
 
-func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan VirtualFileInfo, errors chan error) {
+func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan *VirtualFileInfo, errors chan error) {
 	defer allInputsDone.Done()
 	for path := range input {
+		//fmt.Println("path", path)
 		info, err := os.Stat(path.Path)
+		//fmt.Println("path err", err)
 		if err != nil {
 			select {
 			case errors <- err:
@@ -88,18 +90,21 @@ func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input 
 
 			return
 		}
-		output <- VirtualFileInfo{
+		output <- &VirtualFileInfo{
 			FileInfo: info,
 			Path:     path,
 		}
 	}
+	//fmt.Println("statProcessor exit")
 
 }
 
 // Stat ...
-func (conn *LocalConnection) Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo, error) {
+func (conn *LocalConnection) Stat(paths ...vpath.VirtualPath) (chan *VirtualFileInfo, chan error) {
+	//fmt.Println("LocalConnection Stat")
+
 	input := make(chan vpath.VirtualPath)
-	output := make(chan VirtualFileInfo)
+	output := make(chan *VirtualFileInfo)
 	errors := make(chan error, 1)
 
 	allInputsDone := sync.WaitGroup{}
@@ -109,24 +114,19 @@ func (conn *LocalConnection) Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo
 		go conn.statProcessor(&allInputsDone, input, output, errors)
 	}
 	go func() {
+		////fmt.Println("input send")
+		for _, p := range paths {
+			input <- p
+		}
+		close(input)
+		////fmt.Println("input sent")
+
 		allInputsDone.Wait()
 		close(output)
 		close(errors)
 	}()
 
-	for _, p := range paths {
-		input <- p
-	}
-	close(input)
-	results := []VirtualFileInfo{}
-	for info := range output {
-		results = append(results, info)
-	}
-	err := <-errors
-	if err != nil {
-		return nil, err
-	}
-	return results, err
+	return output, errors
 }
 
 // Link ...

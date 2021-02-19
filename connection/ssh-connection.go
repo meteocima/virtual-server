@@ -214,7 +214,7 @@ func (conn *SSHConnection) ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList
 	return filenames, nil
 }
 
-func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan VirtualFileInfo, errors chan error) {
+func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan *VirtualFileInfo, errors chan error) {
 	defer allInputsDone.Done()
 	client, err := sftp.NewClient(conn.client)
 	if err != nil {
@@ -226,9 +226,12 @@ func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input ch
 		return
 	}
 	defer client.Close()
+
 	for path := range input {
+		//fmt.Println("READ", path.Path)
 		info, err := client.Stat(path.Path)
 		if err != nil {
+			//fmt.Println("ERR", err)
 			select {
 			case errors <- err:
 			default:
@@ -236,46 +239,39 @@ func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input ch
 
 			return
 		}
-		output <- VirtualFileInfo{
+		output <- &VirtualFileInfo{
 			FileInfo: info,
 			Path:     path,
 		}
 	}
-
 }
 
 // Stat ...
-func (conn *SSHConnection) Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo, error) {
-
+func (conn *SSHConnection) Stat(paths ...vpath.VirtualPath) (chan *VirtualFileInfo, chan error) {
+	//fmt.Println("STAZT", len(paths))
 	input := make(chan vpath.VirtualPath)
-	output := make(chan VirtualFileInfo)
+	output := make(chan *VirtualFileInfo)
 	errors := make(chan error, 1)
 
 	allInputsDone := sync.WaitGroup{}
-	allInputsDone.Add(1)
+	allInputsDone.Add(2)
 
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 2; i++ {
 		go conn.statProcessor(&allInputsDone, input, output, errors)
 	}
 	go func() {
+
+		for _, p := range paths {
+			input <- p
+		}
+		close(input)
+
 		allInputsDone.Wait()
 		close(output)
 		close(errors)
 	}()
 
-	for _, p := range paths {
-		input <- p
-	}
-	close(input)
-	results := []VirtualFileInfo{}
-	for info := range output {
-		results = append(results, info)
-	}
-	err := <-errors
-	if err != nil {
-		return nil, err
-	}
-	return results, nil
+	return output, errors
 }
 
 // Glob ...

@@ -11,7 +11,9 @@ import (
 )
 
 func exists(t *testing.T, conn Connection, file vpath.VirtualPath) bool {
-	_, err := conn.Stat(file)
+	infos, errs := conn.Stat(file)
+	<-infos
+	err := <-errs
 
 	if os.IsNotExist(err) {
 		return false
@@ -50,13 +52,19 @@ func CheckRmDir(conn Connection) func(t *testing.T) {
 
 func CheckStat(conn Connection) func(t *testing.T) {
 	return func(t *testing.T) {
-		infos, err := conn.Stat(vpath.VirtualPath{Path: "/tmp"})
-		assert.NoError(t, err)
-		assert.Equal(t, "tmp", infos[0].Name())
+		infos, errs := conn.Stat(vpath.VirtualPath{Path: "/tmp"})
+		info := <-infos
+		err := <-errs
 
-		infos, err = conn.Stat(vpath.VirtualPath{Path: "/timpa/tompa"})
+		assert.NoError(t, err)
+		assert.Equal(t, "tmp", info.Name())
+
+		infos, errs = conn.Stat(vpath.VirtualPath{Path: "/timpa/tompa"})
+		info = <-infos
+		err = <-errs
+
 		assert.Error(t, err)
-		assert.Nil(t, infos)
+		assert.Nil(t, info)
 	}
 }
 

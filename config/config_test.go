@@ -11,7 +11,7 @@ func TestConfigSSHInit(t *testing.T) {
 	err := Init(testutil.FixtureDir("sshconfig-virt-serv.toml"))
 	assert.NoError(t, err)
 
-	assert.Equal(t, 13, len(Hosts))
+	assert.Equal(t, 14, len(Hosts))
 	local, timoteo := Hosts["localhost"], Hosts["timoteo"]
 	assert.Equal(t, "localhost", local.Name)
 	assert.Equal(t, "timoteo", timoteo.Name)

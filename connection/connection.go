@@ -68,7 +68,7 @@ type Connection interface {
 	OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
 	OpenAppendWriter(file vpath.VirtualPath) (io.WriteCloser, error)
 	ReadDir(dir vpath.VirtualPath) (vpath.VirtualPathList, error)
-	Stat(paths ...vpath.VirtualPath) ([]VirtualFileInfo, error)
+	Stat(paths ...vpath.VirtualPath) (chan *VirtualFileInfo, chan error)
 	MkDir(dir vpath.VirtualPath) error
 	RmDir(dir vpath.VirtualPath) error
 	RmFile(file vpath.VirtualPath) error
