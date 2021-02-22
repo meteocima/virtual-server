@@ -79,9 +79,7 @@ func (conn *LocalConnection) Close() error { return nil }
 func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input chan vpath.VirtualPath, output chan *VirtualFileInfo, errors chan error) {
 	defer allInputsDone.Done()
 	for path := range input {
-		//fmt.Println("path", path)
 		info, err := os.Stat(path.Path)
-		//fmt.Println("path err", err)
 		if err != nil {
 			select {
 			case errors <- err:
@@ -95,8 +93,6 @@ func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input 
 			Path:     path,
 		}
 	}
-	//fmt.Println("statProcessor exit")
-
 }
 
 // Stat ...
@@ -114,12 +110,10 @@ func (conn *LocalConnection) Stat(paths ...vpath.VirtualPath) (chan *VirtualFile
 		go conn.statProcessor(&allInputsDone, input, output, errors)
 	}
 	go func() {
-		////fmt.Println("input send")
 		for _, p := range paths {
 			input <- p
 		}
 		close(input)
-		////fmt.Println("input sent")
 
 		allInputsDone.Wait()
 		close(output)
