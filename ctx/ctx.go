@@ -535,7 +535,10 @@ func (ctx *Context) Exec(command vpath.VirtualPath, args []string, options *conn
 
 	ctx.LogInfo("START %s %s", command.String(), strings.Join(args, " "))
 	p := ctx.Run(command, args, *options)
-	p.Wait()
+	if p != nil {
+		p.Wait()
+	}
+
 	if ctx.Err == nil {
 		ctx.LogInfo("COMPLETED OK %s", command.String())
 	}
