@@ -104,7 +104,7 @@ func (conn *SSHConnection) Open() error {
 
 	for failed && retryCount < maxRetries {
 		client, err := ssh.Dial("tcp", fmt.Sprintf("%s:%d", conn.Host, conn.Port), conn.config)
-		if err == nil && retryCount > 0 && len(conn.BackupHosts) > 0 {
+		/*if err == nil && retryCount > 0 && len(conn.BackupHosts) > 0 {
 			fmt.Printf(
 				"VPE: successfully connected to server `%s` using hostname %s. Subsequents requests will use hostname %s\n",
 				conn.Name(),
@@ -117,7 +117,7 @@ func (conn *SSHConnection) Open() error {
 			conn.Name(),
 			conn.Host,
 			conn.Host,
-		)
+		)*/
 		if failed = err != nil; failed {
 			retryHost := conn.Host
 			failedHost := conn.Host

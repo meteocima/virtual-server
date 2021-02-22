@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"sort"
 	"sync"
+	"syscall"
 
 	"github.com/meteocima/virtual-server/vpath"
 )
@@ -88,9 +89,14 @@ func (conn *LocalConnection) statProcessor(allInputsDone *sync.WaitGroup, input 
 
 			return
 		}
+
+		sysStat := info.Sys().(*syscall.Stat_t)
+
 		output <- &VirtualFileInfo{
-			FileInfo: info,
-			Path:     path,
+			FileInfo:   info,
+			Path:       path,
+			OwnerUser:  sysStat.Uid,
+			OwnerGroup: sysStat.Gid,
 		}
 	}
 }
