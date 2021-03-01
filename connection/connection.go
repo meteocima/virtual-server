@@ -64,6 +64,7 @@ type Connection interface {
 	Name() string
 	Open() error
 	Close() error
+
 	OpenReader(file vpath.VirtualPath) (io.ReadCloser, error)
 	OpenWriter(file vpath.VirtualPath) (io.WriteCloser, error)
 	OpenAppendWriter(file vpath.VirtualPath) (io.WriteCloser, error)
@@ -75,6 +76,7 @@ type Connection interface {
 	MkDir(dir vpath.VirtualPath) error
 	RmDir(dir vpath.VirtualPath) error
 	RmFile(file vpath.VirtualPath) error
+
 	Link(source, target vpath.VirtualPath) error
 	Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error)
 }
