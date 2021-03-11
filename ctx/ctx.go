@@ -223,6 +223,7 @@ func (ctx *Context) ExistsUnchangedFrom(file vpath.VirtualPath, from time.Durati
 	}
 
 	infos, errs := conn.Stat(file)
+	info := <-infos
 	err = <-errs
 
 	if os.IsNotExist(err) {
@@ -234,7 +235,6 @@ func (ctx *Context) ExistsUnchangedFrom(file vpath.VirtualPath, from time.Durati
 		return false
 	}
 
-	info := <-infos
 	return time.Now().Sub(info.ModTime()) > from
 
 }
