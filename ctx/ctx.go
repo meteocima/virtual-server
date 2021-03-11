@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/meteocima/virtual-server/connection"
 	"github.com/meteocima/virtual-server/vpath"
@@ -206,6 +207,36 @@ func (ctx *Context) Stat(files ...vpath.VirtualPath) chan *connection.VirtualFil
 	}
 
 	return results
+}
+
+// ExistsUnchangedFrom ...
+func (ctx *Context) ExistsUnchangedFrom(file vpath.VirtualPath, from time.Duration) bool {
+	if ctx.Err != nil {
+		return false
+	}
+	defer ctx.setRunningFunction("Exists `%s`", file.String())()
+
+	conn, err := connection.FindHost(file.Host)
+	if err != nil {
+		ctx.ContextFailed("connection.FindHost", err)
+		return false
+	}
+
+	infos, errs := conn.Stat(file)
+	err = <-errs
+
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	if err != nil {
+		ctx.ContextFailed("connection.Stat", err)
+		return false
+	}
+
+	info := <-infos
+	return time.Now().Sub(info.ModTime()) > from
+
 }
 
 // Exists ...
