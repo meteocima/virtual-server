@@ -47,6 +47,8 @@ type RunOptions struct {
 	// as process Stderr.
 	// If nil, `os.Stderr` will be used.
 	Stderr io.Writer
+
+	Env []string
 }
 
 /*

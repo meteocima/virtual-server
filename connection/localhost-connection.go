@@ -183,7 +183,7 @@ func (proc *LocalProcess) Wait() (int, error) {
 func (conn *LocalConnection) Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error) {
 
 	cmd := exec.Command(command.Path, args...)
-
+	cmd.Env = options.Env
 	process := &LocalProcess{
 		cmd:       cmd,
 		completed: make(chan struct{}),

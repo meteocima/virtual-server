@@ -410,6 +410,12 @@ func (conn *SSHConnection) Run(command vpath.VirtualPath, args []string, options
 	cmdStr := command.Path
 	cmdStr = fmt.Sprintf("%s %s", cmdStr, strings.Join(args, " "))
 
+	if options.Env != nil {
+		for _, str := range options.Env {
+			cmdStr = fmt.Sprintf("%s %s", str, cmdStr)
+		}
+	}
+
 	if options.Cwd.Path != "" {
 		cmdStr = fmt.Sprintf("cd %s && %s", options.Cwd.Path, cmdStr)
 	}
