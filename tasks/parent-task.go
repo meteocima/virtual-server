@@ -1,7 +1,11 @@
 package tasks
 
 import (
+	"errors"
+	"sync"
+
 	"github.com/meteocima/virtual-server/ctx"
+	"github.com/meteocima/virtual-server/event"
 )
 
 // ParentTask is a struct that represents a task that can contains
@@ -37,6 +41,9 @@ type ParentTask struct {
 	children        map[*Task]struct{}
 	waitingChildren []*Task
 	runningChild    chan struct{}
+	failfast        bool
+	failed          bool
+	sem             *sync.Mutex
 }
 
 // AppendChildren ...
@@ -49,30 +56,70 @@ func (tsk *ParentTask) AppendChildren(children ...*Task) {
 // RunChild ...
 func (tsk *ParentTask) RunChild(child *Task) {
 	if tsk.runningChild == nil {
-
 		child.Run()
-
 		return
 	}
 
 	select {
 	case tsk.runningChild <- struct{}{}:
 		//fmt.Println("TASK ENTER", child.ID)
-		child.Run()
+
 		go func() {
 			child.Done.AwaitOne()
 			//fmt.Println("TASK COMPLETED", child.ID)
 			<-tsk.runningChild
-			if len(tsk.waitingChildren) > 0 {
-				//fmt.Println("TASK RECOVERING", child.ID)
-				next := tsk.waitingChildren[0]
-				tsk.waitingChildren = tsk.waitingChildren[1:]
-				tsk.RunChild(next)
+
+			if tsk.failfast && child.Status().IsFailure() {
+				tsk.sem.Lock()
+				tsk.failed = true
+				tsk.sem.Unlock()
 			}
+
+			//fmt.Println("TASK RECOVERING", child.ID)
+
+			tsk.sem.Lock()
+
+			if len(tsk.waitingChildren) == 0 {
+				tsk.sem.Unlock()
+				return
+			}
+
+			next := tsk.waitingChildren[0]
+			tsk.waitingChildren = tsk.waitingChildren[1:]
+			tsk.sem.Unlock()
+
+			tsk.RunChild(next)
 		}()
+
+		tsk.sem.Lock()
+		failed := tsk.failed
+		tsk.sem.Unlock()
+
+		if failed {
+			err := errors.New("tasks cancelled by parent")
+			child.Failed.Invoke(err)
+
+			child.SetStatus(Failed(err))
+			child.Done.Invoke(err)
+
+			event.CloseEmitters(
+				&child.StatusChanged,
+				&child.Failed,
+				&child.Succeeded,
+				&child.Done,
+				&child.Progress,
+				&child.FileProduced,
+			)
+
+			registry.RemoveTask(child.ID)
+		} else {
+			child.Run()
+		}
 	default:
 		//fmt.Println("TASK WAIT", child.ID)
+		tsk.sem.Lock()
 		tsk.waitingChildren = append(tsk.waitingChildren, child)
+		tsk.sem.Unlock()
 	}
 
 }
@@ -87,12 +134,18 @@ func (tsk *ParentTask) SetMaxParallelism(count uint) {
 	tsk.runningChild = make(chan struct{}, count)
 }
 
+// SetFailFast make the parent fails
+// on first child failures.
+func (tsk *ParentTask) SetFailFast() {
+	tsk.failfast = true
+}
+
 // NewParent creates a ParentTask instance that
 // can contains children tasks amd returns its
 // addrress
 func NewParent(ID string, runner TaskRunner) *ParentTask {
 	tsk := ParentTask{
-
+		sem:      &sync.Mutex{},
 		children: map[*Task]struct{}{},
 	}
 

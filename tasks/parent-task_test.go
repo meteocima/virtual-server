@@ -1,6 +1,7 @@
 package tasks
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"testing"
@@ -51,6 +52,58 @@ func TestParentTask(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
 	assert.NoError(t, err)
 	Stdout = os.Stdout
+	mkSerialParent := func(results chan string) *ParentTask {
+		var parent *ParentTask
+		parent = NewParent("PARENT", func(vs *ctx.Context) error {
+			var tsks []*Task
+			tsks = append(tsks, New("TEST1", func(vs *ctx.Context) error {
+				results <- "TEST1"
+				return nil
+			}))
+			tsks = append(tsks, New("TEST2", func(vs *ctx.Context) error {
+				results <- "TEST2"
+				return errors.New("ciccio")
+			}))
+			tsks = append(tsks, New("TEST3", func(vs *ctx.Context) error {
+				results <- "TEST3"
+				return nil
+			}))
+
+			parent.AppendChildren(tsks...)
+			parent.RunChild(tsks[0])
+			parent.RunChild(tsks[1])
+			parent.RunChild(tsks[2])
+			return nil
+		})
+
+		parent.SetMaxParallelism(1)
+		return parent
+	}
+	t.Run("stop on first failed task", func(t *testing.T) {
+		results := make(chan string)
+
+		parent := mkSerialParent(results)
+		parent.SetFailFast()
+		parent.Run()
+		assert.Equal(t,
+			[]string{"TEST1", "TEST2"},
+			readResults(t, results, 2),
+		)
+		parent.Done.AwaitOne()
+	})
+
+	t.Run("continue with other tasks on error", func(t *testing.T) {
+		results := make(chan string)
+
+		parent := mkSerialParent(results)
+
+		parent.Run()
+		assert.Equal(t,
+			[]string{"TEST1", "TEST2", "TEST3"},
+			readResults(t, results, 3),
+		)
+		parent.Done.AwaitOne()
+	})
 
 	t.Run("no max parallelism", func(t *testing.T) {
 		var parent *ParentTask
