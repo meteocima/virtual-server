@@ -6,7 +6,6 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"path"
 	"strings"
 	"sync"
 	"time"
@@ -413,8 +412,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 						ctx.ContextFailed("os.OpenFile", err)
 						return
 					}
-					tmpDir := os.TempDir()
-					tmpFilePath := path.Join(tmpDir, tmpFile.Name())
+					tmpFilePath := tmpFile.Name()
 
 					err = scpclientSrc.CopyFromRemotePassThru(tmpFile, from.Path, nil)
 					tmpFile.Close()
@@ -439,6 +437,8 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 					}
 
 					defer src.Close()
+					defer os.Remove(tmpFilePath)
+
 					stat, err := src.Stat()
 					if err != nil {
 						ctx.ContextFailed("src.Stat", err)

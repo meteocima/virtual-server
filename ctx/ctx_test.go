@@ -19,6 +19,36 @@ func TestNew(t *testing.T) {
 	assert.NoError(t, err)
 	drihmFixt := vpath.New("drihm", "/var/fixtures/")
 	ctx := Context{}
+	t.Run("Copy", func(t *testing.T) {
+		ctx.Copy(
+			drihmFixt.Join("ciao.txt"),
+			vpath.Local("/tmp/hi"),
+		)
+		assert.NoError(t, ctx.Err)
+		actual := ctx.ReadString(vpath.Local("/tmp/hi"))
+		assert.Equal(t, "ciao\n", actual)
+
+		ctx.RmFile(drihmFixt.Join("added"))
+		ctx.Err = nil
+
+		ctx.Copy(
+			vpath.Local("/tmp/hi"),
+			drihmFixt.Join("added"),
+		)
+		assert.NoError(t, ctx.Err)
+		actual2 := ctx.ReadString(drihmFixt.Join("added"))
+		assert.Equal(t, "ciao\n", actual2)
+
+		ctx.RmFile(drihmFixt.Join("added"))
+
+		ctx.Copy(
+			drihmFixt.Join("ciao.txt"),
+			drihmFixt.Join("added"),
+		)
+		assert.NoError(t, ctx.Err)
+		actual3 := ctx.ReadString(drihmFixt.Join("added"))
+		assert.Equal(t, "ciao\n", actual3)
+	})
 
 	t.Run("MkDir", func(t *testing.T) {
 		dir := drihmFixt.Join("created-by-tests")
@@ -72,27 +102,6 @@ func TestNew(t *testing.T) {
 		content := ctx.ReadString(drihmFixt.Join("ciao.txt"))
 		assert.Equal(t, "ciao\n", content)
 		assert.NoError(t, ctx.Err)
-	})
-
-	t.Run("Copy", func(t *testing.T) {
-		ctx.Copy(
-			drihmFixt.Join("ciao.txt"),
-			vpath.Local("/tmp/hi"),
-		)
-		assert.NoError(t, ctx.Err)
-		actual := ctx.ReadString(vpath.Local("/tmp/hi"))
-		assert.Equal(t, "ciao\n", actual)
-
-		ctx.RmFile(drihmFixt.Join("added"))
-		ctx.Err = nil
-
-		ctx.Copy(
-			vpath.Local("/tmp/hi"),
-			drihmFixt.Join("added"),
-		)
-		assert.NoError(t, ctx.Err)
-		actual2 := ctx.ReadString(drihmFixt.Join("added"))
-		assert.Equal(t, "ciao\n", actual2)
 	})
 
 	t.Run("RmDir", func(t *testing.T) {
