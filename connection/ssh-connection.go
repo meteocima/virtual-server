@@ -246,6 +246,10 @@ func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input ch
 	}
 }
 
+func (conn *SSHConnection) SSHClient() *ssh.Client {
+	return conn.client
+}
+
 // Stat ...
 func (conn *SSHConnection) Stat(paths ...vpath.VirtualPath) (chan *VirtualFileInfo, chan error) {
 	//fmt.Println("STAZT", len(paths))

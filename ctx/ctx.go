@@ -6,10 +6,12 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path"
 	"strings"
 	"sync"
 	"time"
 
+	scp "github.com/bramvdbogaerde/go-scp"
 	"github.com/meteocima/virtual-server/connection"
 	"github.com/meteocima/virtual-server/vpath"
 )
@@ -308,34 +310,152 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 		return
 	}
 
-	reader, err := fromConn.OpenReader(from)
-	if err != nil {
-		ctx.ContextFailed("fromConn.OpenReader", err)
-		return
-	}
-	defer reader.Close()
+	if _, ok := fromConn.(*connection.LocalConnection); ok {
+		if _, ok := toConn.(*connection.LocalConnection); ok {
+			// local -> local
+			reader, err := fromConn.OpenReader(from)
+			if err != nil {
+				ctx.ContextFailed("fromConn.OpenReader", err)
+				return
+			}
+			defer reader.Close()
 
-	writer, err := toConn.OpenWriter(to)
-	if err != nil {
-		ctx.ContextFailed("toConn.OpenWriter", err)
-		return
-	}
-	defer writer.Close()
+			writer, err := toConn.OpenWriter(to)
+			if err != nil {
+				ctx.ContextFailed("toConn.OpenWriter", err)
+				return
+			}
+			defer writer.Close()
 
-	bufIn := bufio.NewReaderSize(reader, 1024*1024)
-	bufOut := bufio.NewWriterSize(writer, 1024*1024)
+			bufIn := bufio.NewReaderSize(reader, 1024*1024)
+			bufOut := bufio.NewWriterSize(writer, 1024*1024)
 
-	_, err = io.Copy(bufOut, bufIn)
-	if err != nil {
-		ctx.ContextFailed("io.Copy", err)
-		return
+			_, err = io.Copy(bufOut, bufIn)
+			if err != nil {
+				ctx.ContextFailed("io.Copy", err)
+				return
+			}
+
+			err = bufOut.Flush()
+			if err != nil {
+				ctx.ContextFailed("bufOut.Flush", err)
+				return
+			}
+		} else {
+			if target, ok := toConn.(*connection.SSHConnection); ok {
+				// local -> remote
+				scpclient, err := scp.NewClientBySSH(target.SSHClient())
+				if err != nil {
+					fmt.Println("Error creating new SSH session from existing connection", err)
+				}
+				// Close client connection after the file has been copied
+				defer scpclient.Close()
+
+				src, err := os.Open(from.Path)
+				if err != nil {
+					ctx.ContextFailed("os.Open", err)
+					return
+				}
+
+				defer src.Close()
+				stat, err := src.Stat()
+				if err != nil {
+					ctx.ContextFailed("src.Stat", err)
+					return
+				}
+				err = scpclient.CopyPassThru(src, to.Path, "0644", stat.Size(), nil)
+				if err != nil {
+					ctx.ContextFailed("scpclient.CopyPassThru", err)
+					return
+				}
+			} else {
+				panic("unknown target connection")
+			}
+		}
+	} else {
+		if source, ok := fromConn.(*connection.SSHConnection); !ok {
+			panic("unknown source connection")
+		} else {
+			if _, ok := toConn.(*connection.LocalConnection); ok {
+				// remote -> local
+				scpclient, err := scp.NewClientBySSH(source.SSHClient())
+				if err != nil {
+					fmt.Println("Error creating new SSH session from existing connection", err)
+				}
+				// Close client connection after the file has been copied
+				defer scpclient.Close()
+
+				dest, err := os.OpenFile(to.Path, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, os.FileMode(0644))
+				if err != nil {
+					ctx.ContextFailed("os.OpenFile", err)
+					return
+				}
+
+				defer dest.Close()
+
+				err = scpclient.CopyFromRemotePassThru(dest, from.Path, nil)
+				if err != nil {
+					ctx.ContextFailed("scpclient.CopyFromRemotePassThru", err)
+					return
+				}
+			} else {
+				if target, ok := toConn.(*connection.SSHConnection); ok {
+					// remote -> remote
+
+					scpclientSrc, err := scp.NewClientBySSH(source.SSHClient())
+					if err != nil {
+						fmt.Println("Error creating new SSH session from existing connection", err)
+					}
+
+					tmpFile, err := os.CreateTemp("", "tempFile_*")
+					if err != nil {
+						scpclientSrc.Close()
+						ctx.ContextFailed("os.OpenFile", err)
+						return
+					}
+					tmpDir := os.TempDir()
+					tmpFilePath := path.Join(tmpDir, tmpFile.Name())
+
+					err = scpclientSrc.CopyFromRemotePassThru(tmpFile, from.Path, nil)
+					tmpFile.Close()
+					scpclientSrc.Close()
+
+					if err != nil {
+						ctx.ContextFailed("scpclient.CopyFromRemotePassThru", err)
+						return
+					}
+
+					scpclientDest, err := scp.NewClientBySSH(target.SSHClient())
+					if err != nil {
+						fmt.Println("Error creating new SSH session from existing connection", err)
+					}
+					// Close client connection after the file has been copied
+					defer scpclientDest.Close()
+
+					src, err := os.Open(tmpFilePath)
+					if err != nil {
+						ctx.ContextFailed("os.Open", err)
+						return
+					}
+
+					defer src.Close()
+					stat, err := src.Stat()
+					if err != nil {
+						ctx.ContextFailed("src.Stat", err)
+						return
+					}
+					err = scpclientDest.CopyPassThru(src, to.Path, "0644", stat.Size(), nil)
+					if err != nil {
+						ctx.ContextFailed("scpclient.CopyPassThru", err)
+						return
+					}
+				} else {
+					panic("unknown target connection")
+				}
+			}
+		}
 	}
 
-	err = bufOut.Flush()
-	if err != nil {
-		ctx.ContextFailed("bufOut.Flush", err)
-		return
-	}
 }
 
 // Move ...
