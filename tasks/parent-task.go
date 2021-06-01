@@ -38,23 +38,25 @@ import (
 // parallelism.
 type ParentTask struct {
 	*Task
-	children        map[*Task]struct{}
-	waitingChildren []*Task
+	children        map[TaskI]struct{}
+	waitingChildren []TaskI
 	runningChild    chan struct{}
 	failfast        bool
 	failed          bool
 	sem             *sync.Mutex
 }
 
+type TaskI interface{}
+
 // AppendChildren ...
-func (tsk *ParentTask) AppendChildren(children ...*Task) {
+func (tsk *ParentTask) AppendChildren(children ...TaskI) {
 	for _, child := range children {
 		tsk.children[child] = struct{}{}
 	}
 }
 
 // RunChild ...
-func (tsk *ParentTask) RunChild(child *Task) {
+func (tsk *ParentTask) RunChild(child TaskI) {
 	if tsk.runningChild == nil {
 		child.Run()
 		return
