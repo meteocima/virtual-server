@@ -5,7 +5,6 @@ import (
 	"sync"
 
 	"github.com/meteocima/virtual-server/ctx"
-	"github.com/meteocima/virtual-server/event"
 )
 
 // ParentTask is a struct that represents a task that can contains
@@ -46,7 +45,14 @@ type ParentTask struct {
 	sem             *sync.Mutex
 }
 
-type TaskI interface{}
+// TaskI ...
+type TaskI interface {
+	Run()
+	Status() *TaskStatus
+	SetStatus(newStatus *TaskStatus)
+	SetCompleted(err error)
+	AwaitDone()
+}
 
 // AppendChildren ...
 func (tsk *ParentTask) AppendChildren(children ...TaskI) {
@@ -67,7 +73,7 @@ func (tsk *ParentTask) RunChild(child TaskI) {
 		//fmt.Println("TASK ENTER", child.ID)
 
 		go func() {
-			child.Done.AwaitOne()
+			child.AwaitDone()
 			//fmt.Println("TASK COMPLETED", child.ID)
 			<-tsk.runningChild
 
@@ -98,22 +104,7 @@ func (tsk *ParentTask) RunChild(child TaskI) {
 		tsk.sem.Unlock()
 
 		if failed {
-			err := errors.New("tasks cancelled by parent")
-			child.Failed.Invoke(err)
-
-			child.SetStatus(Failed(err))
-			child.Done.Invoke(err)
-
-			event.CloseEmitters(
-				&child.StatusChanged,
-				&child.Failed,
-				&child.Succeeded,
-				&child.Done,
-				&child.Progress,
-				&child.FileProduced,
-			)
-
-			registry.RemoveTask(child.ID)
+			child.SetCompleted(errors.New("tasks cancelled by parent"))
 		} else {
 			child.Run()
 		}
@@ -128,7 +119,7 @@ func (tsk *ParentTask) RunChild(child TaskI) {
 
 // SetMaxParallelism ...
 func (tsk *ParentTask) SetMaxParallelism(count uint) {
-	tsk.waitingChildren = []*Task{}
+	tsk.waitingChildren = []TaskI{}
 	if count == 0 {
 		tsk.runningChild = nil
 		return
@@ -148,7 +139,7 @@ func (tsk *ParentTask) SetFailFast() {
 func NewParent(ID string, runner TaskRunner) *ParentTask {
 	tsk := ParentTask{
 		sem:      &sync.Mutex{},
-		children: map[*Task]struct{}{},
+		children: map[TaskI]struct{}{},
 	}
 
 	tsk.Task = New(ID, wrapRunner(runner, &tsk))
@@ -160,7 +151,7 @@ func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 	return func(vs *ctx.Context) error {
 		err := runner(vs)
 		for child := range tsk.children {
-			child.Done.AwaitOne()
+			child.AwaitDone()
 		}
 
 		return err

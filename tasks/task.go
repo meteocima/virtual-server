@@ -131,31 +131,37 @@ func (tsk *Task) Run() {
 		}
 
 		vs.Close()
-
 		stderr.Close()
 
-		if err != nil {
-			tsk.Failed.Invoke(err)
-			tsk.SetStatus(Failed(err))
-		} else {
-			tsk.Succeeded.Invoke(nil)
-			tsk.SetStatus(DoneOk)
-		}
-		//fmt.Printf("Invoke Done %v\n", tsk.Done)
-		tsk.Done.Invoke(err)
-
-		event.CloseEmitters(
-			&tsk.StatusChanged,
-			&tsk.Failed,
-			&tsk.Succeeded,
-			&tsk.Done,
-			&tsk.Progress,
-			&tsk.FileProduced,
-		)
-
-		registry.RemoveTask(tsk.ID)
-
+		tsk.SetCompleted(err)
 	}()
+}
+
+func (tsk *Task) AwaitDone() {
+	tsk.Done.AwaitOne()
+}
+
+func (tsk *Task) SetCompleted(err error) {
+	if err != nil {
+		tsk.Failed.Invoke(err)
+		tsk.SetStatus(Failed(err))
+	} else {
+		tsk.Succeeded.Invoke(nil)
+		tsk.SetStatus(DoneOk)
+	}
+	//fmt.Printf("Invoke Done %v\n", tsk.Done)
+	tsk.Done.Invoke(err)
+
+	event.CloseEmitters(
+		&tsk.StatusChanged,
+		&tsk.Failed,
+		&tsk.Succeeded,
+		&tsk.Done,
+		&tsk.Progress,
+		&tsk.FileProduced,
+	)
+
+	registry.RemoveTask(tsk.ID)
 }
 
 func openTaskLog(path string) io.WriteCloser {

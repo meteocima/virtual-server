@@ -23,8 +23,8 @@ func resultEmit(results chan string, i int) func(vs *ctx.Context) error {
 	}
 }
 
-func createsTestTasks(results chan string, count int) []*Task {
-	tsks := make([]*Task, count)
+func createsTestTasks(results chan string, count int) []TaskI {
+	tsks := make([]TaskI, count)
 	for i := 0; i < count; i++ {
 		ID := fmt.Sprintf("TEST%d", i+1)
 		tsks[i] = New(ID, resultEmit(results, i))
@@ -55,7 +55,7 @@ func TestParentTask(t *testing.T) {
 	mkSerialParent := func(results chan string) *ParentTask {
 		var parent *ParentTask
 		parent = NewParent("PARENT", func(vs *ctx.Context) error {
-			var tsks []*Task
+			var tsks []TaskI
 			tsks = append(tsks, New("TEST1", func(vs *ctx.Context) error {
 				results <- "TEST1"
 				return nil
@@ -79,6 +79,47 @@ func TestParentTask(t *testing.T) {
 		parent.SetMaxParallelism(1)
 		return parent
 	}
+
+	t.Run("nested children", func(t *testing.T) {
+		results := make(chan string)
+		children := createsTestTasks(results, 4)
+
+		var parent1 *ParentTask
+		var parent2 *ParentTask
+		var grandParent *ParentTask
+
+		parent1 = NewParent("PARENT1", func(vs *ctx.Context) error {
+			parent1.AppendChildren(children[1], children[0])
+			parent1.RunChild(children[1])
+			parent1.RunChild(children[0])
+			return nil
+		})
+
+		parent2 = NewParent("PARENT2", func(vs *ctx.Context) error {
+			parent2.AppendChildren(children[2], children[3])
+			parent2.RunChild(children[2])
+			parent2.RunChild(children[3])
+			return nil
+		})
+
+		grandParent = NewParent("GRANDPA", func(vs *ctx.Context) error {
+			grandParent.AppendChildren(parent1, parent2)
+			grandParent.RunChild(parent2)
+			grandParent.RunChild(parent1)
+			return nil
+		})
+
+		grandParent.SetMaxParallelism(1)
+		grandParent.Run()
+
+		assert.Equal(t,
+			[]string{"TEST3", "TEST4", "TEST1", "TEST2"},
+			readResults(t, results, 4),
+		)
+
+		grandParent.Done.AwaitOne()
+	})
+
 	t.Run("stop on first failed task", func(t *testing.T) {
 		results := make(chan string)
 
