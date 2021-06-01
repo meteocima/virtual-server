@@ -137,10 +137,12 @@ func (tsk *Task) Run() {
 	}()
 }
 
+// AwaitDone ...
 func (tsk *Task) AwaitDone() {
 	tsk.Done.AwaitOne()
 }
 
+// SetCompleted ...
 func (tsk *Task) SetCompleted(err error) {
 	if err != nil {
 		tsk.Failed.Invoke(err)
