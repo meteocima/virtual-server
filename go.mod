@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/BurntSushi/toml v0.3.1
-	github.com/bramvdbogaerde/go-scp v0.0.0-20210527193300-acf430e39785 // indirect
+	github.com/bramvdbogaerde/go-scp v0.0.0-20210527193300-acf430e39785
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/mikkeloscar/sshconfig v0.1.0
