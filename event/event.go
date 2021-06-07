@@ -150,8 +150,12 @@ func (e *Emitter) AwaitOne() *Event {
 		return nil
 	}
 	lst := e.AddListener()
+	if lst == nil {
+		return nil
+	}
 	event := <-lst.c
 	lst.Stop()
+
 	return event
 }
 

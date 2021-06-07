@@ -344,6 +344,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 			if target, ok := toConn.(*connection.SSHConnection); ok {
 				// local -> remote
 				scpclient, err := scp.NewClientBySSH(target.SSHClient())
+				scpclient.Timeout = time.Hour
 				if err != nil {
 					fmt.Println("Error creating new SSH session from existing connection", err)
 				}
@@ -378,6 +379,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 			if _, ok := toConn.(*connection.LocalConnection); ok {
 				// remote -> local
 				scpclient, err := scp.NewClientBySSH(source.SSHClient())
+				scpclient.Timeout = time.Hour
 				if err != nil {
 					fmt.Println("Error creating new SSH session from existing connection", err)
 				}
@@ -402,6 +404,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 					// remote -> remote
 
 					scpclientSrc, err := scp.NewClientBySSH(source.SSHClient())
+					scpclientSrc.Timeout = time.Hour
 					if err != nil {
 						fmt.Println("Error creating new SSH session from existing connection", err)
 					}
@@ -424,6 +427,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 					}
 
 					scpclientDest, err := scp.NewClientBySSH(target.SSHClient())
+					scpclientDest.Timeout = time.Hour
 					if err != nil {
 						fmt.Println("Error creating new SSH session from existing connection", err)
 					}
