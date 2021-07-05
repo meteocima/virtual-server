@@ -51,10 +51,11 @@ type ParentTask struct {
 	// to allow parallelism to be respected
 	waitingChildren []TaskI
 	// used to implement max parallelism, will be created with a cache.
+	// it's nil when max parallelism is set to 0 (no max parallelism)
 	runningChild chan struct{}
 	failfast     bool
 	failed       bool
-	// synchronize failed member access
+	// synchronizes `failed` and `waitingChildren` members access
 	sem *sync.Mutex
 }
 
@@ -68,6 +69,38 @@ type TaskI interface {
 	SetStatus(newStatus *TaskStatus)
 	SetCompleted(err error)
 	AwaitDone()
+}
+
+func (tsk *ParentTask) setFailed(value bool) {
+	tsk.sem.Lock()
+	tsk.failed = value
+	tsk.sem.Unlock()
+}
+
+func (tsk *ParentTask) getFailed() bool {
+	tsk.sem.Lock()
+	defer tsk.sem.Unlock()
+	return tsk.failed
+}
+
+func (tsk *ParentTask) popWaitingChild() TaskI {
+	tsk.sem.Lock()
+	defer tsk.sem.Unlock()
+	next := tsk.waitingChildren[0]
+	tsk.waitingChildren = tsk.waitingChildren[1:]
+	return next
+}
+
+func (tsk *ParentTask) pushWaitingChild(child TaskI) {
+	tsk.sem.Lock()
+	defer tsk.sem.Unlock()
+	tsk.waitingChildren = append(tsk.waitingChildren, child)
+}
+
+func (tsk *ParentTask) hasWaitingChildren() bool {
+	tsk.sem.Lock()
+	defer tsk.sem.Unlock()
+	return len(tsk.waitingChildren) > 0
 }
 
 // AppendChildren add specified children to this
@@ -90,7 +123,29 @@ func (tsk *ParentTask) AppendChildren(children ...TaskI) {
 // fails with an error og "tasks cancelled by parent"
 func (tsk *ParentTask) RunChild(child TaskI) {
 	if tsk.runningChild == nil {
+		// no max parallelism, so just run the task.
+
+		if tsk.getFailed() {
+			// another child already failed, and failfast option is set.
+			child.SetCompleted(errors.New("tasks cancelled by parent"))
+			return
+		}
+
 		child.Run()
+		if tsk.failfast {
+			go func() {
+				// await for the children to finish,
+				// and eventually set the parent task
+				// failed
+				child.AwaitDone()
+
+				// when failfast option is set, set the whole task has failed.
+				if child.Status().IsFailure() {
+					tsk.setFailed(true)
+				}
+			}()
+		}
+
 		return
 	}
 
@@ -98,54 +153,47 @@ func (tsk *ParentTask) RunChild(child TaskI) {
 	case tsk.runningChild <- struct{}{}:
 		// tsk.runningChild accepted the child in cache,
 		// that means max parallelism is respected, and the
-		// child is consuming 1 place in runningChild chan cache.
+		// child is consuming 1 slot in runningChild chan cache.
 		go func() {
 			child.AwaitDone()
-			//fmt.Println("TASK COMPLETED", child.ID)
+			// task has done, free 1 slot in runningChild chan cache.
 			<-tsk.runningChild
 
+			// when failfast option is set, set the whole task has failed.
 			if tsk.failfast && child.Status().IsFailure() {
-				tsk.sem.Lock()
-				tsk.failed = true
-				tsk.sem.Unlock()
+				tsk.setFailed(true)
 			}
 
-			//fmt.Println("TASK RECOVERING", child.ID)
-
-			tsk.sem.Lock()
-
-			if len(tsk.waitingChildren) == 0 {
-				tsk.sem.Unlock()
-				return
+			if tsk.hasWaitingChildren() {
+				// there is at least one waiting child task,
+				// pick and run it.
+				tsk.RunChild(tsk.popWaitingChild())
 			}
-
-			next := tsk.waitingChildren[0]
-			tsk.waitingChildren = tsk.waitingChildren[1:]
-			tsk.sem.Unlock()
-
-			tsk.RunChild(next)
 		}()
 
-		tsk.sem.Lock()
-		failed := tsk.failed
-		tsk.sem.Unlock()
-
-		if failed {
+		if tsk.getFailed() {
+			// another child already failed, and failfast option is set.
 			child.SetCompleted(errors.New("tasks cancelled by parent"))
-		} else {
-			child.Run()
+			return
 		}
+
+		child.Run()
+
 	default:
-		//fmt.Println("TASK WAIT", child.ID)
-		tsk.sem.Lock()
-		tsk.waitingChildren = append(tsk.waitingChildren, child)
-		tsk.sem.Unlock()
+		// max parallelism reached. Store
+		// child task in waiting store, in
+		// order to be picked later for execution.
+		tsk.pushWaitingChild(child)
 	}
 
 }
 
-// SetMaxParallelism ...
+// SetMaxParallelism sets the maximum allowed number of
+// children tasks that can run concurrently.
 func (tsk *ParentTask) SetMaxParallelism(count uint) {
+	// TODO: don't allow this func to be called when
+	// a task has already started.
+	// TODO: sync waitingChildren change.
 	tsk.waitingChildren = []TaskI{}
 	if count == 0 {
 		tsk.runningChild = nil
@@ -154,15 +202,15 @@ func (tsk *ParentTask) SetMaxParallelism(count uint) {
 	tsk.runningChild = make(chan struct{}, count)
 }
 
-// SetFailFast make the parent fails
-// on first child failures.
+// SetFailFast makes the parent fails
+// on first child failure.
 func (tsk *ParentTask) SetFailFast() {
 	tsk.failfast = true
 }
 
 // NewParent creates a ParentTask instance that
 // can contains children tasks amd returns its
-// addrress
+// addrress.
 func NewParent(ID string, runner TaskRunner) *ParentTask {
 	tsk := ParentTask{
 		sem:      &sync.Mutex{},
@@ -174,6 +222,9 @@ func NewParent(ID string, runner TaskRunner) *ParentTask {
 	return &tsk
 }
 
+// wraps a TaskRunner function in order to
+// await for completion of all children tasks
+// before termination.
 func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 	return func(vs *ctx.Context) error {
 		err := runner(vs)

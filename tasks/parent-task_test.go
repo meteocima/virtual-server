@@ -17,8 +17,11 @@ func resultEmit(results chan string, i int) func(vs *ctx.Context) error {
 	ID := fmt.Sprintf("TEST%d", i+1)
 
 	return func(vs *ctx.Context) error {
+		fmt.Printf("%s go to sleep for %d ms\n", ID, i*150)
 		time.Sleep(time.Duration(i*50) * time.Millisecond)
+		fmt.Printf("%s awaked\n", ID)
 		results <- ID
+		fmt.Printf("%s exiting\n", ID)
 		return nil
 	}
 }
@@ -118,8 +121,48 @@ func TestParentTask(t *testing.T) {
 		)
 
 		grandParent.Done.AwaitOne()
+		fmt.Print("DONE")
 	})
 
+	t.Run("stop on first failed task when no max parallelism is set", func(t *testing.T) {
+		results := make(chan string)
+
+		var parent *ParentTask
+		parent = NewParent("PARENT", func(vs *ctx.Context) error {
+			var tsks []TaskI
+			tsks = append(tsks, New("TEST1", func(vs *ctx.Context) error {
+				results <- "TEST1"
+				return errors.New("TEST ERROR")
+			}))
+			tsks = append(tsks, New("TEST2", func(vs *ctx.Context) error {
+				results <- "TEST2"
+				return errors.New("ciccio")
+			}))
+			tsks = append(tsks, New("TEST3", func(vs *ctx.Context) error {
+				results <- "TEST3"
+				return nil
+			}))
+
+			parent.AppendChildren(tsks...)
+			parent.RunChild(tsks[0])
+			go func() {
+				time.Sleep(50 * time.Millisecond)
+				parent.RunChild(tsks[1])
+				parent.RunChild(tsks[2])
+			}()
+			return nil
+		})
+		parent.SetMaxParallelism(0)
+		parent.SetFailFast()
+		parent.Run()
+		assert.Equal(t,
+			[]string{"TEST1"},
+			readResults(t, results, 1),
+		)
+
+		parent.Done.AwaitOne()
+		fmt.Print("DONE")
+	})
 	t.Run("stop on first failed task", func(t *testing.T) {
 		results := make(chan string)
 
