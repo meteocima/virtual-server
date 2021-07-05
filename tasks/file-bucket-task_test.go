@@ -20,6 +20,7 @@ func TestBucketTask(t *testing.T) {
 	t.Run("Works", func(t *testing.T) {
 		//bytesWriter := bytes.Buffer{}
 		Stdout = os.Stdout
+		Stderr = os.Stdout
 
 		var tsk1 *Task
 		var tsk2 *Task

@@ -56,6 +56,7 @@ func TestParentTask(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
 	assert.NoError(t, err)
 	Stdout = os.Stdout
+	Stderr = os.Stdout
 	t.Run("when a task runner completed without children it fails", func(t *testing.T) {
 
 		var parent TaskI = NewParent("PARENT1", func(vs *ctx.Context) error {

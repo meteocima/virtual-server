@@ -33,8 +33,8 @@ type Task struct {
 	CompletedAt time.Time
 
 	ID          string
-	stdout      io.WriteCloser
-	stderr      io.WriteCloser
+	stdout      io.Writer //Closer
+	stderr      io.Writer //Closer
 	Description string
 	runner      TaskRunner
 }
@@ -90,6 +90,9 @@ func List(w io.Writer) {
 // Stdout ...
 var Stdout io.Writer
 
+// Stderr ...
+var Stderr io.Writer
+
 // SetStatus ...
 func (tsk *Task) SetStatus(newStatus *TaskStatus) {
 	if tsk.status == newStatus {
@@ -109,11 +112,8 @@ func (tsk *Task) Status() *TaskStatus {
 func (tsk *Task) Run() {
 	go func() {
 
-		//infoLog := openTaskLog(tsk.ID + ".info.log")
-		stderr := openTaskLog(tsk.ID + ".log")
-
-		tsk.stdout = NewMultiWriteCloser(stderr, Stdout)
-		tsk.stderr = stderr
+		tsk.stdout = Stdout
+		tsk.stderr = Stderr
 		vs := ctx.New(os.Stdin, tsk.stdout, tsk.stderr)
 		vs.ID = tsk.ID
 		vs.LogInfo("START: %s", tsk.Description)
@@ -131,7 +131,7 @@ func (tsk *Task) Run() {
 		}
 
 		vs.Close()
-		stderr.Close()
+		//stderr.Close()
 
 		tsk.SetCompleted(err)
 	}()
@@ -171,6 +171,7 @@ func (tsk *Task) SetCompleted(err error) {
 	registry.RemoveTask(tsk.ID)
 }
 
+/*
 func openTaskLog(path string) io.WriteCloser {
 	logFile, err := os.OpenFile(path, os.O_RDWR|os.O_TRUNC|os.O_CREATE, os.FileMode(0644))
 	if err != nil {
@@ -178,7 +179,7 @@ func openTaskLog(path string) io.WriteCloser {
 	}
 	return logFile
 }
-
+*/
 // New ...
 func New(ID string, runner TaskRunner) *Task {
 	t := Task{
