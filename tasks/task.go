@@ -180,6 +180,7 @@ func openTaskLog(path string) io.WriteCloser {
 	return logFile
 }
 */
+
 // New ...
 func New(ID string, runner TaskRunner) *Task {
 	t := Task{
