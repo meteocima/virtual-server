@@ -11,6 +11,7 @@ import (
 	"github.com/meteocima/virtual-server/ctx"
 	"github.com/meteocima/virtual-server/testutil"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func resultEmit(results chan string, i int) func(vs *ctx.Context) error {
@@ -55,6 +56,21 @@ func TestParentTask(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
 	assert.NoError(t, err)
 	Stdout = os.Stdout
+	t.Run("when a task runner completed without children it fails", func(t *testing.T) {
+
+		var parent TaskI = NewParent("PARENT1", func(vs *ctx.Context) error {
+			return nil
+		})
+
+		parent.Run()
+		parent.AwaitDone()
+		require.NotNil(t, parent.Status())
+		assert.True(t, parent.Status().IsFailure())
+		require.NotNil(t, parent.Status().Err)
+		assert.Equal(t, "Err: task completed without children", parent.Status().String())
+		assert.Equal(t, "task completed without children", parent.Status().Err.Error())
+
+	})
 
 	t.Run("change max parallelism when already started panics", func(t *testing.T) {
 		results := make(chan string)
@@ -72,6 +88,22 @@ func TestParentTask(t *testing.T) {
 			parent.SetMaxParallelism(1)
 		})
 
+	})
+
+	t.Run("adding same child multiple times panics", func(t *testing.T) {
+		results := make(chan string)
+		children := createsTestTasks(results, 1)
+
+		var parent *ParentTask
+
+		parent = NewParent("PARENT1", func(vs *ctx.Context) error {
+			return nil
+		})
+
+		assert.Panics(t, func() {
+			parent.AppendChildren(children[0])
+			parent.AppendChildren(children[0])
+		})
 	})
 
 	mkSerialParent := func(results chan string) *ParentTask {

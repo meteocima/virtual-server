@@ -142,6 +142,11 @@ func (tsk *Task) AwaitDone() {
 	tsk.Done.AwaitOne()
 }
 
+// TaskID returns ID of the task
+func (tsk *Task) TaskID() string {
+	return tsk.ID
+}
+
 // SetCompleted ...
 func (tsk *Task) SetCompleted(err error) {
 	if err != nil {

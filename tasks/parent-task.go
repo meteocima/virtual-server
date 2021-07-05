@@ -2,6 +2,7 @@ package tasks
 
 import (
 	"errors"
+	"fmt"
 	"sync"
 
 	"github.com/meteocima/virtual-server/ctx"
@@ -44,7 +45,6 @@ type ParentTask struct {
 	*Task
 	// set of children task. each children could be a Task or another ParentTask
 	// so the variable store TaskI interfaces.
-	// TODO: I don't remember why it is implemented as a map, maybe to allow for Task removal?
 	children map[TaskI]struct{}
 	// set of task that are waiting for execution. When a task is tentatively run using
 	// RunChild, if it cannot immediately run because it would overflow max parallelism,
@@ -72,6 +72,7 @@ type TaskI interface {
 	SetStatus(newStatus *TaskStatus)
 	SetCompleted(err error)
 	AwaitDone()
+	TaskID() string
 }
 
 func (tsk *ParentTask) setFailed(value bool) {
@@ -114,8 +115,16 @@ func (tsk *ParentTask) hasWaitingChildren() bool {
 // Caller should provide sinchronization itself if needed.
 func (tsk *ParentTask) AppendChildren(children ...TaskI) {
 	for _, child := range children {
+		if _, exists := tsk.children[child]; exists {
+			panic(fmt.Sprintf("Task %s already appended", child.TaskID()))
+		}
 		tsk.children[child] = struct{}{}
 	}
+}
+
+// TaskID returns ID of the task
+func (tsk *ParentTask) TaskID() string {
+	return tsk.ID
 }
 
 // RunChild schedule specified child task for
@@ -238,6 +247,9 @@ func NewParent(ID string, runner TaskRunner) *ParentTask {
 func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 	return func(vs *ctx.Context) error {
 		err := runner(vs)
+		if len(tsk.children) == 0 {
+			return errors.New("task completed without children")
+		}
 		for child := range tsk.children {
 			child.AwaitDone()
 		}
