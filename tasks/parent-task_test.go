@@ -55,6 +55,25 @@ func TestParentTask(t *testing.T) {
 	err := config.Init(testutil.FixtureDir("virt-serv.toml"))
 	assert.NoError(t, err)
 	Stdout = os.Stdout
+
+	t.Run("change max parallelism when already started panics", func(t *testing.T) {
+		results := make(chan string)
+		children := createsTestTasks(results, 1)
+
+		var parent *ParentTask
+
+		parent = NewParent("PARENT1", func(vs *ctx.Context) error {
+			return nil
+		})
+
+		assert.Panics(t, func() {
+			parent.AppendChildren(children[0])
+			parent.RunChild(children[0])
+			parent.SetMaxParallelism(1)
+		})
+
+	})
+
 	mkSerialParent := func(results chan string) *ParentTask {
 		var parent *ParentTask
 		parent = NewParent("PARENT", func(vs *ctx.Context) error {

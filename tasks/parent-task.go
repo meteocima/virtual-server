@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/meteocima/virtual-server/ctx"
+	"github.com/tevino/abool"
 )
 
 // ParentTask is a struct that represents a task that can contains
@@ -52,10 +53,12 @@ type ParentTask struct {
 	waitingChildren []TaskI
 	// used to implement max parallelism, will be created with a cache.
 	// it's nil when max parallelism is set to 0 (no max parallelism)
-	runningChild chan struct{}
-	failfast     bool
-	failed       bool
-	// synchronizes `failed` and `waitingChildren` members access
+	runningChild        chan struct{}
+	failfast            bool
+	failed              *abool.AtomicBool
+	someChildrenStarted *abool.AtomicBool
+
+	// synchronizes `waitingChildren` members access
 	sem *sync.Mutex
 }
 
@@ -72,15 +75,11 @@ type TaskI interface {
 }
 
 func (tsk *ParentTask) setFailed(value bool) {
-	tsk.sem.Lock()
-	tsk.failed = value
-	tsk.sem.Unlock()
+	tsk.failed.SetTo(value)
 }
 
 func (tsk *ParentTask) getFailed() bool {
-	tsk.sem.Lock()
-	defer tsk.sem.Unlock()
-	return tsk.failed
+	return tsk.failed.IsSet()
 }
 
 func (tsk *ParentTask) popWaitingChild() TaskI {
@@ -95,6 +94,12 @@ func (tsk *ParentTask) pushWaitingChild(child TaskI) {
 	tsk.sem.Lock()
 	defer tsk.sem.Unlock()
 	tsk.waitingChildren = append(tsk.waitingChildren, child)
+}
+
+func (tsk *ParentTask) setWaitingChild(value []TaskI) {
+	tsk.sem.Lock()
+	defer tsk.sem.Unlock()
+	tsk.waitingChildren = value
 }
 
 func (tsk *ParentTask) hasWaitingChildren() bool {
@@ -122,6 +127,8 @@ func (tsk *ParentTask) AppendChildren(children ...TaskI) {
 // and a task already failed, then the child immediately
 // fails with an error og "tasks cancelled by parent"
 func (tsk *ParentTask) RunChild(child TaskI) {
+	tsk.someChildrenStarted.Set()
+
 	if tsk.runningChild == nil {
 		// no max parallelism, so just run the task.
 
@@ -191,10 +198,11 @@ func (tsk *ParentTask) RunChild(child TaskI) {
 // SetMaxParallelism sets the maximum allowed number of
 // children tasks that can run concurrently.
 func (tsk *ParentTask) SetMaxParallelism(count uint) {
-	// TODO: don't allow this func to be called when
-	// a task has already started.
-	// TODO: sync waitingChildren change.
-	tsk.waitingChildren = []TaskI{}
+
+	if tsk.someChildrenStarted.IsSet() {
+		panic("cannot change parallelism: a children task has already been started")
+	}
+	tsk.setWaitingChild([]TaskI{})
 	if count == 0 {
 		tsk.runningChild = nil
 		return
@@ -213,8 +221,10 @@ func (tsk *ParentTask) SetFailFast() {
 // addrress.
 func NewParent(ID string, runner TaskRunner) *ParentTask {
 	tsk := ParentTask{
-		sem:      &sync.Mutex{},
-		children: map[TaskI]struct{}{},
+		sem:                 &sync.Mutex{},
+		children:            map[TaskI]struct{}{},
+		failed:              abool.New(),
+		someChildrenStarted: abool.New(),
 	}
 
 	tsk.Task = New(ID, wrapRunner(runner, &tsk))
