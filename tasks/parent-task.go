@@ -15,37 +15,53 @@ import (
 // method of `ParentTask`, during the parent run phase or before.
 //
 // Parent task completes when all children are completed.
-// If any of the the, fails, the other ones continue to run,
-// but the parent status will be set to failed
-// upon completion.
+// If any of the children fails, the other ones continue to run,
+// but the parent status will be set to failed upon completion.
+// This semantic can be changed by calling SetFailFast(true), that
+// makes the children `Task` immediately fails when run
+// after any children had failed.
 //
 // It's the parent task responsibility to run children when
-// appropriate, using `RunChild` method of `ParentTask`
+// appropriate, using `RunChild` method.
 //
 // Number of children tasks that can runs concurrently can be
 // limited using `SetMaxParallelism` method.
 //
-// A max parallelism of 0 (the default) means no limit,
-// children tasks start as soon as you call `RunChild`.
+// A max parallelism of 0 (the default) means no limit.
+// When o is set, children tasks start as soon as you call
+// `RunChild` on the parent.
 //
 // When the max parallelism is greater then 1, children
 // tasks that you schedule to run with `RunChild` are delayed
-// until enough child tasks completes to respect the limit.
+// until enough child tasks will have completed, in order to respect
+// the choosen limit.
 //
 // A max parallelism of 1 (the default) means that
 // the children run sequentially, effectively removing any
 // parallelism.
 type ParentTask struct {
 	*Task
-	children        map[TaskI]struct{}
+	// set of children task. each children could be a Task or another ParentTask
+	// so the variable store TaskI interfaces.
+	// TODO: I don't remember why it is implemented as a map, maybe to allow for Task removal?
+	children map[TaskI]struct{}
+	// set of task that are waiting for execution. When a task is tentatively run using
+	// RunChild, if it cannot immediately run because it would overflow max parallelism,
+	// it's stored here and later retrieved when enough running task completed in order
+	// to allow parallelism to be respected
 	waitingChildren []TaskI
-	runningChild    chan struct{}
-	failfast        bool
-	failed          bool
-	sem             *sync.Mutex
+	// used to implement max parallelism, will be created with a cache.
+	runningChild chan struct{}
+	failfast     bool
+	failed       bool
+	// synchronize failed member access
+	sem *sync.Mutex
 }
 
-// TaskI ...
+// TaskI is an interface implemented by
+// ParentTask and Task. It's needed to allow
+// ParentTask to contains both ParentTask and
+// Task structures.
 type TaskI interface {
 	Run()
 	Status() *TaskStatus
@@ -54,14 +70,24 @@ type TaskI interface {
 	AwaitDone()
 }
 
-// AppendChildren ...
+// AppendChildren add specified children to this
+// task. This call is not sinchronized, it's not safe
+// to call it concurrently from multiple goroutines.
+// Caller should provide sinchronization itself if needed.
 func (tsk *ParentTask) AppendChildren(children ...TaskI) {
 	for _, child := range children {
 		tsk.children[child] = struct{}{}
 	}
 }
 
-// RunChild ...
+// RunChild schedule specified child task for
+// execution. If max parallelism is set to 0, and else if
+// running task are below max parallelism allowed, the task
+// run immediately. Otherwise, it's put in a queue
+// for it to be runner later.
+// If the fail fast option is set on the ParentTask,
+// and a task already failed, then the child immediately
+// fails with an error og "tasks cancelled by parent"
 func (tsk *ParentTask) RunChild(child TaskI) {
 	if tsk.runningChild == nil {
 		child.Run()
@@ -70,8 +96,9 @@ func (tsk *ParentTask) RunChild(child TaskI) {
 
 	select {
 	case tsk.runningChild <- struct{}{}:
-		//fmt.Println("TASK ENTER", child.ID)
-
+		// tsk.runningChild accepted the child in cache,
+		// that means max parallelism is respected, and the
+		// child is consuming 1 place in runningChild chan cache.
 		go func() {
 			child.AwaitDone()
 			//fmt.Println("TASK COMPLETED", child.ID)
