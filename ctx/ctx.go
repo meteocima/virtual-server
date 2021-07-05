@@ -99,7 +99,7 @@ func (ctx *Context) SetContextFailed(format string, args ...interface{}) {
 func (ctx *Context) setRunningFunction(msg string, args ...interface{}) func() {
 	ctx.runningFunction = fmt.Sprintf(msg, args...)
 
-	ctx.LogDetail("\t⟶\t%s\n", ctx.runningFunction)
+	ctx.LogDetail("\t⟶\t%s", ctx.runningFunction)
 
 	return func() {
 		ctx.runningFunction = ""
