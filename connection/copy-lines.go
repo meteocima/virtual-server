@@ -43,7 +43,13 @@ func copyLines(proc Process, w io.Writer, outLogFile vpath.VirtualPath) {
 		return
 	}
 
-	var conn *ssh.Client
+	cn, err := FindHost(outLogFile.Host)
+	if err != nil {
+		panic(fmt.Errorf("copyLines to log from %s: FindHost: %w", outLogFile.String(), err))
+	}
+
+	conn := cn.(*SSHConnection).client
+
 	cmd, err := conn.NewSession()
 	if err != nil {
 		panic(fmt.Errorf("copyLines to log from %s: conn.client.NewSession: %w", outLogFile.String(), err))
