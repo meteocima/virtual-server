@@ -58,10 +58,22 @@ func copyLines(proc Process, w io.Writer, outLogFile vpath.VirtualPath) {
 
 	cmdStr := fmt.Sprintf("tail -F '%s'", outLogFile.Path)
 
+	out, err := cmd.StdoutPipe()
+	if err != nil {
+		panic(fmt.Errorf("copyLines to log from %s: cmd.StdoutPipe: %w", outLogFile.String(), err))
+	}
+
 	err = cmd.Start(cmdStr)
 	if err != nil {
 		panic(fmt.Errorf("copyLines to log from %s: cmd.Start: %w", outLogFile.String(), err))
 	}
+
+	go func() {
+		_, err := io.Copy(w, out)
+		if err != nil {
+			panic(fmt.Errorf("copyLines to log from %s: io.Copy: %w", outLogFile.String(), err))
+		}
+	}()
 
 	go func() {
 		_, err := proc.Wait()
