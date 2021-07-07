@@ -246,6 +246,7 @@ func (conn *SSHConnection) statProcessor(allInputsDone *sync.WaitGroup, input ch
 	}
 }
 
+// SSHClient ...
 func (conn *SSHConnection) SSHClient() *ssh.Client {
 	return conn.client
 }
