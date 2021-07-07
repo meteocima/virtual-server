@@ -68,10 +68,10 @@ func copyLines(proc Process, w io.Writer, outLogFile vpath.VirtualPath) {
 		if err != nil {
 			panic(fmt.Errorf("copyLines to log from %s: proc.Wait: %w", outLogFile.String(), err))
 		}
-		err = cmd.Signal(ssh.SIGKILL)
-		if err != nil {
+		/*err =*/ cmd.Signal(ssh.SIGKILL)
+		/*if err != nil {
 			panic(fmt.Errorf("copyLines to log from %s: cmd.Signal(ssh.SIGKILL): %w", outLogFile.String(), err))
-		}
+		}*/
 	}()
 
 }
