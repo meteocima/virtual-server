@@ -264,6 +264,7 @@ func (conn *SSHConnection) Stat(paths ...vpath.VirtualPath) (chan *VirtualFileIn
 	for i := 0; i < 2; i++ {
 		go conn.statProcessor(&allInputsDone, input, output, errors)
 	}
+
 	go func() {
 
 		for _, p := range paths {
