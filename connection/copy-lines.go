@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"time"
 
 	"github.com/meteocima/virtual-server/tailor"
@@ -48,42 +49,84 @@ func copyLines(proc Process, w io.Writer, outLogFile vpath.VirtualPath) {
 		panic(fmt.Errorf("copyLines to log from %s: FindHost: %w", outLogFile.String(), err))
 	}
 
-	conn := cn.(*SSHConnection).client
+	if c, ok := cn.(*SSHConnection); ok {
 
-	cmd, err := conn.NewSession()
-	if err != nil {
-		panic(fmt.Errorf("copyLines to log from %s: conn.client.NewSession: %w", outLogFile.String(), err))
-	}
-	defer cmd.Close()
+		conn := c.client
 
-	cmdStr := fmt.Sprintf("tail -F '%s'", outLogFile.Path)
-
-	out, err := cmd.StdoutPipe()
-	if err != nil {
-		panic(fmt.Errorf("copyLines to log from %s: cmd.StdoutPipe: %w", outLogFile.String(), err))
-	}
-
-	err = cmd.Start(cmdStr)
-	if err != nil {
-		panic(fmt.Errorf("copyLines to log from %s: cmd.Start: %w", outLogFile.String(), err))
-	}
-
-	go func() {
-		_, err := io.Copy(w, out)
+		cmd, err := conn.NewSession()
 		if err != nil {
-			panic(fmt.Errorf("copyLines to log from %s: io.Copy: %w", outLogFile.String(), err))
+			panic(fmt.Errorf("copyLines to log from %s: conn.client.NewSession: %w", outLogFile.String(), err))
 		}
-	}()
+		defer cmd.Close()
 
-	go func() {
-		_, err := proc.Wait()
+		cmdStr := fmt.Sprintf("tail -F '%s'", outLogFile.Path)
+
+		out, err := cmd.StdoutPipe()
 		if err != nil {
-			panic(fmt.Errorf("copyLines to log from %s: proc.Wait: %w", outLogFile.String(), err))
+			panic(fmt.Errorf("copyLines to log from %s: cmd.StdoutPipe: %w", outLogFile.String(), err))
 		}
-		/*err =*/ cmd.Signal(ssh.SIGKILL)
-		/*if err != nil {
-			panic(fmt.Errorf("copyLines to log from %s: cmd.Signal(ssh.SIGKILL): %w", outLogFile.String(), err))
-		}*/
-	}()
+
+		err = cmd.Start(cmdStr)
+		if err != nil {
+			panic(fmt.Errorf("copyLines to log from %s: cmd.Start: %w", outLogFile.String(), err))
+		}
+
+		go func() {
+			_, err := io.Copy(w, out)
+			if err != nil {
+				panic(fmt.Errorf("copyLines to log from %s: io.Copy: %w", outLogFile.String(), err))
+			}
+		}()
+
+		go func() {
+			_, err := proc.Wait()
+			if err != nil {
+				panic(fmt.Errorf("copyLines to log from %s: proc.Wait: %w", outLogFile.String(), err))
+			}
+			/*err =*/ cmd.Signal(ssh.SIGKILL)
+			/*if err != nil {
+				panic(fmt.Errorf("copyLines to log from %s: cmd.Signal(ssh.SIGKILL): %w", outLogFile.String(), err))
+			}*/
+		}()
+
+		return
+	}
+
+	if _, ok := cn.(*LocalConnection); ok {
+		cmd := exec.Command("tail", "-F", outLogFile.Path)
+		//defer cmd.Close()
+
+		out, err := cmd.StdoutPipe()
+		if err != nil {
+			panic(fmt.Errorf("copyLines to log from %s: cmd.StdoutPipe: %w", outLogFile.String(), err))
+		}
+
+		err = cmd.Start()
+		if err != nil {
+			panic(fmt.Errorf("copyLines to log from %s: cmd.Start: %w", outLogFile.String(), err))
+		}
+
+		go func() {
+			_, err := io.Copy(w, out)
+			if err != nil {
+				panic(fmt.Errorf("copyLines to log from %s: io.Copy: %w", outLogFile.String(), err))
+			}
+		}()
+
+		go func() {
+			_, err := proc.Wait()
+			if err != nil {
+				panic(fmt.Errorf("copyLines to log from %s: proc.Wait: %w", outLogFile.String(), err))
+			}
+			/*err =*/ cmd.Process.Kill()
+			/*if err != nil {
+				panic(fmt.Errorf("copyLines to log from %s: cmd.Signal(ssh.SIGKILL): %w", outLogFile.String(), err))
+			}*/
+		}()
+
+		return
+	}
+
+	panic("Unknown connection type")
 
 }
