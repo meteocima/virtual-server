@@ -310,6 +310,10 @@ func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error {
 	return client.Symlink(source.Path, target.Path)
 }
 
+func (conn *SSHConnection) SSHPath(vpath.VirtualPath) string {
+	return ""
+}
+
 // MkDir ...
 func (conn *SSHConnection) MkDir(dir vpath.VirtualPath) error {
 	client, err := sftp.NewClient(conn.client)

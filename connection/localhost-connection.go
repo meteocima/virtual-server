@@ -25,6 +25,10 @@ func (conn *LocalConnection) Name() string {
 	return conn.name
 }
 
+func (conn *LocalConnection) SSHPath(vpath.VirtualPath) string {
+	return ""
+}
+
 // OpenReader ...
 func (conn *LocalConnection) OpenReader(file vpath.VirtualPath) (io.ReadCloser, error) {
 	freader, err := os.Open(file.Path)

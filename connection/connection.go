@@ -81,6 +81,8 @@ type Connection interface {
 
 	Link(source, target vpath.VirtualPath) error
 	Run(command vpath.VirtualPath, args []string, options RunOptions) (Process, error)
+
+	SSHPath(vpath.VirtualPath) string
 }
 
 type connectionRegistry struct {
