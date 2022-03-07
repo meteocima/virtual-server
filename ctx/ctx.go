@@ -2,6 +2,7 @@ package ctx
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -363,7 +364,9 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 					ctx.ContextFailed("src.Stat", err)
 					return
 				}
-				err = scpclient.CopyPassThru(src, to.Path, "0644", stat.Size(), nil)
+				c, cancel := context.WithTimeout(context.Background(), time.Hour)
+				err = scpclient.CopyPassThru(c, src, to.Path, "0644", stat.Size(), nil)
+				cancel()
 				if err != nil {
 					ctx.ContextFailed("scpclient.CopyPassThru", err)
 					return
@@ -394,11 +397,15 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 
 				defer dest.Close()
 
-				err = scpclient.CopyFromRemotePassThru(dest, from.Path, nil)
+				c, cancel := context.WithTimeout(context.Background(), time.Hour)
+				err = scpclient.CopyFromRemotePassThru(c, dest, from.Path, nil)
+				cancel()
 				if err != nil {
 					ctx.ContextFailed("scpclient.CopyFromRemotePassThru", err)
 					return
+
 				}
+
 			} else {
 				if target, ok := toConn.(*connection.SSHConnection); ok {
 					// remote -> remote
@@ -416,10 +423,11 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 						return
 					}
 					tmpFilePath := tmpFile.Name()
-
-					err = scpclientSrc.CopyFromRemotePassThru(tmpFile, from.Path, nil)
+					c, cancel := context.WithTimeout(context.Background(), time.Hour)
+					err = scpclientSrc.CopyFromRemotePassThru(c, tmpFile, from.Path, nil)
 					tmpFile.Close()
 					scpclientSrc.Close()
+					cancel()
 
 					if err != nil {
 						ctx.ContextFailed("scpclient.CopyFromRemotePassThru", err)
@@ -448,7 +456,9 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 						ctx.ContextFailed("src.Stat", err)
 						return
 					}
-					err = scpclientDest.CopyPassThru(src, to.Path, "0644", stat.Size(), nil)
+					c, cancel = context.WithTimeout(context.Background(), time.Hour)
+					err = scpclientDest.CopyPassThru(c, src, to.Path, "0644", stat.Size(), nil)
+					cancel()
 					if err != nil {
 						ctx.ContextFailed("scpclient.CopyPassThru", err)
 						return
