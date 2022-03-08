@@ -149,11 +149,11 @@ func TestNew(t *testing.T) {
 	t.Run("Move", func(t *testing.T) {
 		file := drihmFixt.Join("tbmoved")
 		ctx.WriteString(file, "something")
-
-		ctx.Move(
-			file,
-			vpath.Local("/tmp/tbmoved"),
-		)
+		/*
+			ctx.Move(
+				file,
+				vpath.Local("/tmp/tbmoved"),
+			)*/
 		assert.NoError(t, ctx.Err)
 
 		actual := ctx.ReadString(vpath.Local("/tmp/tbmoved"))
