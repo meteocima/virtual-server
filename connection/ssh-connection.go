@@ -20,13 +20,13 @@ type SSHConnection struct {
 	BackupHosts []string
 	name        string
 
-	Host     string
-	Port     int
-	User     string
-	KeyPath  string
-	hostName string
-	config   *ssh.ClientConfig
-	client   *ssh.Client
+	Host    string
+	Port    int
+	User    string
+	KeyPath string
+	//hostName string
+	config *ssh.ClientConfig
+	client *ssh.Client
 }
 
 // Name ...
@@ -311,7 +311,7 @@ func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error {
 }
 
 func (conn *SSHConnection) SSHPath(p vpath.VirtualPath) string {
-	return conn.hostName + p.Path
+	return conn.Host + ":" + p.Path
 }
 
 // MkDir ...
