@@ -308,7 +308,7 @@ func (ctx *Context) Copy(from, to vpath.VirtualPath) {
 	}
 
 	fromS := fromConn.SSHPath(from)
-	toS := toConn.SSHPath(from)
+	toS := toConn.SSHPath(to)
 	fmt.Printf("scp %s %s\n", fromS, toS)
 	/*
 		if _, ok := fromConn.(*connection.LocalConnection); ok {

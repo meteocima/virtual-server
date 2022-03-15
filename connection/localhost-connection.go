@@ -25,8 +25,8 @@ func (conn *LocalConnection) Name() string {
 	return conn.name
 }
 
-func (conn *LocalConnection) SSHPath(vpath.VirtualPath) string {
-	return ""
+func (conn *LocalConnection) SSHPath(p vpath.VirtualPath) string {
+	return p.Path
 }
 
 // OpenReader ...

@@ -310,8 +310,8 @@ func (conn *SSHConnection) Link(source, target vpath.VirtualPath) error {
 	return client.Symlink(source.Path, target.Path)
 }
 
-func (conn *SSHConnection) SSHPath(vpath.VirtualPath) string {
-	return ""
+func (conn *SSHConnection) SSHPath(p vpath.VirtualPath) string {
+	return conn.hostName + p.Path
 }
 
 // MkDir ...
