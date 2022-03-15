@@ -60,6 +60,8 @@ type ParentTask struct {
 
 	// synchronizes `waitingChildren` members access
 	sem *sync.Mutex
+	// synchronizes `children` members access
+	lckChildren *sync.Mutex
 }
 
 // TaskI is an interface implemented by
@@ -114,7 +116,10 @@ func (tsk *ParentTask) hasWaitingChildren() bool {
 // to call it concurrently from multiple goroutines.
 // Caller should provide sinchronization itself if needed.
 func (tsk *ParentTask) AppendChildren(children ...TaskI) {
+	tsk.lckChildren.Lock()
+	defer tsk.lckChildren.Unlock()
 	for _, child := range children {
+
 		if _, exists := tsk.children[child]; exists {
 			panic(fmt.Sprintf("Task %s already appended", child.TaskID()))
 		}
@@ -231,6 +236,7 @@ func (tsk *ParentTask) SetFailFast() {
 func NewParent(ID string, runner TaskRunner) *ParentTask {
 	tsk := ParentTask{
 		sem:                 &sync.Mutex{},
+		lckChildren:         &sync.Mutex{},
 		children:            map[TaskI]struct{}{},
 		failed:              abool.New(),
 		someChildrenStarted: abool.New(),
@@ -247,10 +253,17 @@ func NewParent(ID string, runner TaskRunner) *ParentTask {
 func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 	return func(vs *ctx.Context) error {
 		err := runner(vs)
-		if len(tsk.children) == 0 {
+		tsk.lckChildren.Lock()
+		var children map[TaskI]struct{}
+		for k, v := range tsk.children {
+			children[k] = v
+		}
+		tsk.lckChildren.Unlock()
+
+		if len(children) == 0 {
 			return errors.New("task completed without children")
 		}
-		for child := range tsk.children {
+		for child := range children {
 			child.AwaitDone()
 		}
 
