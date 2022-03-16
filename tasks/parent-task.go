@@ -254,7 +254,7 @@ func wrapRunner(runner TaskRunner, tsk *ParentTask) TaskRunner {
 	return func(vs *ctx.Context) error {
 		err := runner(vs)
 		tsk.lckChildren.Lock()
-		var children map[TaskI]struct{}
+		children := map[TaskI]struct{}{}
 		for k, v := range tsk.children {
 			children[k] = v
 		}
