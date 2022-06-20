@@ -28,15 +28,16 @@ type Context struct {
 
 	//infoChannel   chan string
 	//detailChannel chan string
-	logCompleted  chan struct{}
-	running       bool
-	runningLock   *sync.Mutex
-	level         LogLevel
-	useDateInLogs bool
+	logCompleted chan struct{}
+	running      bool
+	runningLock  *sync.Mutex
+	level        LogLevel
 }
 
+var useDateInLogs bool
+
 func (ctx *Context) UseDateInLogs() {
-	ctx.useDateInLogs = true
+	useDateInLogs = true
 }
 
 // Clone ...
@@ -674,7 +675,7 @@ func (ctx *Context) logWrite(msgLevel LogLevel, msgText string, args []interface
 	}
 
 	format := msgLevel.String() + ": " + ctx.ID + ": " + msgText + "\n"
-	if ctx.useDateInLogs {
+	if useDateInLogs {
 		dt := time.Now().Format(time.Stamp)
 		format = dt + " - " + format
 	}
