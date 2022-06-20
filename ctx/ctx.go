@@ -28,10 +28,15 @@ type Context struct {
 
 	//infoChannel   chan string
 	//detailChannel chan string
-	logCompleted chan struct{}
-	running      bool
-	runningLock  *sync.Mutex
-	level        LogLevel
+	logCompleted  chan struct{}
+	running       bool
+	runningLock   *sync.Mutex
+	level         LogLevel
+	useDateInLogs bool
+}
+
+func (ctx *Context) UseDateInLogs() {
+	ctx.useDateInLogs = true
 }
 
 // Clone ...
@@ -629,35 +634,35 @@ func (ctx *Context) Close() {
 }
 
 /*
-func (ctx *Context) startLogWriter() {
-	ctx.infoChannel = make(chan string, 1024)
-	ctx.detailChannel = make(chan string, 1024)
-	ctx.runningLock.Lock()
-	ctx.running = true
-	ctx.runningLock.Unlock()
-	go func() {
-		defer close(ctx.logCompleted)
-		for {
-			var chunk string
-			select {
-			case chunk = <-ctx.infoChannel:
-				fmt.Fprintf(ctx.stdout, chunk)
-			case chunk = <-ctx.detailChannel:
-				fmt.Fprintf(ctx.stderr, chunk)
-			case <-time.After(100 * time.Millisecond):
-				ctx.runningLock.Lock()
-				running := ctx.running
-				ctx.runningLock.Unlock()
-				if !running {
+	func (ctx *Context) startLogWriter() {
+		ctx.infoChannel = make(chan string, 1024)
+		ctx.detailChannel = make(chan string, 1024)
+		ctx.runningLock.Lock()
+		ctx.running = true
+		ctx.runningLock.Unlock()
+		go func() {
+			defer close(ctx.logCompleted)
+			for {
+				var chunk string
+				select {
+				case chunk = <-ctx.infoChannel:
+					fmt.Fprintf(ctx.stdout, chunk)
+				case chunk = <-ctx.detailChannel:
+					fmt.Fprintf(ctx.stderr, chunk)
+				case <-time.After(100 * time.Millisecond):
+					ctx.runningLock.Lock()
+					running := ctx.running
+					ctx.runningLock.Unlock()
+					if !running {
 
-					return
+						return
+					}
 				}
+
 			}
 
-		}
-
-	}()
-}
+		}()
+	}
 */
 func (ctx *Context) logWrite(msgLevel LogLevel, msgText string, args []interface{}) {
 	if msgLevel > ctx.level {
@@ -668,7 +673,12 @@ func (ctx *Context) logWrite(msgLevel LogLevel, msgText string, args []interface
 		stream = ctx.stderr
 	}
 
-	fmt.Fprintf(stream, msgLevel.String()+": "+ctx.ID+": "+msgText+"\n", args...)
+	format := msgLevel.String() + ": " + ctx.ID + ": " + msgText + "\n"
+	if ctx.useDateInLogs {
+		dt := time.Now().Format(time.Stamp)
+		format = dt + " - " + format
+	}
+	fmt.Fprintf(stream, format, args...)
 }
 
 // OutPrintf ...
