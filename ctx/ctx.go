@@ -36,7 +36,7 @@ type Context struct {
 
 var useDateInLogs bool
 
-func (ctx *Context) UseDateInLogs() {
+func UseDateInLogs() {
 	useDateInLogs = true
 }
 
